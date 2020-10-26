@@ -1,0 +1,28 @@
+.members {
+  display: flex;
+  max-width: 100vw;
+  overflow-x: auto;
+
+  &__member {
+    text-align: center;
+    border: 1px solid #dedede;
+    margin-bottom: 10px;
+    cursor: pointer;
+    background-color: #eee;
+    padding: 20px;
+    &:hover {
+      background-color: #ccc;
+    }
+  }
+
+  &__disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  &__image {
+    user-select: none;
+    width: 100px;
+    height: auto;
+  }
+}

@@ -1,0 +1,42 @@
+.Cap {
+  position: absolute;
+  left: calc(50% - 43px);
+  top: 11px;
+  transform: none;
+  opacity: 1;
+  transition: 200ms ease-out;
+}
+
+.Fly {
+  opacity: 0;
+  &_1 {
+    transform: translate(-150px, -150px) rotate(-154deg);
+  }
+  &_2 {
+    transform: translate(-100px, -160px) rotate(-194deg);
+  }
+  &_3 {
+    transform: translate(-50px, -170px) rotate(254deg);
+  }
+  &_4 {
+    transform: translate(-15px, -150px) rotate(354deg);
+  }
+  &_5 {
+    transform: translate(50px, -160px) rotate(-243deg);
+  }
+  &_6 {
+    transform: translate(250px, -160px) rotate(-243deg);
+  }
+}
+
+.clicker {
+  position: relative;
+  text-align: center;
+}
+
+.Bottle {
+  cursor: pointer;
+  &:hover {
+    transform: scale(0.95);
+  }
+}
