@@ -15,7 +15,7 @@ var Clicker = /** @class */ (function () {
         image.onclick = function () {
             container.appendChild(cap.cloneNode(true));
             setTimeout(function () {
-                container.querySelector(".Cap:not(.Fly)").classList.add("Fly_" + Math.ceil(Math.random() * 6));
+                container.querySelector(".Cap:not(.Fly)").classList.add("Fly_" + Math.ceil(Math.random() * 11));
                 container.querySelector(".Cap:not(.Fly)").classList.add("Fly");
             }, 20);
             setTimeout(function () {

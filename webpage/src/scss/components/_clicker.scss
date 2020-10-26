@@ -1,10 +1,12 @@
 .Cap {
   position: absolute;
-  left: calc(50% - 43px);
-  top: 11px;
+  left: calc(50% - 18px);
+  top: 21px;
   transform: none;
   opacity: 1;
   transition: 200ms ease-out;
+  width: 35px;
+  overflow: hidden;
 }
 
 .Fly {
@@ -22,20 +24,42 @@
     transform: translate(-15px, -150px) rotate(354deg);
   }
   &_5 {
-    transform: translate(50px, -160px) rotate(-243deg);
+    transform: translate(-220px, -123px) rotate(-243deg);
   }
   &_6 {
-    transform: translate(250px, -160px) rotate(-243deg);
+    transform: translate(20px, -202px) rotate(-163deg);
+  }
+  &_7 {
+    transform: translate(72px, -160px) rotate(-243deg);
+  }
+  &_8 {
+    transform: translate(123px, -180px) rotate(-243deg);
+  }
+  &_9 {
+    transform: translate(175px, -100px) rotate(-243deg);
+  }
+  &_10 {
+    transform: translate(182px, -169px) rotate(-243deg);
+  }
+  &_11 {
+    transform: translate(200px, -90px) rotate(-243deg);
   }
 }
 
 .clicker {
   position: relative;
   text-align: center;
+  background-color: #fff;
+  border-radius: 50%;
+  width: 320px;
+  height: 320px;
+  margin: 0 auto;
 }
 
 .Bottle {
   cursor: pointer;
+  margin-top: 10px;
+  height: 300px;
   &:hover {
     transform: scale(0.95);
   }

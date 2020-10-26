@@ -4,6 +4,8 @@ interface Dom {
   image: HTMLImageElement;
   amount: HTMLElement;
   price: HTMLElement;
+  imageContainer: HTMLElement;
+  infoContainer: HTMLElement;
 }
 
 class Member {
@@ -20,6 +22,8 @@ class Member {
     image: null,
     amount: null,
     price: null,
+    imageContainer: null,
+    infoContainer: null,
   };
 
   constructor(name: string, basePower: number, basePrice: number, image: string) {
@@ -42,22 +46,36 @@ class Member {
   };
 
   createDomElement() {
+    this.dom.imageContainer = document.createElement("div");
+    this.dom.imageContainer.classList.add("members__imageContainer");
+
+    this.dom.infoContainer = document.createElement("div");
+    this.dom.infoContainer.classList.add("members__infoContainer");
+
     this.dom.title = document.createElement("p");
+    this.dom.title.classList.add("members__title");
+
     this.dom.amount = document.createElement("p");
+    this.dom.amount.classList.add("members__amount");
 
     this.dom.title.innerHTML = this.name;
-    this.dom.amount.innerHTML = "Anzahl:" + this.amount;
+    this.dom.amount.innerHTML = "" + this.amount;
 
     this.dom.container = document.createElement("article");
     this.dom.container.classList.add("members__member");
 
     this.dom.price = document.createElement("p");
+    this.dom.price.classList.add("members__price");
     this.updatePrice();
 
-    this.dom.container.append(this.dom.title);
-    this.dom.container.append(this.dom.image);
-    this.dom.container.append(this.dom.amount);
-    this.dom.container.append(this.dom.price);
+    this.dom.imageContainer.append(this.dom.image);
+
+    this.dom.infoContainer.append(this.dom.title);
+    this.dom.infoContainer.append(this.dom.amount);
+    this.dom.infoContainer.append(this.dom.price);
+
+    this.dom.container.append(this.dom.imageContainer);
+    this.dom.container.append(this.dom.infoContainer);
   }
 
   applyToDom() {
@@ -72,7 +90,7 @@ class Member {
   }
 
   updateAmount() {
-    this.dom.amount.innerHTML = "Anzahl: " + this.amount;
+    this.dom.amount.innerHTML = "" + this.amount;
   }
 
   updatePrice() {
