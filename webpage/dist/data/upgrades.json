@@ -1,0 +1,205 @@
+[
+  { "name": "Stärkere Lesebrille", "referenceId": 0, "requirement": 1, "multiplier": 2, "price": 100 },
+  { "name": "Goldene Lesebrille", "referenceId": 0, "requirement": 1, "multiplier": 2, "price": 500 },
+  { "name": "Aerodynamische Lesebrille", "referenceId": 0, "requirement": 10, "multiplier": 2, "price": 10000 },
+  { "name": "Doppelt verglaste Lesebrille", "referenceId": 0, "requirement": 25, "multiplier": 2, "price": 100000 },
+
+  { "name": "Milde Chips", "referenceId": 1, "requirement": 1, "multiplier": 2, "price": 1000 },
+  { "name": "Geschmackvolle Chips", "referenceId": 1, "requirement": 5, "multiplier": 2, "price": 5000 },
+  { "name": "Salzige Chips", "referenceId": 1, "requirement": 25, "multiplier": 2, "price": 50000 },
+  { "name": "Chili Chips", "referenceId": 1, "requirement": 50, "multiplier": 2, "price": 5000000 },
+
+  { "name": "Trainingshosen", "referenceId": 2, "requirement": 1, "multiplier": 2, "price": 11000 },
+  { "name": "Saubere Trainingshosen", "referenceId": 2, "requirement": 5, "multiplier": 2, "price": 55000 },
+  { "name": "Flauschige Trainingshosen", "referenceId": 2, "requirement": 25, "multiplier": 2, "price": 550000 },
+  { "name": "Flauschige Trainingshosen", "referenceId": 2, "requirement": 50, "multiplier": 2, "price": 55000000 },
+
+  { "name": "Wasserkocher", "referenceId": 3, "requirement": 1, "multiplier": 2, "price": 120000 },
+  { "name": "Gusseiserner Wasserkocher", "referenceId": 3, "requirement": 5, "multiplier": 2, "price": 600000 },
+  { "name": "Turboschneller Wasserkocher", "referenceId": 3, "requirement": 25, "multiplier": 2, "price": 6000000 },
+  { "name": "Dampfbetriebener Wasserkocher", "referenceId": 3, "requirement": 50, "multiplier": 2, "price": 600000000 },
+
+  { "name": "Verstärkter Flaschenöffner", "referenceId": 4, "requirement": 1, "multiplier": 2, "price": 1300000 },
+  { "name": "Elektronischer Flaschenöffner", "referenceId": 4, "requirement": 5, "multiplier": 2, "price": 6500000 },
+  { "name": "Mehrfach-Flaschenöffner", "referenceId": 4, "requirement": 25, "multiplier": 2, "price": 65000000 },
+  {
+    "name": "Flaschenöffner Schmierflüssigkeit",
+    "referenceId": 4,
+    "requirement": 50,
+    "multiplier": 2,
+    "price": 65000000000
+  },
+
+  { "name": "Seya!", "referenceId": 5, "requirement": 1, "multiplier": 2, "price": 14000000 },
+  { "name": "Seeeeya!!", "referenceId": 5, "requirement": 5, "multiplier": 2, "price": 70000000 },
+  { "name": "SEYAA!!!", "referenceId": 5, "requirement": 25, "multiplier": 2, "price": 700000000 },
+  { "name": "SEEEEEYAAAA!!!!", "referenceId": 5, "requirement": 50, "multiplier": 2, "price": 70000000000 },
+
+  { "name": "Einweg Alkoholtester", "referenceId": 6, "requirement": 1, "multiplier": 2, "price": 200000000 },
+  { "name": "Plastik Alkoholtester", "referenceId": 6, "requirement": 5, "multiplier": 2, "price": 1000000000 },
+  { "name": "Alluminium Alkoholtester", "referenceId": 6, "requirement": 25, "multiplier": 2, "price": 10000000000 },
+  { "name": "Edelstahl Alkoholtester", "referenceId": 6, "requirement": 50, "multiplier": 2, "price": 1000000000000 },
+
+  { "name": "Einfache Motivation", "referenceId": 7, "requirement": 1, "multiplier": 2, "price": 3300000000 },
+  { "name": "Ausgeprägte Motivation", "referenceId": 7, "requirement": 5, "multiplier": 2, "price": 16500000000 },
+  { "name": "Grosse Motivation", "referenceId": 7, "requirement": 25, "multiplier": 2, "price": 165000000000 },
+  {
+    "name": "Grösste Motivation des Lebens",
+    "referenceId": 7,
+    "requirement": 50,
+    "multiplier": 2,
+    "price": 16500000000000
+  },
+  { "name": "Regenmütze", "referenceId": 8, "requirement": 1, "multiplier": 2, "price": 51000000000 },
+  { "name": "Schirmmütze", "referenceId": 8, "requirement": 5, "multiplier": 2, "price": 255000000000 },
+  {
+    "name": "Metal-Band-Fan-Merch-Mütze",
+    "referenceId": 8,
+    "requirement": 25,
+    "multiplier": 2,
+    "price": 2550000000000
+  },
+  { "name": "Deez Nuts Cap", "referenceId": 8, "requirement": 50, "multiplier": 2, "price": 255000000000000 },
+
+  { "name": "Taschentücher", "referenceId": 9, "requirement": 1, "multiplier": 2, "price": 750000000000 },
+  { "name": "Mehrlagige Taschentücher", "referenceId": 9, "requirement": 5, "multiplier": 2, "price": 3750000000000 },
+  {
+    "name": "Taschentücher mit Ätherischen Ölen",
+    "referenceId": 9,
+    "requirement": 25,
+    "multiplier": 2,
+    "price": 37500000000000
+  },
+  {
+    "name": "Taschentücher mit Flieder Flavour",
+    "referenceId": 9,
+    "requirement": 50,
+    "multiplier": 2,
+    "price": 3750000000000000
+  },
+
+  { "name": "Alkoholfreies Bier", "referenceId": 10, "requirement": 1, "multiplier": 2, "price": 10000000000000 },
+  { "name": "Alkoholfreier Wein", "referenceId": 10, "requirement": 5, "multiplier": 2, "price": 50000000000000 },
+  { "name": "Alkoholfreier Vodka", "referenceId": 10, "requirement": 25, "multiplier": 2, "price": 500000000000000 },
+  {
+    "name": "Alkoholfreier Alkohol",
+    "referenceId": 10,
+    "requirement": 50,
+    "multiplier": 2,
+    "price": 50000000000000000
+  },
+
+  {
+    "name": "Ein kleines Stück Zwiebel",
+    "referenceId": 11,
+    "requirement": 1,
+    "multiplier": 2,
+    "price": 140000000000000
+  },
+  {
+    "name": "Ein Taschenbrot gefüllt mit Zwiebel",
+    "referenceId": 11,
+    "requirement": 5,
+    "multiplier": 2,
+    "price": 700000000000000
+  },
+  { "name": "Ein Berg von Zwiebeln", "referenceId": 11, "requirement": 25, "multiplier": 2, "price": 7000000000000000 },
+  {
+    "name": "Eine Schiffsladung Zwiebeln",
+    "referenceId": 11,
+    "requirement": 50,
+    "multiplier": 2,
+    "price": 700000000000000000
+  },
+
+  {
+    "name": "Diablo 3 - Standart Edition",
+    "referenceId": 12,
+    "requirement": 1,
+    "multiplier": 2,
+    "price": 1700000000000000
+  },
+  {
+    "name": "Diablo 3 - GotY Edition",
+    "referenceId": 12,
+    "requirement": 5,
+    "multiplier": 2,
+    "price": 8500000000000000
+  },
+  {
+    "name": "Diablo 3 - Remastered GotY Edition",
+    "referenceId": 12,
+    "requirement": 25,
+    "multiplier": 2,
+    "price": 85000000000000000
+  },
+  { "name": "Diablo Mobile", "referenceId": 12, "requirement": 50, "multiplier": 2, "price": 8500000000000000000 },
+
+  { "name": "CBD Vaporizer", "referenceId": 13, "requirement": 1, "multiplier": 2, "price": 21000000000000000 },
+  { "name": "CBD Tabletten", "referenceId": 13, "requirement": 5, "multiplier": 2, "price": 105000000000000000 },
+  {
+    "name": "CBD Pulver zum Schnupfen",
+    "referenceId": 13,
+    "requirement": 25,
+    "multiplier": 2,
+    "price": 1050000000000000000
+  },
+  {
+    "name": "Flüssiges CBD inkl. Spritze",
+    "referenceId": 13,
+    "requirement": 50,
+    "multiplier": 2,
+    "price": 105000000000000000000
+  },
+
+  {
+    "name": "Anti Agressionstabletten",
+    "referenceId": 14,
+    "requirement": 1,
+    "multiplier": 2,
+    "price": 260000000000000000
+  },
+  {
+    "name": "Extra Agressionstabletten",
+    "referenceId": 14,
+    "requirement": 5,
+    "multiplier": 2,
+    "price": 1300000000000000000
+  },
+  { "name": "Stimmungstherapie", "referenceId": 14, "requirement": 25, "multiplier": 2, "price": 13000000000000000000 },
+  { "name": "Extra extra Agressionstabletten", "referenceId": 14, "requirement": 50, "multiplier": 2, "price": 1.3e21 },
+
+  {
+    "name": "Endloser Kelch (für Bier)",
+    "referenceId": 15,
+    "requirement": 1,
+    "multiplier": 2,
+    "price": 3100000000000000000
+  },
+  {
+    "name": "Wasser zu Bier verwandeln",
+    "referenceId": 15,
+    "requirement": 5,
+    "multiplier": 2,
+    "price": 15500000000000000000
+  },
+  {
+    "name": "Saufgelage im Olymp",
+    "referenceId": 15,
+    "requirement": 25,
+    "multiplier": 2,
+    "price": 155000000000000000000
+  },
+  { "name": "Deus Vult", "referenceId": 15, "requirement": 50, "multiplier": 2, "price": 1.55e22 },
+
+  {
+    "name": "Einberufung des Vorstandes",
+    "referenceId": 16,
+    "requirement": 1,
+    "multiplier": 2,
+    "price": 710000000000000000000
+  },
+  { "name": "Eintragung im Vereinsregister", "referenceId": 16, "requirement": 5, "multiplier": 2, "price": 3.55e21 },
+  { "name": "Als Glaube anerkennen lassen", "referenceId": 16, "requirement": 25, "multiplier": 2, "price": 3.55e22 },
+  { "name": "Dystopische Weltherrschaft", "referenceId": 16, "requirement": 50, "multiplier": 2, "price": 3.55e24 }
+]

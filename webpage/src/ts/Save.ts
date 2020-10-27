@@ -31,7 +31,9 @@ class Save {
 
       if (data["upgrades"]) {
         this.game.upgrades.forEach((upgrade, index) => {
-          upgrade.bought = data["upgrades"][index].bought;
+          if (data["upgrades"][index]) {
+            upgrade.bought = data["upgrades"][index].bought;
+          }
         });
       }
     }

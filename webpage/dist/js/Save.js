@@ -24,7 +24,9 @@ var Save = /** @class */ (function () {
             this.game.score = parseInt(data_1["score"]);
             if (data_1["upgrades"]) {
                 this.game.upgrades.forEach(function (upgrade, index) {
-                    upgrade.bought = data_1["upgrades"][index].bought;
+                    if (data_1["upgrades"][index]) {
+                        upgrade.bought = data_1["upgrades"][index].bought;
+                    }
                 });
             }
         }

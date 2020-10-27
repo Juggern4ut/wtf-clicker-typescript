@@ -7,7 +7,9 @@ class Score {
   }
 
   updateScore(score, scorePerSecond) {
-    this.scoreElement.innerHTML = window["numberWithCommas"](score.toFixed(2));
-    this.scorePerSecondsElement.innerHTML = window["numberWithCommas"](scorePerSecond.toFixed(2));
+    const afterScoreComma = score < 1000 ? 2 : 0;
+    const afterScorePerSecondComma = scorePerSecond < 1000 ? 2 : 0;
+    this.scoreElement.innerHTML = window["numberWithCommas"](score.toFixed(afterScoreComma));
+    this.scorePerSecondsElement.innerHTML = window["numberWithCommas"](scorePerSecond.toFixed(afterScorePerSecondComma));
   }
 }
