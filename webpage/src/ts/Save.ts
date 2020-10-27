@@ -38,4 +38,9 @@ class Save {
       }
     }
   }
+
+  reset() {
+    localStorage.removeItem("WtfClickerGame2");
+    window.location.reload();
+  }
 }

@@ -90,6 +90,12 @@ class Game {
       });
   }
 
+  reset(){
+    if(confirm("Wirklich den gesamten Fortschritt löschen?")){
+      this.save.reset();
+    }
+  }
+
   step() {
     let difference = 1;
     if (this.lastUpdate && Date.now() - this.lastUpdate > 1000) {

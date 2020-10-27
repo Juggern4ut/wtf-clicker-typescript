@@ -76,6 +76,11 @@ var Game = /** @class */ (function () {
             _this.save.load();
         });
     };
+    Game.prototype.reset = function () {
+        if (confirm("Wirklich den gesamten Fortschritt löschen?")) {
+            this.save.reset();
+        }
+    };
     Game.prototype.step = function () {
         var _this = this;
         var difference = 1;

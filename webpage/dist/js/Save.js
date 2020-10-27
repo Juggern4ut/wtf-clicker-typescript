@@ -31,5 +31,9 @@ var Save = /** @class */ (function () {
             }
         }
     };
+    Save.prototype.reset = function () {
+        localStorage.removeItem("WtfClickerGame2");
+        window.location.reload();
+    };
     return Save;
 }());
