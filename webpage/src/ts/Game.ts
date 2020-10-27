@@ -80,8 +80,8 @@ class Game {
             upgrade.dom.onclick = () => {
               if (this.score >= upgrade.price) {
                 upgrade.buy();
-                this.save.save();
                 this.score -= upgrade.price;
+                this.save.save();
               }
             };
           }

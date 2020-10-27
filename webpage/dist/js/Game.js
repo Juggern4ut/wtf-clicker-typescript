@@ -67,8 +67,8 @@ var Game = /** @class */ (function () {
                     upgrade.dom.onclick = function () {
                         if (_this.score >= upgrade.price) {
                             upgrade.buy();
-                            _this.save.save();
                             _this.score -= upgrade.price;
+                            _this.save.save();
                         }
                     };
                 }
