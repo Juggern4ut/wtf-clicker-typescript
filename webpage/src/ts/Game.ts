@@ -18,21 +18,6 @@ class Game {
     this.instantiateUpgrades();
 
     this.save = new Save(this);
-    this.save.load();
-
-    setTimeout(() => {
-      this.upgrades.forEach((upgrade) => {
-        upgrade.update();
-        if (upgrade.dom) {
-          upgrade.dom.onclick = () => {
-            if (this.score >= upgrade.price) {
-              upgrade.buy();
-              this.score -= upgrade.price;
-            }
-          };
-        }
-      });
-    }, 1000);
 
     this.saveInterval = setInterval(() => {
       this.save.save();
@@ -89,6 +74,19 @@ class Game {
           const tmp = new Upgrade(up.name, this.members[up.referenceId], up.requirement, up.multiplier, up.price);
           this.upgrades.push(tmp);
         });
+
+        this.upgrades.forEach((upgrade) => {
+          if (upgrade.dom) {
+            upgrade.dom.onclick = () => {
+              if (this.score >= upgrade.price) {
+                upgrade.buy();
+                this.save.save();
+                this.score -= upgrade.price;
+              }
+            };
+          }
+        });
+        this.save.load();
       });
   }
 

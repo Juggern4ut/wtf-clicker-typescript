@@ -37,6 +37,10 @@ var Upgrade = /** @class */ (function () {
         }
     };
     Upgrade.prototype.updateVisibility = function () {
+        if (this.bought) {
+            this.dom.classList.add("hidden");
+            return;
+        }
         if (this.requirement <= this.reference.amount) {
             this.dom.classList.remove("hidden");
         }
@@ -48,17 +52,7 @@ var Upgrade = /** @class */ (function () {
         if (!this.bought) {
             this.bought = true;
             this.reference.multiplier *= this.multiplier;
-            this.update();
             this.reference.updatePower();
-            return this.price;
-        }
-        return 0;
-    };
-    Upgrade.prototype.update = function () {
-        if (this.dom) {
-            if (this.bought) {
-                this.dom.remove();
-            }
         }
     };
     return Upgrade;

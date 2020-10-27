@@ -42,7 +42,7 @@ class Upgrade {
 
   updateBuyability(score) {
     if (!this.dom) return false;
-    
+
     if (score > this.price) {
       this.dom.classList.remove("disabled");
     } else {
@@ -50,10 +50,15 @@ class Upgrade {
     }
   }
 
-  updateVisibility(){
-    if(this.requirement <= this.reference.amount){
+  updateVisibility() {
+    if (this.bought) {
+      this.dom.classList.add("hidden");
+      return;
+    }
+
+    if (this.requirement <= this.reference.amount) {
       this.dom.classList.remove("hidden");
-    }else{
+    } else {
       this.dom.classList.add("hidden");
     }
   }
@@ -62,18 +67,7 @@ class Upgrade {
     if (!this.bought) {
       this.bought = true;
       this.reference.multiplier *= this.multiplier;
-      this.update();
       this.reference.updatePower();
-      return this.price;
-    }
-    return 0;
-  }
-
-  update() {
-    if (this.dom) {
-      if (this.bought) {
-        this.dom.remove();
-      }
     }
   }
 }

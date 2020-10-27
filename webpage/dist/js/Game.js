@@ -10,20 +10,6 @@ var Game = /** @class */ (function () {
         this.instantiateMembers();
         this.instantiateUpgrades();
         this.save = new Save(this);
-        this.save.load();
-        setTimeout(function () {
-            _this.upgrades.forEach(function (upgrade) {
-                upgrade.update();
-                if (upgrade.dom) {
-                    upgrade.dom.onclick = function () {
-                        if (_this.score >= upgrade.price) {
-                            upgrade.buy();
-                            _this.score -= upgrade.price;
-                        }
-                    };
-                }
-            });
-        }, 1000);
         this.saveInterval = setInterval(function () {
             _this.save.save();
         }, 5000);
@@ -76,6 +62,18 @@ var Game = /** @class */ (function () {
                 var tmp = new Upgrade(up.name, _this.members[up.referenceId], up.requirement, up.multiplier, up.price);
                 _this.upgrades.push(tmp);
             });
+            _this.upgrades.forEach(function (upgrade) {
+                if (upgrade.dom) {
+                    upgrade.dom.onclick = function () {
+                        if (_this.score >= upgrade.price) {
+                            upgrade.buy();
+                            _this.save.save();
+                            _this.score -= upgrade.price;
+                        }
+                    };
+                }
+            });
+            _this.save.load();
         });
     };
     Game.prototype.step = function () {
