@@ -102,10 +102,16 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.step = function () {
         var _this = this;
+        var difference = 1;
+        if (this.lastUpdate && Date.now() - this.lastUpdate > 1000) {
+            difference = (Date.now() - this.lastUpdate) / 100;
+        }
+        this.lastUpdate = Date.now();
         var increase = 0;
         this.members.forEach(function (m) {
             increase += m.getIncrease();
         });
+        increase *= difference;
         this.members.forEach(function (m) {
             m.updateBuyability(_this.score);
         });

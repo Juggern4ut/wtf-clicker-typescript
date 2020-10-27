@@ -8,6 +8,7 @@ class Game {
   save: Save;
   saveInterval: NodeJS.Timeout;
   clicker: Clicker;
+  lastUpdate: number;
 
   constructor() {
     this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
@@ -122,10 +123,19 @@ class Game {
   }
 
   step() {
+    let difference = 1;
+    if (this.lastUpdate && Date.now() - this.lastUpdate > 1000) {
+      difference = (Date.now() - this.lastUpdate) / 100;
+    }
+
+    this.lastUpdate = Date.now();
     let increase = 0;
+
     this.members.forEach((m) => {
       increase += m.getIncrease();
     });
+
+    increase *= difference;
 
     this.members.forEach((m) => {
       m.updateBuyability(this.score);
