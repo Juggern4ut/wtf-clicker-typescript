@@ -29,18 +29,18 @@ var Game = /** @class */ (function () {
         this.members.push(new Member("Göttlicher Patrik", 150 * billion, 310 * quadrillion, "patrik_2.png"));
         this.members.push(new Member("W T F", 1.1 * trillion, 71 * quintillion, "wtf.png"));
         this.save = new Save(this);
-        this.save.load(this.members);
+        this.save.load();
         this.members.forEach(function (m) {
             m.dom.container.onclick = function () {
                 if (m.getPrice() < _this.score) {
                     _this.score -= m.getPrice();
                     m.buy();
-                    _this.save.save(_this.members, _this.score);
+                    _this.save.save();
                 }
             };
         });
         this.saveInterval = setInterval(function () {
-            _this.save.save(_this.members, _this.score);
+            _this.save.save();
         }, 5000);
         this.stepInterval = setInterval(function () {
             _this.step();

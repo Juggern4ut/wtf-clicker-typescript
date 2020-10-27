@@ -6,10 +6,10 @@ var Clicker = /** @class */ (function () {
         container.classList.add("clicker");
         var image = document.createElement("img");
         image.classList.add("Bottle");
+        image.src = "/img/bottle.png";
         var cap = document.createElement("img");
         cap.classList.add("Cap");
         cap.src = "/img/cap.png";
-        image.src = "/img/bottle.png";
         container.append(image);
         document.querySelector("body").prepend(container);
         image.onclick = function () {

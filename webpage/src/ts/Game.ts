@@ -37,20 +37,20 @@ class Game {
     this.members.push(new Member("W T F", 1.1 * trillion, 71 * quintillion, "wtf.png"));
 
     this.save = new Save(this);
-    this.save.load(this.members);
+    this.save.load();
 
     this.members.forEach((m) => {
       m.dom.container.onclick = () => {
         if (m.getPrice() < this.score) {
           this.score -= m.getPrice();
           m.buy();
-          this.save.save(this.members, this.score);
+          this.save.save();
         }
       };
     });
 
     this.saveInterval = setInterval(() => {
-      this.save.save(this.members, this.score);
+      this.save.save();
     }, 5000);
 
     this.stepInterval = setInterval(() => {

@@ -1,30 +1,31 @@
 class Save {
-  saveData: Object = {};
   game: Game;
 
   constructor(game: Game) {
     this.game = game;
   }
 
-  save(members: Member[], score) {
-    this.saveData["members"] = members;
-    this.saveData["score"] = score;
-    document.cookie = "data=" + JSON.stringify(this.saveData);
+  save() {
+    const saveData = {};
+    saveData["members"] = this.game.members;
+    saveData["score"] = this.game.score;
+    
+    const saveString = btoa(JSON.stringify(saveData));
+    localStorage.setItem("WtfClickerGame", saveString);
   }
 
-  load(members: Member[]) {
-    if (document.cookie) {
-      let data = document.cookie.replace("data=", "");
-      data = JSON.parse(data);
+  load() {
+    const localStorageData = localStorage.getItem("WtfClickerGame");
 
-      members.forEach((member, index) => {
+    if (localStorageData) {
+      const data = JSON.parse(atob(localStorageData));
+      this.game.members.forEach((member, index) => {
         if (data["members"][index]) {
-          member.amount = data["members"][index].amount;
+          member.amount = data["members"][index]["amount"];
           member.update();
         }
       });
-
-      this.game.score = data["score"];
+      this.game.score = parseInt(data["score"]);
     }
   }
 }
