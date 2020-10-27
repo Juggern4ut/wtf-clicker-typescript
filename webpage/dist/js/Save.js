@@ -23,10 +23,9 @@ var Save = /** @class */ (function () {
             });
             this.game.score = parseInt(data_1["score"]);
             if (data_1["upgrades"]) {
-                this.game.upgrades.forEach(function (upgrade, index) {
-                    if (data_1["upgrades"][index]) {
-                        upgrade.bought = data_1["upgrades"][index].bought;
-                    }
+                this.game.upgrades.forEach(function (upgrade) {
+                    var save = data_1["upgrades"].find(function (u) { return u.id === upgrade.id; });
+                    upgrade.bought = save.bought;
                 });
             }
         }

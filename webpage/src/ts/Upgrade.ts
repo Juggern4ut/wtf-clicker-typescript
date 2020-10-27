@@ -7,13 +7,15 @@ class Upgrade {
   container: HTMLElement;
   bought: boolean = false;
   dom: HTMLElement = null;
+  id: number;
 
-  constructor(title: string, reference: Member, requirement: number, multiplier: number, price: number) {
+  constructor(title: string, reference: Member, requirement: number, multiplier: number, price: number, id: number) {
     this.title = title;
     this.reference = reference;
     this.requirement = requirement;
     this.multiplier = multiplier;
     this.price = price;
+    this.id = id;
     this.container = document.querySelector(".upgrades");
     this.createDom();
   }

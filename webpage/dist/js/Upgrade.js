@@ -1,5 +1,5 @@
 var Upgrade = /** @class */ (function () {
-    function Upgrade(title, reference, requirement, multiplier, price) {
+    function Upgrade(title, reference, requirement, multiplier, price, id) {
         this.bought = false;
         this.dom = null;
         this.title = title;
@@ -7,6 +7,7 @@ var Upgrade = /** @class */ (function () {
         this.requirement = requirement;
         this.multiplier = multiplier;
         this.price = price;
+        this.id = id;
         this.container = document.querySelector(".upgrades");
         this.createDom();
     }

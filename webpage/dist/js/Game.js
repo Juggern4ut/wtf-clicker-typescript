@@ -59,7 +59,7 @@ var Game = /** @class */ (function () {
         })
             .then(function (res) {
             res.forEach(function (up) {
-                var tmp = new Upgrade(up.name, _this.members[up.referenceId], up.requirement, up.multiplier, up.price);
+                var tmp = new Upgrade(up.name, _this.members[up.referenceId], up.requirement, up.multiplier, up.price, up.id);
                 _this.upgrades.push(tmp);
             });
             _this.upgrades.forEach(function (upgrade) {

@@ -71,7 +71,7 @@ class Game {
       })
       .then((res) => {
         res.forEach((up) => {
-          const tmp = new Upgrade(up.name, this.members[up.referenceId], up.requirement, up.multiplier, up.price);
+          const tmp = new Upgrade(up.name, this.members[up.referenceId], up.requirement, up.multiplier, up.price, up.id);
           this.upgrades.push(tmp);
         });
 
@@ -90,8 +90,8 @@ class Game {
       });
   }
 
-  reset(){
-    if(confirm("Wirklich den gesamten Fortschritt löschen?")){
+  reset() {
+    if (confirm("Wirklich den gesamten Fortschritt löschen?")) {
       this.save.reset();
     }
   }

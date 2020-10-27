@@ -30,10 +30,9 @@ class Save {
       this.game.score = parseInt(data["score"]);
 
       if (data["upgrades"]) {
-        this.game.upgrades.forEach((upgrade, index) => {
-          if (data["upgrades"][index]) {
-            upgrade.bought = data["upgrades"][index].bought;
-          }
+        this.game.upgrades.forEach((upgrade) => {
+          let save = data["upgrades"].find((u) => u.id === upgrade.id);
+          upgrade.bought = save.bought;
         });
       }
     }
