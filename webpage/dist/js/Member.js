@@ -1,5 +1,6 @@
 var Member = /** @class */ (function () {
     function Member(name, basePower, basePrice, image) {
+        this.multiplier = 1;
         this.dom = {
             container: null,
             title: null,
@@ -7,7 +8,8 @@ var Member = /** @class */ (function () {
             amount: null,
             price: null,
             imageContainer: null,
-            infoContainer: null
+            infoContainer: null,
+            power: null
         };
         this.numberWithCommas = function (number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
@@ -32,6 +34,8 @@ var Member = /** @class */ (function () {
         this.dom.title.classList.add("members__title");
         this.dom.amount = document.createElement("p");
         this.dom.amount.classList.add("members__amount");
+        this.dom.power = document.createElement("p");
+        this.dom.power.classList.add("members__power");
         this.dom.title.innerHTML = this.name;
         this.dom.amount.innerHTML = "" + this.amount;
         this.dom.container = document.createElement("article");
@@ -42,7 +46,9 @@ var Member = /** @class */ (function () {
         this.dom.imageContainer.append(this.dom.image);
         this.dom.infoContainer.append(this.dom.title);
         this.dom.infoContainer.append(this.dom.amount);
+        this.dom.infoContainer.append(this.dom.power);
         this.dom.infoContainer.append(this.dom.price);
+        this.updatePower();
         this.dom.container.append(this.dom.imageContainer);
         this.dom.container.append(this.dom.infoContainer);
     };
@@ -69,14 +75,18 @@ var Member = /** @class */ (function () {
             this.dom.container.classList.remove("members__disabled");
         }
     };
+    Member.prototype.updatePower = function () {
+        this.dom.power.innerHTML = window["numberWithCommas"]((this.basePower * this.multiplier).toFixed(2)) + " p/s";
+    };
     Member.prototype.getIncrease = function () {
-        return this.basePower * this.amount;
+        return this.basePower * this.amount * this.multiplier;
     };
     Member.prototype.buy = function () {
         this.amount++;
         this.update();
     };
     Member.prototype.update = function () {
+        this.updatePower();
         this.updateAmount();
         this.updatePrice();
     };

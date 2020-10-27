@@ -9,7 +9,8 @@ class Save {
     const saveData = {};
     saveData["members"] = this.game.members;
     saveData["score"] = this.game.score;
-    
+    saveData["upgrades"] = this.game.upgrades;
+
     const saveString = btoa(JSON.stringify(saveData));
     localStorage.setItem("WtfClickerGame", saveString);
   }
@@ -22,10 +23,17 @@ class Save {
       this.game.members.forEach((member, index) => {
         if (data["members"][index]) {
           member.amount = data["members"][index]["amount"];
+          member.multiplier = data["members"][index]["multiplier"];
           member.update();
         }
       });
       this.game.score = parseInt(data["score"]);
+
+      if (data["upgrades"]) {
+        this.game.upgrades.forEach((upgrade, index) => {
+          upgrade.bought = data["upgrades"][index].bought;
+        });
+      }
     }
   }
 }

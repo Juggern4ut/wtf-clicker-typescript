@@ -6,6 +6,7 @@ interface Dom {
   price: HTMLElement;
   imageContainer: HTMLElement;
   infoContainer: HTMLElement;
+  power: HTMLElement;
 }
 
 class Member {
@@ -15,6 +16,7 @@ class Member {
   basePrice: number;
   nextPrice: number;
   container: HTMLElement;
+  multiplier: number = 1;
   image: HTMLImageElement;
   dom: Dom = {
     container: null,
@@ -24,6 +26,7 @@ class Member {
     price: null,
     imageContainer: null,
     infoContainer: null,
+    power: null,
   };
 
   constructor(name: string, basePower: number, basePrice: number, image: string) {
@@ -32,7 +35,7 @@ class Member {
     this.name = name;
     this.basePrice = basePrice;
 
-    this.dom.image = document.createElement("img") as HTMLImageElement;
+    this.dom.image = document.createElement("img");
     this.dom.image.src = "/img/members/" + image;
     this.dom.image.classList.add("members__image");
 
@@ -58,6 +61,9 @@ class Member {
     this.dom.amount = document.createElement("p");
     this.dom.amount.classList.add("members__amount");
 
+    this.dom.power = document.createElement("p");
+    this.dom.power.classList.add("members__power");
+
     this.dom.title.innerHTML = this.name;
     this.dom.amount.innerHTML = "" + this.amount;
 
@@ -72,7 +78,9 @@ class Member {
 
     this.dom.infoContainer.append(this.dom.title);
     this.dom.infoContainer.append(this.dom.amount);
+    this.dom.infoContainer.append(this.dom.power);
     this.dom.infoContainer.append(this.dom.price);
+    this.updatePower();
 
     this.dom.container.append(this.dom.imageContainer);
     this.dom.container.append(this.dom.infoContainer);
@@ -105,8 +113,12 @@ class Member {
     }
   }
 
+  updatePower() {
+    this.dom.power.innerHTML = window["numberWithCommas"]((this.basePower * this.multiplier).toFixed(2)) + " p/s";
+  }
+
   getIncrease(): number {
-    return this.basePower * this.amount;
+    return this.basePower * this.amount * this.multiplier;
   }
 
   buy() {
@@ -115,6 +127,7 @@ class Member {
   }
 
   update() {
+    this.updatePower();
     this.updateAmount();
     this.updatePrice();
   }

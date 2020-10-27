@@ -1,0 +1,14 @@
+.upgrades {
+  display: flex;
+  &__upgrade {
+    color: #444;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 5px;
+    background-color: #fff;
+    cursor: pointer;
+    &:hover{
+      background-color: #dedede;
+    }
+  }
+}

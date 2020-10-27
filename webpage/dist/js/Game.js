@@ -3,9 +3,34 @@ var Game = /** @class */ (function () {
         var _this = this;
         this.intervalSpeed = 100;
         this.members = [];
+        this.upgrades = [];
         this.score = 0;
         this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
         this.clicker = new Clicker(this);
+        this.instantiateMembers();
+        this.instantiateUpgrades();
+        this.save = new Save(this);
+        this.save.load();
+        this.upgrades.forEach(function (upgrade) {
+            upgrade.update();
+            if (upgrade.dom) {
+                upgrade.dom.onclick = function () {
+                    if (_this.score >= upgrade.price) {
+                        upgrade.buy();
+                        _this.score -= upgrade.price;
+                    }
+                };
+            }
+        });
+        this.saveInterval = setInterval(function () {
+            _this.save.save();
+        }, 5000);
+        this.stepInterval = setInterval(function () {
+            _this.step();
+        }, this.intervalSpeed);
+    }
+    Game.prototype.instantiateMembers = function () {
+        var _this = this;
         var million = 1000000;
         var billion = 1000000000;
         var trillion = 1000000000000;
@@ -28,24 +53,53 @@ var Game = /** @class */ (function () {
         this.members.push(new Member("Wütender Ö", 21 * billion, 26 * quadrillion, "philip_2.png"));
         this.members.push(new Member("Göttlicher Patrik", 150 * billion, 310 * quadrillion, "patrik_2.png"));
         this.members.push(new Member("W T F", 1.1 * trillion, 71 * quintillion, "wtf.png"));
-        this.save = new Save(this);
-        this.save.load();
         this.members.forEach(function (m) {
             m.dom.container.onclick = function () {
                 if (m.getPrice() < _this.score) {
                     _this.score -= m.getPrice();
                     m.buy();
+                    _this.upgrades.forEach(function (upgrade) {
+                        upgrade.update();
+                        if (upgrade.dom) {
+                            upgrade.dom.onclick = function () {
+                                if (_this.score >= upgrade.price) {
+                                    upgrade.buy();
+                                    _this.score -= upgrade.price;
+                                }
+                            };
+                        }
+                    });
                     _this.save.save();
                 }
             };
         });
-        this.saveInterval = setInterval(function () {
-            _this.save.save();
-        }, 5000);
-        this.stepInterval = setInterval(function () {
-            _this.step();
-        }, this.intervalSpeed);
-    }
+    };
+    Game.prototype.instantiateUpgrades = function () {
+        this.upgrades.push(new Upgrade("Stärkere Lesebrille", this.members[0], 1, 2, 100));
+        this.upgrades.push(new Upgrade("Goldene Lesebrille", this.members[0], 1, 2, 500));
+        this.upgrades.push(new Upgrade("Aerodynamische Lesebrille", this.members[0], 10, 2, 10000));
+        this.upgrades.push(new Upgrade("Doppelt verglaste Lesebrille", this.members[0], 25, 2, 100000));
+        this.upgrades.push(new Upgrade("Milde Chips", this.members[1], 1, 2, 1000));
+        this.upgrades.push(new Upgrade("Geschmackvolle Chips", this.members[1], 5, 2, 5000));
+        this.upgrades.push(new Upgrade("Salzige Chips", this.members[1], 25, 2, 50000));
+        this.upgrades.push(new Upgrade("Chili Chips", this.members[1], 50, 2, 5000000));
+        this.upgrades.push(new Upgrade("Trainingshosen", this.members[2], 1, 2, 11000));
+        this.upgrades.push(new Upgrade("Saubere Trainingshosen", this.members[2], 5, 2, 55000));
+        this.upgrades.push(new Upgrade("Flauschige Trainingshosen", this.members[2], 25, 2, 550000));
+        this.upgrades.push(new Upgrade("Flauschige Trainingshosen", this.members[2], 50, 2, 55000000));
+        this.upgrades.push(new Upgrade("Wasserkocher", this.members[3], 1, 2, 120000));
+        this.upgrades.push(new Upgrade("Gusseiserner Wasserkocher", this.members[3], 5, 2, 600000));
+        this.upgrades.push(new Upgrade("Turboschneller Wasserkocher", this.members[3], 25, 2, 6000000));
+        this.upgrades.push(new Upgrade("Dampfbetriebener Wasserkocher", this.members[3], 50, 2, 600000000));
+        this.upgrades.push(new Upgrade("Verstärkter Flaschenöffner", this.members[4], 1, 2, 1300000));
+        this.upgrades.push(new Upgrade("Elektronischer Flaschenöffner", this.members[4], 5, 2, 6500000));
+        this.upgrades.push(new Upgrade("Mehrfach-Flaschenöffner", this.members[4], 25, 2, 65000000));
+        this.upgrades.push(new Upgrade("Flaschenöffner Schmierflüssigkeit", this.members[4], 50, 2, 65000000000));
+        this.upgrades.push(new Upgrade("Seya!", this.members[5], 1, 2, 14000000));
+        this.upgrades.push(new Upgrade("Seeeeya!!", this.members[5], 5, 2, 70000000));
+        this.upgrades.push(new Upgrade("SEYAA!!!", this.members[5], 25, 2, 700000000));
+        this.upgrades.push(new Upgrade("SEEEEEYAAAA!!!!", this.members[5], 50, 2, 70000000000));
+    };
     Game.prototype.step = function () {
         var _this = this;
         var increase = 0;
