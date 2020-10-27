@@ -8,10 +8,10 @@ var Save = /** @class */ (function () {
         saveData["score"] = this.game.score;
         saveData["upgrades"] = this.game.upgrades;
         var saveString = btoa(JSON.stringify(saveData));
-        localStorage.setItem("WtfClickerGame", saveString);
+        localStorage.setItem("WtfClickerGame2", saveString);
     };
     Save.prototype.load = function () {
-        var localStorageData = localStorage.getItem("WtfClickerGame");
+        var localStorageData = localStorage.getItem("WtfClickerGame2");
         if (localStorageData) {
             var data_1 = JSON.parse(atob(localStorageData));
             this.game.members.forEach(function (member, index) {
