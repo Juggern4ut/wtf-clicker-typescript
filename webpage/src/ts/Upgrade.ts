@@ -26,7 +26,7 @@ class Upgrade {
     this.dom.classList.add("hidden");
 
     const price = document.createElement("p");
-    price.innerHTML = window["numberWithCommas"](this.price);
+    price.innerHTML = window["numberAsText"](this.price);
 
     const title = document.createElement("p");
     title.innerHTML = this.title;

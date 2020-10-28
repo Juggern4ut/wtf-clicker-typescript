@@ -16,7 +16,7 @@ var Upgrade = /** @class */ (function () {
         this.dom.classList.add("upgrades__upgrade");
         this.dom.classList.add("hidden");
         var price = document.createElement("p");
-        price.innerHTML = window["numberWithCommas"](this.price);
+        price.innerHTML = window["numberAsText"](this.price);
         var title = document.createElement("p");
         title.innerHTML = this.title;
         var effect = document.createElement("p");

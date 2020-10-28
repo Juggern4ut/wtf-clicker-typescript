@@ -13,6 +13,12 @@
   { "id": 8, "name": "Chili Chips", "referenceId": 1, "requirement": 50, "multiplier": 2, "price": 5000000 },
   { "id": 72, "name": "Chips mit reinem Pfefferextrakt", "referenceId": 1, "requirement": 100, "multiplier": 2, "price": 500000000 },
   { "id": 73, "name": "Carolina Reaper Chips", "referenceId": 1, "requirement": 150, "multiplier": 2, "price": 50000000000 },
+  { "id": 75, "name": "Chips mit Schwefelgeschmack", "referenceId": 1, "requirement": 200, "multiplier": 2, "price": 50000000000000 },
+  { "id": 76, "name": "Chips mit Feenstaub (extra Salzig)", "referenceId": 1, "requirement": 250, "multiplier": 2, "price": 50000000000000000 },
+  { "id": 77, "name": "Chipsdirektversand aus der Hölle", "referenceId": 1, "requirement": 300, "multiplier": 2, "price": 50000000000000000000 },
+  { "id": 78, "name": "Effiziente Chipskonsumationstechnik", "referenceId": 1, "requirement": 350, "multiplier": 2, "price": 50000000000000000000000 },
+  { "id": 79, "name": "Chips aus dem Äther des Weltraums", "referenceId": 1, "requirement": 400, "multiplier": 2, "price": 500000000000000000000000000 },
+  { "id": 80, "name": "Chips mit Salz aus den himmlischen Gewürzminen", "referenceId": 1, "requirement": 450, "multiplier": 2, "price": 5000000000000000000000000000000 },
 
   { "id": 9, "name": "Trainingshosen", "referenceId": 2, "requirement": 1, "multiplier": 2, "price": 11000 },
   { "id": 10, "name": "Saubere Trainingshosen", "referenceId": 2, "requirement": 5, "multiplier": 2, "price": 55000 },

@@ -102,7 +102,7 @@ class Member {
   }
 
   updatePrice() {
-    this.dom.price.innerHTML = window["numberWithCommas"](this.getPrice()) + "";
+    this.dom.price.innerHTML = window["numberAsText"](this.getPrice()) + "";
   }
 
   updateBuyability(score: number) {
@@ -114,7 +114,7 @@ class Member {
   }
 
   updatePower() {
-    this.dom.power.innerHTML = window["numberWithCommas"]((this.basePower * this.multiplier).toFixed(2)) + " p/s";
+    this.dom.power.innerHTML = window["numberAsText"]((this.basePower * this.multiplier)) + " p/s";
   }
 
   getIncrease(): number {

@@ -65,7 +65,7 @@ var Member = /** @class */ (function () {
         this.dom.amount.innerHTML = "" + this.amount;
     };
     Member.prototype.updatePrice = function () {
-        this.dom.price.innerHTML = window["numberWithCommas"](this.getPrice()) + "";
+        this.dom.price.innerHTML = window["numberAsText"](this.getPrice()) + "";
     };
     Member.prototype.updateBuyability = function (score) {
         if (this.getPrice() > score) {
@@ -76,7 +76,7 @@ var Member = /** @class */ (function () {
         }
     };
     Member.prototype.updatePower = function () {
-        this.dom.power.innerHTML = window["numberWithCommas"]((this.basePower * this.multiplier).toFixed(2)) + " p/s";
+        this.dom.power.innerHTML = window["numberAsText"]((this.basePower * this.multiplier)) + " p/s";
     };
     Member.prototype.getIncrease = function () {
         return this.basePower * this.amount * this.multiplier;
