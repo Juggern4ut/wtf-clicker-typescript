@@ -43,7 +43,7 @@ var Game = /** @class */ (function () {
         this.members.push(new Member("W T F", 1.1 * trillion, 71 * quintillion, "wtf.png"));
         this.members.forEach(function (m) {
             m.dom.container.onclick = function () {
-                if (m.getPrice() < _this.score) {
+                if (m.getPrice() <= _this.score) {
                     _this.score -= m.getPrice();
                     m.buy();
                     _this.save.save();

@@ -55,7 +55,7 @@ class Game {
 
     this.members.forEach((m) => {
       m.dom.container.onclick = () => {
-        if (m.getPrice() < this.score) {
+        if (m.getPrice() <= this.score) {
           this.score -= m.getPrice();
           m.buy();
           this.save.save();
