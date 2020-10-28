@@ -17,7 +17,7 @@ class Game {
 
     this.instantiateMembers();
 
-    const showBoughtButton = document.querySelector(".showBought");
+    const showBoughtButton = document.querySelector(".showBought") as HTMLButtonElement;
     showBoughtButton.onclick = () => {
       this.showBoughtUpgrades = !this.showBoughtUpgrades;
       showBoughtButton.innerHTML = this.showBoughtUpgrades ? "Gekaufte Upgrades ausblenden" : "Gekaufte Upgrades anzeigen";

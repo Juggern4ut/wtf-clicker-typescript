@@ -9,7 +9,7 @@
   { "id": 7, "name": "PeLo", "basePower": 44000, "basePrice": 330000000, "image": "pelo.png" },
   { "id": 8, "name": "Hosi", "basePower": 260000, "basePrice": 5100000000, "image": "pascal.png" },
   { "id": 9, "name": "Nicolas", "basePower": 1600000, "basePrice": 75000000000, "image": "nico.png" },
-  { "id": 10, "name": "Baby Ö", "basePower": 10000000, "basePrice": 1000000000000, "image": "philip.png" },
+  { "id": 10, "name": "Jan", "basePower": 10000000, "basePrice": 1000000000000, "image": "jan.png" },
   { "id": 11, "name": "Luki", "basePower": 65000000, "basePrice": 14000000000000, "image": "luki.png" },
   { "id": 12, "name": "Party Pascal", "basePower": 430000000, "basePrice": 170000000000000, "image": "pascal_2.png" },
   { "id": 13, "name": "Vape Nation Nicolas", "basePower": 2900000000, "basePrice": 2100000000000000, "image": "nico_2.png" },
