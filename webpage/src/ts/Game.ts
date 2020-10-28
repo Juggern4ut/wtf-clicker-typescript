@@ -154,6 +154,8 @@ class Game {
       try {
         JSON.parse(atob(loadState));
         this.save.load(loadState);
+        this.loadDialog.querySelector("textarea").innerHTML = "";
+        this.loadDialog.classList.remove("loadDialog__open");
       } catch (error) {
         alert("Fehler!");
       }

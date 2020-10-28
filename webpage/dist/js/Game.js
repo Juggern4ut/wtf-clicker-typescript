@@ -124,6 +124,8 @@ var Game = /** @class */ (function () {
             try {
                 JSON.parse(atob(loadState));
                 _this.save.load(loadState);
+                _this.loadDialog.querySelector("textarea").innerHTML = "";
+                _this.loadDialog.classList.remove("loadDialog__open");
             }
             catch (error) {
                 alert("Fehler!");
