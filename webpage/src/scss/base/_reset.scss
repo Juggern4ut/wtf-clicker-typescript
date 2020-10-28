@@ -1,7 +1,9 @@
 html {
   font-size: 62.5%;
+  min-height: 100vh;
   box-sizing: border-box;
-  background-color: #00867f;
+  background: #00867f;
+  background: linear-gradient(138deg, rgba(2, 0, 36, 1) 0%, rgba(5, 57, 140, 1) 20%, rgba(0, 134, 127, 1) 100%);
 }
 
 body {

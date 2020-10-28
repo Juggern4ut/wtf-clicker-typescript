@@ -1,6 +1,10 @@
 .reset {
-  border: none;
-  background-color: transparent;
-  color: red;
+  border: 0;
+  background-color: darkred;
+  color: #fff;
   margin-top: 100px;
+  margin: 100px auto 30px auto;
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
 }

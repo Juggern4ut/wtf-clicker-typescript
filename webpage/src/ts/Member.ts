@@ -6,6 +6,7 @@ interface Dom {
   price: HTMLElement;
   imageContainer: HTMLElement;
   infoContainer: HTMLElement;
+  amountContainer: HTMLElement;
   power: HTMLElement;
 }
 
@@ -28,6 +29,7 @@ class Member {
     price: null,
     imageContainer: null,
     infoContainer: null,
+    amountContainer: null,
     power: null,
   };
 
@@ -62,6 +64,9 @@ class Member {
     this.dom.infoContainer = document.createElement("div");
     this.dom.infoContainer.classList.add("members__infoContainer");
 
+    this.dom.amountContainer = document.createElement("div");
+    this.dom.amountContainer.classList.add("members__amountContainer");
+
     this.dom.title = document.createElement("p");
     this.dom.title.classList.add("members__title");
 
@@ -84,13 +89,14 @@ class Member {
     this.dom.imageContainer.append(this.dom.image);
 
     this.dom.infoContainer.append(this.dom.title);
-    this.dom.infoContainer.append(this.dom.amount);
+    this.dom.amountContainer.append(this.dom.amount);
     this.dom.infoContainer.append(this.dom.power);
     this.dom.infoContainer.append(this.dom.price);
     this.updatePower();
 
     this.dom.container.append(this.dom.imageContainer);
     this.dom.container.append(this.dom.infoContainer);
+    this.dom.container.append(this.dom.amountContainer);
   }
 
   applyToDom() {
@@ -140,7 +146,6 @@ class Member {
 
   buy() {
     this.amount++;
-    this.update();
   }
 
   updateUpgrades(score: number) {

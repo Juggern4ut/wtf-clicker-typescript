@@ -10,6 +10,7 @@ var Member = /** @class */ (function () {
             price: null,
             imageContainer: null,
             infoContainer: null,
+            amountContainer: null,
             power: null
         };
         this.numberWithCommas = function (number) {
@@ -35,6 +36,8 @@ var Member = /** @class */ (function () {
         this.dom.imageContainer.classList.add("members__imageContainer");
         this.dom.infoContainer = document.createElement("div");
         this.dom.infoContainer.classList.add("members__infoContainer");
+        this.dom.amountContainer = document.createElement("div");
+        this.dom.amountContainer.classList.add("members__amountContainer");
         this.dom.title = document.createElement("p");
         this.dom.title.classList.add("members__title");
         this.dom.amount = document.createElement("p");
@@ -50,12 +53,13 @@ var Member = /** @class */ (function () {
         this.updatePrice();
         this.dom.imageContainer.append(this.dom.image);
         this.dom.infoContainer.append(this.dom.title);
-        this.dom.infoContainer.append(this.dom.amount);
+        this.dom.amountContainer.append(this.dom.amount);
         this.dom.infoContainer.append(this.dom.power);
         this.dom.infoContainer.append(this.dom.price);
         this.updatePower();
         this.dom.container.append(this.dom.imageContainer);
         this.dom.container.append(this.dom.infoContainer);
+        this.dom.container.append(this.dom.amountContainer);
     };
     Member.prototype.applyToDom = function () {
         this.container.append(this.dom.container);
@@ -97,7 +101,6 @@ var Member = /** @class */ (function () {
     };
     Member.prototype.buy = function () {
         this.amount++;
-        this.update();
     };
     Member.prototype.updateUpgrades = function (score) {
         var _this = this;
