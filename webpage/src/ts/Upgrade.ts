@@ -1,6 +1,5 @@
 class Upgrade {
   title: string;
-  reference: Member;
   requirement: number;
   multiplier: number;
   price: number;
@@ -8,12 +7,13 @@ class Upgrade {
   bought: boolean = false;
   dom: HTMLElement = null;
   id: number;
+  description: string;
 
-  constructor(title: string, reference: Member, requirement: number, multiplier: number, price: number, id: number) {
+  constructor(title: string, description: string, requirement: number, multiplier: number, price: number, id: number) {
     this.title = title;
-    this.reference = reference;
     this.requirement = requirement;
     this.multiplier = multiplier;
+    this.description = description;
     this.price = price;
     this.id = id;
     this.container = document.querySelector(".upgrades");
@@ -33,7 +33,7 @@ class Upgrade {
 
     const effect = document.createElement("p");
     effect.style.fontSize = 12 + "px";
-    effect.innerHTML = this.reference.name + " wird " + this.multiplier + "x effektiver!<br /><br />";
+    effect.innerHTML = this.description + "<br /><br />";
 
     this.dom.append(title);
     this.dom.append(effect);
@@ -52,24 +52,16 @@ class Upgrade {
     }
   }
 
-  updateVisibility() {
+  updateVisibility(amount) {
     if (this.bought) {
       this.dom.classList.add("hidden");
       return;
     }
 
-    if (this.requirement <= this.reference.amount) {
+    if (this.requirement <= amount) {
       this.dom.classList.remove("hidden");
     } else {
       this.dom.classList.add("hidden");
-    }
-  }
-
-  buy() {
-    if (!this.bought) {
-      this.bought = true;
-      this.reference.multiplier *= this.multiplier;
-      this.reference.updatePower();
     }
   }
 }

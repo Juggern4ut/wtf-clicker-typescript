@@ -1,11 +1,11 @@
 var Upgrade = /** @class */ (function () {
-    function Upgrade(title, reference, requirement, multiplier, price, id) {
+    function Upgrade(title, description, requirement, multiplier, price, id) {
         this.bought = false;
         this.dom = null;
         this.title = title;
-        this.reference = reference;
         this.requirement = requirement;
         this.multiplier = multiplier;
+        this.description = description;
         this.price = price;
         this.id = id;
         this.container = document.querySelector(".upgrades");
@@ -21,7 +21,7 @@ var Upgrade = /** @class */ (function () {
         title.innerHTML = this.title;
         var effect = document.createElement("p");
         effect.style.fontSize = 12 + "px";
-        effect.innerHTML = this.reference.name + " wird " + this.multiplier + "x effektiver!<br /><br />";
+        effect.innerHTML = this.description + "<br /><br />";
         this.dom.append(title);
         this.dom.append(effect);
         this.dom.append(price);
@@ -37,23 +37,16 @@ var Upgrade = /** @class */ (function () {
             this.dom.classList.add("disabled");
         }
     };
-    Upgrade.prototype.updateVisibility = function () {
+    Upgrade.prototype.updateVisibility = function (amount) {
         if (this.bought) {
             this.dom.classList.add("hidden");
             return;
         }
-        if (this.requirement <= this.reference.amount) {
+        if (this.requirement <= amount) {
             this.dom.classList.remove("hidden");
         }
         else {
             this.dom.classList.add("hidden");
-        }
-    };
-    Upgrade.prototype.buy = function () {
-        if (!this.bought) {
-            this.bought = true;
-            this.reference.multiplier *= this.multiplier;
-            this.reference.updatePower();
         }
     };
     return Upgrade;

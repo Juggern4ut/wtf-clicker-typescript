@@ -10,6 +10,7 @@ interface Dom {
 }
 
 class Member {
+  id: number;
   amount: number;
   name: string;
   basePower: number;
@@ -17,6 +18,7 @@ class Member {
   nextPrice: number;
   container: HTMLElement;
   multiplier: number = 1;
+  upgrades: Upgrade[] = [];
   image: HTMLImageElement;
   dom: Dom = {
     container: null,
@@ -29,11 +31,12 @@ class Member {
     power: null,
   };
 
-  constructor(name: string, basePower: number, basePrice: number, image: string) {
+  constructor(name: string, basePower: number, basePrice: number, image: string, id: number) {
     this.amount = 0;
     this.basePower = basePower;
     this.name = name;
     this.basePrice = basePrice;
+    this.id = id;
 
     this.dom.image = document.createElement("img");
     this.dom.image.src = "/img/members/" + image;
@@ -42,6 +45,10 @@ class Member {
     this.container = document.querySelector(".members");
     this.createDomElement();
     this.applyToDom();
+  }
+
+  addUpgrade(upgrade: Upgrade) {
+    this.upgrades.push(upgrade);
   }
 
   numberWithCommas = (number) => {
@@ -114,11 +121,21 @@ class Member {
   }
 
   updatePower() {
-    this.dom.power.innerHTML = window["numberAsText"]((this.basePower * this.multiplier)) + " p/s";
+    this.dom.power.innerHTML = window["numberAsText"](this.basePower * this.getMultiplier()) + " p/s";
   }
 
   getIncrease(): number {
-    return this.basePower * this.amount * this.multiplier;
+    return this.basePower * this.amount * this.getMultiplier();
+  }
+
+  getMultiplier(): number {
+    let multiplier = 1;
+    this.upgrades.forEach((u) => {
+      if (u.bought) {
+        multiplier *= u.multiplier;
+      }
+    });
+    return multiplier;
   }
 
   buy() {
@@ -126,9 +143,18 @@ class Member {
     this.update();
   }
 
-  update() {
+  updateUpgrades(score: number) {
+    this.upgrades.forEach((u) => {
+      u.updateVisibility(this.amount);
+      u.updateBuyability(score);
+    });
+  }
+
+  update(score: number) {
+    this.updateBuyability(score);
     this.updatePower();
     this.updateAmount();
+    this.updateUpgrades(score);
     this.updatePrice();
   }
 }

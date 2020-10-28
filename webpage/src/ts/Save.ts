@@ -9,7 +9,6 @@ class Save {
     const saveData = {};
     saveData["members"] = this.game.members;
     saveData["score"] = this.game.score;
-    saveData["upgrades"] = this.game.upgrades;
 
     const saveString = btoa(JSON.stringify(saveData));
     localStorage.setItem("WtfClickerGame2", saveString);
@@ -20,21 +19,18 @@ class Save {
 
     if (localStorageData) {
       const data = JSON.parse(atob(localStorageData));
-      this.game.members.forEach((member, index) => {
-        if (data["members"][index]) {
-          member.amount = data["members"][index]["amount"];
-          member.multiplier = data["members"][index]["multiplier"];
-          member.update();
-        }
-      });
-      this.game.score = parseInt(data["score"]);
 
-      if (data["upgrades"]) {
-        this.game.upgrades.forEach((upgrade) => {
-          let save = data["upgrades"].find((u) => u.id === upgrade.id);
-          upgrade.bought = save.bought;
+      this.game.members.forEach((member) => {
+        let saveMember = data["members"].find((m) => m.id === member.id);
+        member.amount = saveMember.amount;
+
+        member.upgrades.forEach((upgrade) => {
+          let saveUpgrade = saveMember.upgrades.find((u) => u.id === upgrade.id);
+          upgrade.bought = saveUpgrade ? saveUpgrade.bought : false;
         });
-      }
+      });
+
+      this.game.score = parseInt(data["score"]);
     }
   }
 

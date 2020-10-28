@@ -6,7 +6,6 @@ var Save = /** @class */ (function () {
         var saveData = {};
         saveData["members"] = this.game.members;
         saveData["score"] = this.game.score;
-        saveData["upgrades"] = this.game.upgrades;
         var saveString = btoa(JSON.stringify(saveData));
         localStorage.setItem("WtfClickerGame2", saveString);
     };
@@ -14,20 +13,15 @@ var Save = /** @class */ (function () {
         var localStorageData = localStorage.getItem("WtfClickerGame2");
         if (localStorageData) {
             var data_1 = JSON.parse(atob(localStorageData));
-            this.game.members.forEach(function (member, index) {
-                if (data_1["members"][index]) {
-                    member.amount = data_1["members"][index]["amount"];
-                    member.multiplier = data_1["members"][index]["multiplier"];
-                    member.update();
-                }
+            this.game.members.forEach(function (member) {
+                var saveMember = data_1["members"].find(function (m) { return m.id === member.id; });
+                member.amount = saveMember.amount;
+                member.upgrades.forEach(function (upgrade) {
+                    var saveUpgrade = saveMember.upgrades.find(function (u) { return u.id === upgrade.id; });
+                    upgrade.bought = saveUpgrade ? saveUpgrade.bought : false;
+                });
             });
             this.game.score = parseInt(data_1["score"]);
-            if (data_1["upgrades"]) {
-                this.game.upgrades.forEach(function (upgrade) {
-                    var save = data_1["upgrades"].find(function (u) { return u.id === upgrade.id; });
-                    upgrade.bought = save.bought;
-                });
-            }
         }
     };
     Save.prototype.reset = function () {

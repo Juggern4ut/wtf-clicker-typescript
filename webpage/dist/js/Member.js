@@ -1,6 +1,7 @@
 var Member = /** @class */ (function () {
-    function Member(name, basePower, basePrice, image) {
+    function Member(name, basePower, basePrice, image, id) {
         this.multiplier = 1;
+        this.upgrades = [];
         this.dom = {
             container: null,
             title: null,
@@ -18,6 +19,7 @@ var Member = /** @class */ (function () {
         this.basePower = basePower;
         this.name = name;
         this.basePrice = basePrice;
+        this.id = id;
         this.dom.image = document.createElement("img");
         this.dom.image.src = "/img/members/" + image;
         this.dom.image.classList.add("members__image");
@@ -25,6 +27,9 @@ var Member = /** @class */ (function () {
         this.createDomElement();
         this.applyToDom();
     }
+    Member.prototype.addUpgrade = function (upgrade) {
+        this.upgrades.push(upgrade);
+    };
     Member.prototype.createDomElement = function () {
         this.dom.imageContainer = document.createElement("div");
         this.dom.imageContainer.classList.add("members__imageContainer");
@@ -76,18 +81,36 @@ var Member = /** @class */ (function () {
         }
     };
     Member.prototype.updatePower = function () {
-        this.dom.power.innerHTML = window["numberAsText"]((this.basePower * this.multiplier)) + " p/s";
+        this.dom.power.innerHTML = window["numberAsText"](this.basePower * this.getMultiplier()) + " p/s";
     };
     Member.prototype.getIncrease = function () {
-        return this.basePower * this.amount * this.multiplier;
+        return this.basePower * this.amount * this.getMultiplier();
+    };
+    Member.prototype.getMultiplier = function () {
+        var multiplier = 1;
+        this.upgrades.forEach(function (u) {
+            if (u.bought) {
+                multiplier *= u.multiplier;
+            }
+        });
+        return multiplier;
     };
     Member.prototype.buy = function () {
         this.amount++;
         this.update();
     };
-    Member.prototype.update = function () {
+    Member.prototype.updateUpgrades = function (score) {
+        var _this = this;
+        this.upgrades.forEach(function (u) {
+            u.updateVisibility(_this.amount);
+            u.updateBuyability(score);
+        });
+    };
+    Member.prototype.update = function (score) {
+        this.updateBuyability(score);
         this.updatePower();
         this.updateAmount();
+        this.updateUpgrades(score);
         this.updatePrice();
     };
     return Member;
