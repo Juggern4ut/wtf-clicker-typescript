@@ -109,7 +109,9 @@ var Game = /** @class */ (function () {
             _this.saveDialog.querySelector("textarea").innerHTML = saveString;
         });
         this.saveDialog.addEventListener("click", function (e) {
-            _this.saveDialog.classList.remove("saveDialog__open");
+            if (e.target.classList.contains("saveDialog")) {
+                _this.saveDialog.classList.remove("saveDialog__open");
+            }
         });
         showLoadButton.addEventListener("click", function () {
             _this.loadDialog.classList.add("loadDialog__open");
@@ -124,7 +126,7 @@ var Game = /** @class */ (function () {
             try {
                 JSON.parse(atob(loadState));
                 _this.save.load(loadState);
-                _this.loadDialog.querySelector("textarea").innerHTML = "";
+                _this.loadDialog.querySelector("textarea").value = "";
                 _this.loadDialog.classList.remove("loadDialog__open");
             }
             catch (error) {

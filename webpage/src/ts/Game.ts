@@ -136,7 +136,9 @@ class Game {
     });
 
     this.saveDialog.addEventListener("click", (e) => {
-      this.saveDialog.classList.remove("saveDialog__open");
+      if (e.target.classList.contains("saveDialog")) {
+        this.saveDialog.classList.remove("saveDialog__open");
+      }
     });
 
     showLoadButton.addEventListener("click", () => {
@@ -154,7 +156,7 @@ class Game {
       try {
         JSON.parse(atob(loadState));
         this.save.load(loadState);
-        this.loadDialog.querySelector("textarea").innerHTML = "";
+        this.loadDialog.querySelector("textarea").value = "";
         this.loadDialog.classList.remove("loadDialog__open");
       } catch (error) {
         alert("Fehler!");
