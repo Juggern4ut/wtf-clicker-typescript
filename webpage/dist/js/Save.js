@@ -8,9 +8,16 @@ var Save = /** @class */ (function () {
         saveData["score"] = this.game.score;
         var saveString = btoa(JSON.stringify(saveData));
         localStorage.setItem("WtfClickerGame2", saveString);
+        return saveString;
     };
-    Save.prototype.load = function () {
-        var localStorageData = localStorage.getItem("WtfClickerGame2");
+    Save.prototype.load = function (fromString) {
+        var localStorageData;
+        if (fromString) {
+            localStorageData = fromString;
+        }
+        else {
+            localStorageData = localStorage.getItem("WtfClickerGame2");
+        }
         if (localStorageData) {
             var data_1 = JSON.parse(atob(localStorageData));
             this.game.members.forEach(function (member) {

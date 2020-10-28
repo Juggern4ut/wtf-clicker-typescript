@@ -7,6 +7,8 @@ var Game = /** @class */ (function () {
         this.score = 0;
         this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
         this.clicker = new Clicker(this);
+        this.saveDialog = document.querySelector(".saveDialog");
+        this.loadDialog = document.querySelector(".loadDialog");
         this.instantiateMembers();
         var showBoughtButton = document.querySelector(".showBought");
         showBoughtButton.onclick = function () {
@@ -20,6 +22,7 @@ var Game = /** @class */ (function () {
         this.stepInterval = setInterval(function () {
             _this.step();
         }, this.intervalSpeed);
+        this.addSaveAndLoadDialogLogic();
     }
     Game.prototype.instantiateMembers = function () {
         var _this = this;
@@ -95,6 +98,37 @@ var Game = /** @class */ (function () {
         });
         this.score += increase / (1000 / this.intervalSpeed);
         this.scoreElement.updateScore(this.score, increase);
+    };
+    Game.prototype.addSaveAndLoadDialogLogic = function () {
+        var _this = this;
+        var showSaveButton = document.querySelector(".Button.save");
+        var showLoadButton = document.querySelector(".Button.load");
+        showSaveButton.addEventListener("click", function () {
+            _this.saveDialog.classList.add("saveDialog__open");
+            var saveString = _this.save.save();
+            _this.saveDialog.querySelector("textarea").innerHTML = saveString;
+        });
+        this.saveDialog.addEventListener("click", function (e) {
+            _this.saveDialog.classList.remove("saveDialog__open");
+        });
+        showLoadButton.addEventListener("click", function () {
+            _this.loadDialog.classList.add("loadDialog__open");
+        });
+        this.loadDialog.addEventListener("click", function (e) {
+            if (e.target.classList.contains("loadDialog")) {
+                _this.loadDialog.classList.remove("loadDialog__open");
+            }
+        });
+        this.loadDialog.querySelector("button").addEventListener("click", function () {
+            var loadState = _this.loadDialog.querySelector("textarea").value;
+            try {
+                JSON.parse(atob(loadState));
+                _this.save.load(loadState);
+            }
+            catch (error) {
+                alert("Fehler!");
+            }
+        });
     };
     return Game;
 }());

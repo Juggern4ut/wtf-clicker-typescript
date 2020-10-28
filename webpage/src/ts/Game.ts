@@ -10,10 +10,14 @@ class Game {
   saveInterval: NodeJS.Timeout;
   clicker: Clicker;
   lastUpdate: number;
+  saveDialog: HTMLElement;
+  loadDialog: HTMLElement;
 
   constructor() {
     this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
     this.clicker = new Clicker(this);
+    this.saveDialog = document.querySelector(".saveDialog");
+    this.loadDialog = document.querySelector(".loadDialog");
 
     this.instantiateMembers();
 
@@ -32,6 +36,8 @@ class Game {
     this.stepInterval = setInterval(() => {
       this.step();
     }, this.intervalSpeed);
+
+    this.addSaveAndLoadDialogLogic();
   }
 
   instantiateMembers() {
@@ -117,5 +123,40 @@ class Game {
 
     this.score += increase / (1000 / this.intervalSpeed);
     this.scoreElement.updateScore(this.score, increase);
+  }
+
+  addSaveAndLoadDialogLogic() {
+    const showSaveButton = document.querySelector(".Button.save");
+    const showLoadButton = document.querySelector(".Button.load");
+
+    showSaveButton.addEventListener("click", () => {
+      this.saveDialog.classList.add("saveDialog__open");
+      let saveString = this.save.save();
+      this.saveDialog.querySelector("textarea").innerHTML = saveString;
+    });
+
+    this.saveDialog.addEventListener("click", (e) => {
+      this.saveDialog.classList.remove("saveDialog__open");
+    });
+
+    showLoadButton.addEventListener("click", () => {
+      this.loadDialog.classList.add("loadDialog__open");
+    });
+
+    this.loadDialog.addEventListener("click", (e) => {
+      if (e.target.classList.contains("loadDialog")) {
+        this.loadDialog.classList.remove("loadDialog__open");
+      }
+    });
+
+    this.loadDialog.querySelector("button").addEventListener("click", () => {
+      const loadState = this.loadDialog.querySelector("textarea").value;
+      try {
+        JSON.parse(atob(loadState));
+        this.save.load(loadState);
+      } catch (error) {
+        alert("Fehler!");
+      }
+    })
   }
 }

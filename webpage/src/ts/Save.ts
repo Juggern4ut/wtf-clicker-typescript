@@ -12,10 +12,17 @@ class Save {
 
     const saveString = btoa(JSON.stringify(saveData));
     localStorage.setItem("WtfClickerGame2", saveString);
+    return saveString;
   }
 
-  load() {
-    const localStorageData = localStorage.getItem("WtfClickerGame2");
+  load(fromString?: string) {
+
+    let localStorageData;
+    if(fromString){
+      localStorageData = fromString;
+    }else{
+      localStorageData = localStorage.getItem("WtfClickerGame2");
+    }
 
     if (localStorageData) {
       const data = JSON.parse(atob(localStorageData));
