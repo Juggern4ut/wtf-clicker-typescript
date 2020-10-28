@@ -25,6 +25,13 @@
   { "id": 11, "name": "Flauschige Trainingshosen", "referenceId": 2, "requirement": 25, "multiplier": 2, "price": 550000 },
   { "id": 12, "name": "Trainingshosen aus Baumwollseide", "referenceId": 2, "requirement": 50, "multiplier": 2, "price": 55000000 },
   { "id": 74, "name": "Handgestrickte Trainingshosen aus Albinomammutwolle", "referenceId": 2, "requirement": 100, "multiplier": 2, "price": 5500000000 },
+  { "id": 81, "name": "Trainingshosen aus Aluminiumfaser", "referenceId": 2, "requirement": 150, "multiplier": 2, "price": 550000000000 },
+  { "id": 82, "name": "Trainingshosen handgewaschen von 72 Jungrauen", "referenceId": 2, "requirement": 200, "multiplier": 2, "price": 550000000000000 },
+  { "id": 83, "name": "Mit flüssigem Gold veredelte Trainingshosen", "referenceId": 2, "requirement": 250, "multiplier": 2, "price": 550000000000000000 },
+  { "id": 84, "name": "Trainigshosen aus der Seide der Isländischen Bergnuckler-Spinne", "referenceId": 2, "requirement": 300, "multiplier": 2, "price": 550000000000000000000 },
+  { "id": 85, "name": "Subatomar gebügelte Trainingshosen", "referenceId": 2, "requirement": 350, "multiplier": 2, "price": 550000000000000000000000 },
+  { "id": 86, "name": "Trainingshosen aus der Trainingshosendimension", "referenceId": 2, "requirement": 400, "multiplier": 2, "price": 5500000000000000000000000000 },
+  { "id": 87, "name": "Transzendentale Trainingshosen", "referenceId": 2, "requirement": 450, "multiplier": 2, "price": 55000000000000000000000000000000 },
 
   { "id": 13, "name": "Wasserkocher", "referenceId": 3, "requirement": 1, "multiplier": 2, "price": 120000 },
   { "id": 14, "name": "Gusseiserner Wasserkocher", "referenceId": 3, "requirement": 5, "multiplier": 2, "price": 600000 },
