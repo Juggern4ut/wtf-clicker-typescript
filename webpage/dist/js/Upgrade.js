@@ -16,12 +16,14 @@ var Upgrade = /** @class */ (function () {
         this.dom.classList.add("upgrades__upgrade");
         this.dom.classList.add("hidden");
         var price = document.createElement("p");
+        price.classList.add("upgrades__price");
         price.innerHTML = window["numberAsText"](this.price);
         var title = document.createElement("p");
         title.innerHTML = this.title;
         var effect = document.createElement("p");
         effect.style.fontSize = 12 + "px";
-        effect.innerHTML = this.description + "<br /><br />";
+        effect.classList.add("upgrades__description");
+        effect.innerHTML = this.description;
         this.dom.append(title);
         this.dom.append(effect);
         this.dom.append(price);
@@ -30,16 +32,22 @@ var Upgrade = /** @class */ (function () {
     Upgrade.prototype.updateBuyability = function (score) {
         if (!this.dom)
             return false;
-        if (score > this.price) {
+        if (score > this.price || this.bought) {
             this.dom.classList.remove("disabled");
         }
         else {
             this.dom.classList.add("disabled");
         }
     };
-    Upgrade.prototype.updateVisibility = function (amount) {
+    Upgrade.prototype.updateVisibility = function (amount, showBought) {
         if (this.bought) {
-            this.dom.classList.add("hidden");
+            this.dom.classList.remove("hidden");
+            if (showBought) {
+                this.dom.classList.add("bought");
+            }
+            else {
+                this.dom.classList.add("hidden");
+            }
             return;
         }
         if (this.requirement <= amount) {

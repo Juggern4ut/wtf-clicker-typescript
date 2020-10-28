@@ -148,18 +148,18 @@ class Member {
     this.amount++;
   }
 
-  updateUpgrades(score: number) {
+  updateUpgrades(score: number, showBought: boolean) {
     this.upgrades.forEach((u) => {
-      u.updateVisibility(this.amount);
+      u.updateVisibility(this.amount, showBought);
       u.updateBuyability(score);
     });
   }
 
-  update(score: number) {
+  update(score: number, showBought: boolean) {
     this.updateBuyability(score);
     this.updatePower();
     this.updateAmount();
-    this.updateUpgrades(score);
+    this.updateUpgrades(score, showBought);
     this.updatePrice();
   }
 }

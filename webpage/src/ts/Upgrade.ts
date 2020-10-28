@@ -26,6 +26,7 @@ class Upgrade {
     this.dom.classList.add("hidden");
 
     const price = document.createElement("p");
+    price.classList.add("upgrades__price");
     price.innerHTML = window["numberAsText"](this.price);
 
     const title = document.createElement("p");
@@ -33,7 +34,8 @@ class Upgrade {
 
     const effect = document.createElement("p");
     effect.style.fontSize = 12 + "px";
-    effect.innerHTML = this.description + "<br /><br />";
+    effect.classList.add("upgrades__description");
+    effect.innerHTML = this.description;
 
     this.dom.append(title);
     this.dom.append(effect);
@@ -45,16 +47,21 @@ class Upgrade {
   updateBuyability(score) {
     if (!this.dom) return false;
 
-    if (score > this.price) {
+    if (score > this.price || this.bought) {
       this.dom.classList.remove("disabled");
     } else {
       this.dom.classList.add("disabled");
     }
   }
 
-  updateVisibility(amount) {
+  updateVisibility(amount, showBought) {
     if (this.bought) {
-      this.dom.classList.add("hidden");
+      this.dom.classList.remove("hidden");
+      if (showBought) {
+        this.dom.classList.add("bought");
+      } else {
+        this.dom.classList.add("hidden");
+      }
       return;
     }
 

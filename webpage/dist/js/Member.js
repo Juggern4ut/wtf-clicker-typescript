@@ -102,18 +102,18 @@ var Member = /** @class */ (function () {
     Member.prototype.buy = function () {
         this.amount++;
     };
-    Member.prototype.updateUpgrades = function (score) {
+    Member.prototype.updateUpgrades = function (score, showBought) {
         var _this = this;
         this.upgrades.forEach(function (u) {
-            u.updateVisibility(_this.amount);
+            u.updateVisibility(_this.amount, showBought);
             u.updateBuyability(score);
         });
     };
-    Member.prototype.update = function (score) {
+    Member.prototype.update = function (score, showBought) {
         this.updateBuyability(score);
         this.updatePower();
         this.updateAmount();
-        this.updateUpgrades(score);
+        this.updateUpgrades(score, showBought);
         this.updatePrice();
     };
     return Member;

@@ -18,13 +18,11 @@
     background-color: #eee;
     display: flex;
     flex-shrink: 0;
-    &:hover {
-      background-color: #ccc;
-    }
 
     &:not(:last-of-type) {
       margin-right: 10px;
     }
+    user-select: none;
   }
 
   &__power {

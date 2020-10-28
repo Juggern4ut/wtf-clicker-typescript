@@ -8,6 +8,11 @@ var Game = /** @class */ (function () {
         this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
         this.clicker = new Clicker(this);
         this.instantiateMembers();
+        var showBoughtButton = document.querySelector(".showBought");
+        showBoughtButton.onclick = function () {
+            _this.showBoughtUpgrades = !_this.showBoughtUpgrades;
+            showBoughtButton.innerHTML = _this.showBoughtUpgrades ? "Gekaufte Upgrades ausblenden" : "Gekaufte Upgrades anzeigen";
+        };
         this.save = new Save(this);
         this.saveInterval = setInterval(function () {
             _this.save.save();
@@ -55,8 +60,7 @@ var Game = /** @class */ (function () {
                 m.upgrades.forEach(function (upgrade) {
                     if (upgrade.dom) {
                         upgrade.dom.onclick = function () {
-                            console.log(upgrade.price);
-                            if (_this.score >= upgrade.price) {
+                            if (_this.score >= upgrade.price && !upgrade.bought) {
                                 upgrade.bought = true;
                                 _this.score -= upgrade.price;
                                 _this.save.save();
@@ -87,7 +91,7 @@ var Game = /** @class */ (function () {
         increase *= difference;
         this.members.forEach(function (m) {
             m.updateBuyability(_this.score);
-            m.update(_this.score);
+            m.update(_this.score, _this.showBoughtUpgrades);
         });
         this.score += increase / (1000 / this.intervalSpeed);
         this.scoreElement.updateScore(this.score, increase);

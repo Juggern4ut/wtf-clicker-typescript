@@ -6,6 +6,7 @@ class Game {
   score: number = 0;
   scoreElement: Score;
   save: Save;
+  showBoughtUpgrades: boolean;
   saveInterval: NodeJS.Timeout;
   clicker: Clicker;
   lastUpdate: number;
@@ -15,6 +16,12 @@ class Game {
     this.clicker = new Clicker(this);
 
     this.instantiateMembers();
+
+    const showBoughtButton = document.querySelector(".showBought");
+    showBoughtButton.onclick = () => {
+      this.showBoughtUpgrades = !this.showBoughtUpgrades;
+      showBoughtButton.innerHTML = this.showBoughtUpgrades ? "Gekaufte Upgrades ausblenden" : "Gekaufte Upgrades anzeigen";
+    };
 
     this.save = new Save(this);
 
@@ -68,9 +75,7 @@ class Game {
           m.upgrades.forEach((upgrade) => {
             if (upgrade.dom) {
               upgrade.dom.onclick = () => {
-                console.log(upgrade.price);
-
-                if (this.score >= upgrade.price) {
+                if (this.score >= upgrade.price && !upgrade.bought) {
                   upgrade.bought = true;
                   this.score -= upgrade.price;
                   this.save.save();
@@ -107,7 +112,7 @@ class Game {
 
     this.members.forEach((m) => {
       m.updateBuyability(this.score);
-      m.update(this.score);
+      m.update(this.score, this.showBoughtUpgrades);
     });
 
     this.score += increase / (1000 / this.intervalSpeed);
