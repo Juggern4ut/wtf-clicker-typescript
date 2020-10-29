@@ -126,8 +126,8 @@ class Game {
   }
 
   addSaveAndLoadDialogLogic() {
-    const showSaveButton = document.querySelector(".Button.save");
-    const showLoadButton = document.querySelector(".Button.load");
+    const showSaveButton = document.querySelector(".navigation__list-item.save");
+    const showLoadButton = document.querySelector(".navigation__list-item.load");
 
     showSaveButton.addEventListener("click", () => {
       this.saveDialog.classList.add("saveDialog__open");

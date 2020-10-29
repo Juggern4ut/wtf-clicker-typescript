@@ -101,8 +101,8 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.addSaveAndLoadDialogLogic = function () {
         var _this = this;
-        var showSaveButton = document.querySelector(".Button.save");
-        var showLoadButton = document.querySelector(".Button.load");
+        var showSaveButton = document.querySelector(".navigation__list-item.save");
+        var showLoadButton = document.querySelector(".navigation__list-item.load");
         showSaveButton.addEventListener("click", function () {
             _this.saveDialog.classList.add("saveDialog__open");
             var saveString = _this.save.save();

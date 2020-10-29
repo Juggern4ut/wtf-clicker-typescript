@@ -33,16 +33,16 @@
     <meta name="DC.publisher" content="Lukas Meier" />
     <meta name="DC.rights" content="All rights reserved" />
 
-    <script src="/js/Game.js?v=18"></script>
-    <script src="/js/Member.js?v=18"></script>
-    <script src="/js/Upgrade.js?v=18"></script>
-    <script src="/js/Score.js?v=18"></script>
-    <script src="/js/Clicker.js?v=18"></script>
-    <script src="/js/Save.js?v=18"></script>
-    <script src="/js/main.js?v=18"></script>
-    <title>WTF Clicker - Alpha 0.4.0</title>
+    <script src="/js/Game.js?v=19"></script>
+    <script src="/js/Member.js?v=19"></script>
+    <script src="/js/Upgrade.js?v=19"></script>
+    <script src="/js/Score.js?v=19"></script>
+    <script src="/js/Clicker.js?v=19"></script>
+    <script src="/js/Save.js?v=19"></script>
+    <script src="/js/main.js?v=19"></script>
+    <title>WTF Clicker - Alpha 0.5.2</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/css/main.css?v=18" />
+    <link rel="stylesheet" href="/css/main.css?v=19" />
   </head>
   <body>
     <div class="scoreContainer">
@@ -55,6 +55,21 @@
     <h2 class="title-secondary">Upgrades</h2>
     <section class="upgrades"></section>
 
+    <section class="navigation">
+      <ul class="navigation__burger">
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+
+      <nav class="navigation__list">
+        <button class="navigation__list-item showBought">Gekaufte Upgrades anzeigen</button>
+        <button class="navigation__list-item save">Spielstand exporiteren</button>
+        <button class="navigation__list-item load">Spielstand laden</button>
+        <button onclick="window['clicker'].reset()" class="reset">Reset!</button>
+      </nav>
+    </section>
+
     <div class="saveDialog">
       <textarea></textarea>
     </div>
@@ -65,10 +80,5 @@
         <button>Laden!</button>
       </div>
     </div>
-
-    <button class="Button showBought">Gekaufte Upgrades anzeigen</button>
-    <button class="Button save">Spielstand exporiteren</button>
-    <button class="Button load">Spielstand laden</button>
-    <button onclick="window['clicker'].reset()" class="reset">Reset!</button>
   </body>
 </html>

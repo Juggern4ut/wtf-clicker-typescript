@@ -1,4 +1,7 @@
 window.onload = function () {
+    document.querySelector(".navigation__burger").addEventListener("click", function () {
+        document.querySelector(".navigation").classList.toggle("navigation--open");
+    });
     window["numberWithCommas"] = function (number) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
     };
