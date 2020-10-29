@@ -74,10 +74,15 @@
     border-bottom-color: currentcolor;
     border-bottom-style: none;
     border-bottom-width: 0px;
-    padding: 15px;
+    padding: 20px 15px;
+    font-size: 18px;
     text-align: left;
     background-color: #2965a6;
     color: #fff;
     border-bottom: 1px solid #fff;
+
+    &--reset{
+      background-color: #970000;
+    }
   }
 }
