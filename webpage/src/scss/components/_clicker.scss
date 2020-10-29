@@ -55,12 +55,16 @@
   height: 320px;
   margin: 0 auto;
   box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.3);
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  outline: none;
 }
 
 .Bottle {
   cursor: pointer;
   margin-top: 10px;
   height: 300px;
+  outline: none;
   &:hover {
     transform: scale(0.95);
   }
