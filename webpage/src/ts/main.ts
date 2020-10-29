@@ -1,8 +1,10 @@
 window.onload = () => {
+  window["a"] = new LargeNumber(1, 6);
+  window["b"] = new LargeNumber(500, 3);
 
   document.querySelector(".navigation__burger").addEventListener("click", () => {
     document.querySelector(".navigation").classList.toggle("navigation--open");
-  })
+  });
 
   window["numberWithCommas"] = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");

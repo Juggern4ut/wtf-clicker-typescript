@@ -1,4 +1,6 @@
 window.onload = function () {
+    window["a"] = new LargeNumber(1, 6);
+    window["b"] = new LargeNumber(500, 3);
     document.querySelector(".navigation__burger").addEventListener("click", function () {
         document.querySelector(".navigation").classList.toggle("navigation--open");
     });
