@@ -6,6 +6,8 @@ var Save = /** @class */ (function () {
         var saveData = {};
         saveData["members"] = this.game.members;
         saveData["score"] = this.game.score;
+        saveData["handmadeCaps"] = this.game.handmadeCaps;
+        saveData["clickerUpgrades"] = this.game.clickerUpgrades;
         var saveString = btoa(JSON.stringify(saveData));
         localStorage.setItem("WtfClickerGame2", saveString);
         return saveString;
@@ -28,7 +30,13 @@ var Save = /** @class */ (function () {
                     upgrade.bought = saveUpgrade ? saveUpgrade.bought : false;
                 });
             });
+            this.game.clickerUpgrades.forEach(function (clickerUpgrade) {
+                var savedClickerUpgrade = data_1["clickerUpgrades"].find(function (u) { return u.id === clickerUpgrade.id; });
+                clickerUpgrade.bought = savedClickerUpgrade.bought;
+            });
             this.game.score = parseInt(data_1["score"]);
+            var handmadeCaps = data_1["handmadeCaps"] ? parseInt(data_1["handmadeCaps"]) : 0;
+            this.game.handmadeCaps = handmadeCaps;
         }
     };
     Save.prototype.reset = function () {

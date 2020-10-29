@@ -3,6 +3,7 @@ class Game {
   stepInterval: NodeJS.Timeout;
   members: Member[] = [];
   upgrades: Upgrade[] = [];
+  clickerUpgrades: ClickerUpgrade[] = [];
   score: number = 0;
   scoreElement: Score;
   save: Save;
@@ -12,6 +13,9 @@ class Game {
   lastUpdate: number;
   saveDialog: HTMLElement;
   loadDialog: HTMLElement;
+  handmadeCaps: number = 0;
+  capsPerSecond: number;
+  totalMembers: number;
 
   constructor() {
     this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
@@ -56,6 +60,29 @@ class Game {
             if (m.getPrice() <= this.score) {
               this.score -= m.getPrice();
               m.buy();
+              this.save.save();
+            }
+          };
+        });
+
+        this.instantiateClickerUpgrades();
+      });
+  }
+
+  instantiateClickerUpgrades() {
+    fetch("/data/clickerUpgrades.json")
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        res.forEach((up) => {
+          const tmp = new ClickerUpgrade(up.name, up.description, up.requirement, up.type, up.power, up.price, up.id);
+          this.clickerUpgrades.push(tmp);
+          tmp.dom.onclick = () => {
+            if (tmp.price <= this.score) {
+              this.score -= tmp.price;
+              tmp.buy();
+              console.log(tmp);
               this.save.save();
             }
           };
@@ -121,8 +148,17 @@ class Game {
       m.update(this.score, this.showBoughtUpgrades);
     });
 
+    this.clickerUpgrades.forEach((c) => {
+      c.updateBuyability(this.score);
+      c.updateVisibility(this.members[0].amount, this.handmadeCaps, this.showBoughtUpgrades);
+    });
+
+    this.totalMembers = 0;
+    this.members.forEach((mem) => (this.totalMembers += mem.amount));
+
     this.score += increase / (1000 / this.intervalSpeed);
     this.scoreElement.updateScore(this.score, increase);
+    this.capsPerSecond = increase;
   }
 
   addSaveAndLoadDialogLogic() {
@@ -147,7 +183,7 @@ class Game {
     });
 
     this.loadDialog.addEventListener("click", (e) => {
-       let tmp = e.target as HTMLElement;
+      let tmp = e.target as HTMLElement;
       if (tmp.classList.contains("loadDialog")) {
         this.loadDialog.classList.remove("loadDialog__open");
       }
@@ -163,6 +199,6 @@ class Game {
       } catch (error) {
         alert("Fehler!");
       }
-    })
+    });
   }
 }

@@ -9,6 +9,8 @@ class Save {
     const saveData = {};
     saveData["members"] = this.game.members;
     saveData["score"] = this.game.score;
+    saveData["handmadeCaps"] = this.game.handmadeCaps;
+    saveData["clickerUpgrades"] = this.game.clickerUpgrades;
 
     const saveString = btoa(JSON.stringify(saveData));
     localStorage.setItem("WtfClickerGame2", saveString);
@@ -16,11 +18,10 @@ class Save {
   }
 
   load(fromString?: string) {
-
     let localStorageData;
-    if(fromString){
+    if (fromString) {
       localStorageData = fromString;
-    }else{
+    } else {
       localStorageData = localStorage.getItem("WtfClickerGame2");
     }
 
@@ -37,7 +38,14 @@ class Save {
         });
       });
 
+      this.game.clickerUpgrades.forEach((clickerUpgrade) => {
+        let savedClickerUpgrade = data["clickerUpgrades"].find((u) => u.id === clickerUpgrade.id);
+        clickerUpgrade.bought = savedClickerUpgrade.bought;
+      });
+
       this.game.score = parseInt(data["score"]);
+      let handmadeCaps = data["handmadeCaps"] ? parseInt(data["handmadeCaps"]) : 0;
+      this.game.handmadeCaps = handmadeCaps;
     }
   }
 

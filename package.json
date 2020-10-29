@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "concurrently --kill-others \"npm run gulp\" \"tsc\" \"live-server ./webpage/dist\"",
     "gulp": "gulp",
     "ftp-deploy": "node deploy_active.js"
   },

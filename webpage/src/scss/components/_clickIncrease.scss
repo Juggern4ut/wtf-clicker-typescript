@@ -1,0 +1,15 @@
+.clickIncrease {
+  color: #000;
+  opacity: 1;
+  position: fixed;
+  z-index: 100;
+  font-size: 20px;
+  text-shadow: 0 0 10px #fff;
+  transition: 500ms ease-out;
+  pointer-events: none;
+
+  &--fade {
+    transform: translate(50px, -50px);
+    opacity: 0;
+  }
+}
