@@ -29,9 +29,14 @@ window.onload = function () {
             "dezillionen",
             "dezilliarden",
         ];
-        var index = number.toLocaleString().split(",").length - 1;
-        var outNumber = (number / Math.pow(1000, index)).toFixed(2);
-        return outNumber + " " + scales[index];
+        for (var power = 0; power < scales.length; power++) {
+            var potence = Math.pow(1000, power);
+            var division = number / potence;
+            if (division < 100) {
+                return division.toFixed(2) + " " + scales[power];
+            }
+        }
+        return (number / Math.pow(1000, scales.length - 1)).toFixed(2) + " " + scales[scales.length - 1];
     };
     window["clicker"] = new Game();
 };

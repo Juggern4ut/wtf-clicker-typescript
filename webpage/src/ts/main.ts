@@ -4,7 +4,8 @@ window.onload = () => {
   };
 
   window["numberAsText"] = (number) => {
-    if(number < 1000000) return window["numberWithCommas"](number.toFixed(2));
+    if (number < 1000000) return window["numberWithCommas"](number.toFixed(2));
+
     const scales = [
       "",
       "tausend",
@@ -30,10 +31,15 @@ window.onload = () => {
       "dezilliarden",
     ];
 
-    const index = number.toLocaleString().split(",").length - 1;
-    const outNumber = (number / Math.pow(1000, index)).toFixed(2);
-    return outNumber+" "+scales[index];
+    for (let power = 0; power < scales.length; power++) {
+      let potence = Math.pow(1000, power);
+      let division = number / potence;
+      if (division < 100) {
+        return division.toFixed(2) + " " + scales[power];
+      }
+    }
 
+    return (number / Math.pow(1000, scales.length - 1)).toFixed(2) + " " + scales[scales.length - 1];
   };
 
   window["clicker"] = new Game();

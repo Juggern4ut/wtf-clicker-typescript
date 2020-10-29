@@ -109,7 +109,8 @@ var Game = /** @class */ (function () {
             _this.saveDialog.querySelector("textarea").innerHTML = saveString;
         });
         this.saveDialog.addEventListener("click", function (e) {
-            if (e.target.classList.contains("saveDialog")) {
+            var tmp = e.target;
+            if (tmp.classList.contains("saveDialog")) {
                 _this.saveDialog.classList.remove("saveDialog__open");
             }
         });
@@ -117,7 +118,8 @@ var Game = /** @class */ (function () {
             _this.loadDialog.classList.add("loadDialog__open");
         });
         this.loadDialog.addEventListener("click", function (e) {
-            if (e.target.classList.contains("loadDialog")) {
+            var tmp = e.target;
+            if (tmp.classList.contains("loadDialog")) {
                 _this.loadDialog.classList.remove("loadDialog__open");
             }
         });

@@ -136,7 +136,8 @@ class Game {
     });
 
     this.saveDialog.addEventListener("click", (e) => {
-      if (e.target.classList.contains("saveDialog")) {
+      let tmp = e.target as HTMLElement;
+      if (tmp.classList.contains("saveDialog")) {
         this.saveDialog.classList.remove("saveDialog__open");
       }
     });
@@ -146,7 +147,8 @@ class Game {
     });
 
     this.loadDialog.addEventListener("click", (e) => {
-      if (e.target.classList.contains("loadDialog")) {
+       let tmp = e.target as HTMLElement;
+      if (tmp.classList.contains("loadDialog")) {
         this.loadDialog.classList.remove("loadDialog__open");
       }
     });
