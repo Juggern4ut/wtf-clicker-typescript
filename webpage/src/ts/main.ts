@@ -34,7 +34,7 @@ window.onload = () => {
     for (let power = 0; power < scales.length; power++) {
       let potence = Math.pow(1000, power);
       let division = number / potence;
-      if (division < 100) {
+      if (division < 1000) {
         return division.toFixed(2) + " " + scales[power];
       }
     }

@@ -32,7 +32,7 @@ window.onload = function () {
         for (var power = 0; power < scales.length; power++) {
             var potence = Math.pow(1000, power);
             var division = number / potence;
-            if (division < 100) {
+            if (division < 1000) {
                 return division.toFixed(2) + " " + scales[power];
             }
         }
