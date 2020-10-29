@@ -11,6 +11,7 @@ var Game = /** @class */ (function () {
         this.clicker = new Clicker(this);
         this.saveDialog = document.querySelector(".saveDialog");
         this.loadDialog = document.querySelector(".loadDialog");
+        this.runStarted = Date.now();
         this.instantiateMembers();
         var showBoughtButton = document.querySelector(".showBought");
         showBoughtButton.onclick = function () {
@@ -63,7 +64,6 @@ var Game = /** @class */ (function () {
                     if (tmp.price <= _this.score) {
                         _this.score -= tmp.price;
                         tmp.buy();
-                        console.log(tmp);
                         _this.save.save();
                     }
                 };
@@ -129,6 +129,7 @@ var Game = /** @class */ (function () {
         this.score += increase / (1000 / this.intervalSpeed);
         this.scoreElement.updateScore(this.score, increase);
         this.capsPerSecond = increase;
+        this.runDuration = Date.now() - this.runStarted;
     };
     Game.prototype.addSaveAndLoadDialogLogic = function () {
         var _this = this;

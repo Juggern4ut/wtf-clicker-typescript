@@ -58,9 +58,11 @@
   -ms-touch-action: manipulation;
   touch-action: manipulation;
   outline: none;
+  user-select: none;
 }
 
 .Bottle {
+  user-select: none;
   cursor: pointer;
   margin-top: 10px;
   height: 300px;

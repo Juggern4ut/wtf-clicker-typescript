@@ -8,6 +8,10 @@ var Clicker = /** @class */ (function () {
         image.classList.add("Bottle");
         image.src = "/img/bottle.png";
         image.draggable = false;
+        image.ondragstart = function (e) {
+            e.preventDefault();
+            return false;
+        };
         var cap = document.createElement("img");
         cap.classList.add("Cap");
         cap.src = "/img/cap.png";

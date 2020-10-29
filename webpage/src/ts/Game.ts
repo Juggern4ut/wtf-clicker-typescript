@@ -16,12 +16,15 @@ class Game {
   handmadeCaps: number = 0;
   capsPerSecond: number;
   totalMembers: number;
+  runStarted: number;
+  runDuration: number;
 
   constructor() {
     this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
     this.clicker = new Clicker(this);
     this.saveDialog = document.querySelector(".saveDialog");
     this.loadDialog = document.querySelector(".loadDialog");
+    this.runStarted = Date.now();
 
     this.instantiateMembers();
 
@@ -82,7 +85,6 @@ class Game {
             if (tmp.price <= this.score) {
               this.score -= tmp.price;
               tmp.buy();
-              console.log(tmp);
               this.save.save();
             }
           };
@@ -159,6 +161,8 @@ class Game {
     this.score += increase / (1000 / this.intervalSpeed);
     this.scoreElement.updateScore(this.score, increase);
     this.capsPerSecond = increase;
+
+    this.runDuration = Date.now() - this.runStarted;
   }
 
   addSaveAndLoadDialogLogic() {

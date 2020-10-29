@@ -12,6 +12,11 @@ class Clicker {
     image.classList.add("Bottle");
     image.src = "/img/bottle.png";
     image.draggable = false;
+    
+    image.ondragstart = e => {
+      e.preventDefault();
+      return false;
+    }
 
     const cap = document.createElement("img");
     cap.classList.add("Cap");
