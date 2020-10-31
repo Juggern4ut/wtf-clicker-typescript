@@ -10,10 +10,13 @@ class Save {
 
     saveData["members"] = this.game.members;
     saveData["clickerUpgrades"] = this.game.clickerUpgrades;
+    saveData["inventory"] = this.game.items;
     saveData["game"] = {
       score: this.game.score,
+      dailyBonusGot: this.game.dailyBonusGot,
       handmadeCaps: this.game.handmadeCaps,
       runStarted: this.game.runStarted,
+      missedGoldenPelo: this.game.missedGoldenPelo,
     };
 
     const saveString = btoa(JSON.stringify(saveData));
@@ -25,6 +28,7 @@ class Save {
     let localStorageData;
     if (fromString) {
       localStorageData = fromString;
+      this.game.clearInventory();
     } else {
       localStorageData = localStorage.getItem("WtfClickerGame2");
     }
@@ -47,16 +51,35 @@ class Save {
         clickerUpgrade.bought = savedClickerUpgrade.bought;
       });
 
-      if(data["game"]){
-        Object.keys(data["game"]).forEach(k=>{
-          this.game[k] = data["game"][k]
-        })
-      }else if(data["score"] || data["handmadeCaps"]){
+      if (data["inventory"]) {
+        data["inventory"].forEach((item) => {
+          
+          if (!item.id && item.name === "Wasserkochsalzlösung") {
+            item.power = 66;
+            item.id = 2;
+            item.duration = 15;
+            item.description = "Deine Bierdeckel pro Sekunde werden für 15 Sekunden 66x effizienter!";
+          } else if (!item.id && item.name === "Super homo saft") {
+            item.power = 7000;
+            item.id = 1;
+            item.duration = 60;
+            item.description = "Sandro wird für 60 Sekunden 7000x effizienter!";
+          }
+
+          this.game.items.push(new Item(item.id, item.name, item.imageString, item.description, item.text, item.referenceMemberId, item.power, item.consumable, item.duration));
+        });
+        this.game.updateInventory();
+      }
+
+      if (data["game"]) {
+        Object.keys(data["game"]).forEach((k) => {
+          this.game[k] = data["game"][k];
+        });
+      } else if (data["score"] || data["handmadeCaps"]) {
         this.game.score = parseInt(data["score"]);
         let handmadeCaps = data["handmadeCaps"] ? parseInt(data["handmadeCaps"]) : 0;
         this.game.handmadeCaps = handmadeCaps;
       }
-
     }
   }
 

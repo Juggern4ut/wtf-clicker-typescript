@@ -30,7 +30,7 @@
   }
 
   &__imageContainer {
-    background-color: #00e89e;
+    background-color: #6bc962;
     padding: 10px;
   }
 
@@ -56,6 +56,9 @@
     overflow: hidden;
     .members__price {
       color: red;
+    }
+    .members__imageContainer{
+      background-color: #d46921;
     }
     &::before {
       position: absolute;

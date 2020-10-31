@@ -92,7 +92,7 @@ class Member {
     this.dom.amountContainer.append(this.dom.amount);
     this.dom.infoContainer.append(this.dom.power);
     this.dom.infoContainer.append(this.dom.price);
-    this.updatePower();
+    this.updatePower(null);
 
     this.dom.container.append(this.dom.imageContainer);
     this.dom.container.append(this.dom.infoContainer);
@@ -126,11 +126,18 @@ class Member {
     }
   }
 
-  updatePower() {
-    this.dom.power.innerHTML = window["numberAsText"](this.basePower * this.getMultiplier()) + " p/s";
+  updatePower(buff: Item) {
+    if (buff && this.id === buff.referenceMemberId) {
+      this.dom.power.innerHTML = window["numberAsText"](this.basePower * this.getMultiplier() * buff.power) + " p/s";
+    } else {
+      this.dom.power.innerHTML = window["numberAsText"](this.basePower * this.getMultiplier()) + " p/s";
+    }
   }
 
-  getIncrease(): number {
+  getIncrease(buff: Item): number {
+    if (buff && this.id === buff.referenceMemberId) {
+      return this.basePower * this.amount * this.getMultiplier() * buff.power;
+    }
     return this.basePower * this.amount * this.getMultiplier();
   }
 
@@ -155,9 +162,9 @@ class Member {
     });
   }
 
-  update(score: number, showBought: boolean) {
+  update(score: number, showBought: boolean, buff: Item) {
     this.updateBuyability(score);
-    this.updatePower();
+    this.updatePower(buff);
     this.updateAmount();
     this.updateUpgrades(score, showBought);
     this.updatePrice();

@@ -4,6 +4,12 @@ window.onload = function () {
     document.querySelector(".navigation__burger").addEventListener("click", function () {
         document.querySelector(".navigation").classList.toggle("navigation--open");
     });
+    document.querySelector(".inventory").addEventListener("click", function () {
+        document.querySelector(".inventory__modal").classList.add("inventory__modal--open");
+    });
+    document.querySelector(".inventory__close").addEventListener("click", function () {
+        document.querySelector(".inventory__modal").classList.remove("inventory__modal--open");
+    });
     window["numberWithCommas"] = function (number) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
     };

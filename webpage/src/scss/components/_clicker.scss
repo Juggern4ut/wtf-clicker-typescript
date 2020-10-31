@@ -70,4 +70,8 @@
   &:hover {
     transform: scale(0.95);
   }
+  &:active {
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
+  }
 }

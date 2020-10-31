@@ -12,11 +12,11 @@ class Clicker {
     image.classList.add("Bottle");
     image.src = "/img/bottle.png";
     image.draggable = false;
-    
-    image.ondragstart = e => {
+
+    image.ondragstart = (e) => {
       e.preventDefault();
       return false;
-    }
+    };
 
     const cap = document.createElement("img");
     cap.classList.add("Cap");
@@ -51,11 +51,22 @@ class Clicker {
         }
       });
 
+      if (game.dailyBonusGot === 0) {
+        let date = new Date();
+        game.dailyBonusGot = date.getDate();
+        game.items.push(new Item(1000, "Daily Bonus!", "daily_bonus.png", "Wirbt automatisch ein Vereinsmitglied an!", "Deine Mutter wäre stolz auf dich!", -3, 1, true, 1));
+        game.updateInventory();
+      }
+
+      if (game.activeBuff && game.activeBuff.id === 2) {
+        power *= game.activeBuff.power;
+      }
+
       let tmp = document.createElement("p");
       tmp.classList.add("clickIncrease");
       tmp.innerHTML = "+ " + window["numberAsText"](power);
-      tmp.style.top = e.clientY + "px";
-      tmp.style.left = e.clientX + "px";
+      tmp.style.top = e.clientY - 30 + "px";
+      tmp.style.left = e.clientX + 30 + "px";
       document.querySelector("body").append(tmp);
       setTimeout(() => {
         tmp.classList.add("clickIncrease--fade");

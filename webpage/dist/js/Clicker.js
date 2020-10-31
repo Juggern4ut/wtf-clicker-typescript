@@ -40,11 +40,20 @@ var Clicker = /** @class */ (function () {
                     power = power + game.totalMembers * c.power;
                 }
             });
+            if (game.dailyBonusGot === 0) {
+                var date = new Date();
+                game.dailyBonusGot = date.getDate();
+                game.items.push(new Item(1000, "Daily Bonus!", "daily_bonus.png", "Wirbt automatisch ein Vereinsmitglied an!", "Deine Mutter wäre stolz auf dich!", -3, 1, true, 1));
+                game.updateInventory();
+            }
+            if (game.activeBuff && game.activeBuff.id === 2) {
+                power *= game.activeBuff.power;
+            }
             var tmp = document.createElement("p");
             tmp.classList.add("clickIncrease");
             tmp.innerHTML = "+ " + window["numberAsText"](power);
-            tmp.style.top = e.clientY + "px";
-            tmp.style.left = e.clientX + "px";
+            tmp.style.top = e.clientY - 30 + "px";
+            tmp.style.left = e.clientX + 30 + "px";
             document.querySelector("body").append(tmp);
             setTimeout(function () {
                 tmp.classList.add("clickIncrease--fade");

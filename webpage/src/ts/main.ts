@@ -6,6 +6,15 @@ window.onload = () => {
     document.querySelector(".navigation").classList.toggle("navigation--open");
   });
 
+  document.querySelector(".inventory").addEventListener("click", () => {
+    document.querySelector(".inventory__modal").classList.add("inventory__modal--open");
+  });
+
+  document.querySelector(".inventory__close").addEventListener("click", () => {
+    document.querySelector(".inventory__modal").classList.remove("inventory__modal--open");
+  });
+
+
   window["numberWithCommas"] = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
   };

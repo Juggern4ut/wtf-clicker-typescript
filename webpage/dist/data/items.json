@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "Super homo saft",
+    "description": "Sandro wird für 60 Sekunden 7000x effizienter!",
+    "text": "Schmeckt... merkwürdig",
+    "image": "potion_yellow.png",
+    "consumable": true,
+    "referenceMemberId": 1,
+    "power": 7000,
+    "duration": 60
+  },
+  {
+    "id": 2,
+    "name": "Wasserkochsalzlösung",
+    "description": "Deine Bierdeckel pro Sekunde werden für 15 Sekunden 66x effizienter!",
+    "text": "Regt den Durst an",
+    "image": "potion_green.png",
+    "consumable": true,
+    "referenceMemberId": -2,
+    "power": 66,
+    "duration": 15
+  },
+  {
+    "id": 3,
+    "name": "PeLonische Pheromone",
+    "description": "Für die nächsten 8 Sekunden spawnt der goldene PeLo 20x so oft!",
+    "text": "Rape mer der PeLo?",
+    "image": "potion_purple.png",
+    "consumable": true,
+    "referenceMemberId": -1,
+    "power": 20,
+    "duration": 8
+  }
+]

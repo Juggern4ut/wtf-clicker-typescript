@@ -1,16 +1,22 @@
 html {
   font-size: 62.5%;
-  min-height: 100vh;
   box-sizing: border-box;
   background: #00867f;
-  background: linear-gradient(138deg, rgba(2, 0, 36, 1) 0%, rgba(5, 57, 140, 1) 20%, rgba(0, 134, 127, 1) 100%);
+  
 }
 
 body {
-  margin-top: 50px;
+  padding-top: 50px;
   font-size: 1.6rem;
   color: #454545;
   font-family: "Open Sans", "Arial";
+  min-height: 100vh;
+  background: linear-gradient(138deg, #020024 0%, #05398c 20%, #00867f 100%);
+
+  &.buff{
+    background: linear-gradient(138deg, #934200  0%, #ce7b00 20%, #8a7c00 100%);
+  }
+  
 }
 
 * {

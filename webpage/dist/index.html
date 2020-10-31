@@ -33,20 +33,37 @@
     <meta name="DC.publisher" content="Lukas Meier" />
     <meta name="DC.rights" content="All rights reserved" />
 
-    <script src="/js/Game.js?v=25"></script>
-    <script src="/js/Member.js?v=25"></script>
-    <script src="/js/Upgrade.js?v=25"></script>
-    <script src="/js/Score.js?v=25"></script>
-    <script src="/js/Clicker.js?v=25"></script>
-    <script src="/js/ClickerUpgrade.js?v=25"></script>
-    <script src="/js/LargeNumber.js?v=25"></script>
-    <script src="/js/Save.js?v=25"></script>
-    <script src="/js/main.js?v=25"></script>
-    <title>WTF Clicker - Beta 1.0.0</title>
+    <script src="/js/Game.js?v=37"></script>
+    <script src="/js/Member.js?v=37"></script>
+    <script src="/js/Upgrade.js?v=37"></script>
+    <script src="/js/Score.js?v=37"></script>
+    <script src="/js/Clicker.js?v=37"></script>
+    <script src="/js/ClickerUpgrade.js?v=37"></script>
+    <script src="/js/Item.js?v=37"></script>
+    <script src="/js/LargeNumber.js?v=37"></script>
+    <script src="/js/Save.js?v=37"></script>
+    <script src="/js/main.js?v=37"></script>
+    <title>WTF Clicker - Beta 1.3.8</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/css/main.css?v=25" />
+    <link rel="stylesheet" href="/css/main.css?v=37" />
   </head>
   <body>
+
+    <div class="inventory">
+      <img class="inventory__image" src="img/inventar.png" />
+      <span class="inventory__count">0</span>
+    </div>
+
+    <div class="inventory__modal">
+      <div class="inventory__inner">
+        <h2 class="inventory__title">Inventar</h2>
+        <div class="inventory__close">X</div>
+        <div class="inventory__content">
+          <h1>Dein Inventar ist leer! :(</h1>
+        </div>
+      </div>
+    </div>
+
     <div class="scoreContainer">
       <p class="score"></p>
       <p class="scorePerSeconds"></p>

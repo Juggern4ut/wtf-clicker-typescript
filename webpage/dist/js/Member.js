@@ -56,7 +56,7 @@ var Member = /** @class */ (function () {
         this.dom.amountContainer.append(this.dom.amount);
         this.dom.infoContainer.append(this.dom.power);
         this.dom.infoContainer.append(this.dom.price);
-        this.updatePower();
+        this.updatePower(null);
         this.dom.container.append(this.dom.imageContainer);
         this.dom.container.append(this.dom.infoContainer);
         this.dom.container.append(this.dom.amountContainer);
@@ -84,10 +84,18 @@ var Member = /** @class */ (function () {
             this.dom.container.classList.remove("members__disabled");
         }
     };
-    Member.prototype.updatePower = function () {
-        this.dom.power.innerHTML = window["numberAsText"](this.basePower * this.getMultiplier()) + " p/s";
+    Member.prototype.updatePower = function (buff) {
+        if (buff && this.id === buff.referenceMemberId) {
+            this.dom.power.innerHTML = window["numberAsText"](this.basePower * this.getMultiplier() * buff.power) + " p/s";
+        }
+        else {
+            this.dom.power.innerHTML = window["numberAsText"](this.basePower * this.getMultiplier()) + " p/s";
+        }
     };
-    Member.prototype.getIncrease = function () {
+    Member.prototype.getIncrease = function (buff) {
+        if (buff && this.id === buff.referenceMemberId) {
+            return this.basePower * this.amount * this.getMultiplier() * buff.power;
+        }
         return this.basePower * this.amount * this.getMultiplier();
     };
     Member.prototype.getMultiplier = function () {
@@ -109,9 +117,9 @@ var Member = /** @class */ (function () {
             u.updateBuyability(score);
         });
     };
-    Member.prototype.update = function (score, showBought) {
+    Member.prototype.update = function (score, showBought, buff) {
         this.updateBuyability(score);
-        this.updatePower();
+        this.updatePower(buff);
         this.updateAmount();
         this.updateUpgrades(score, showBought);
         this.updatePrice();
