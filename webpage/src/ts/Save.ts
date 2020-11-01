@@ -10,7 +10,7 @@ class Save {
 
     saveData["members"] = this.game.members;
     saveData["clickerUpgrades"] = this.game.clickerUpgrades;
-    saveData["inventory"] = this.game.items;
+    saveData["inventory_new"] = this.game.inventory.stack;
     saveData["game"] = {
       score: this.game.score,
       dailyBonusGot: this.game.dailyBonusGot,
@@ -51,22 +51,9 @@ class Save {
         clickerUpgrade.bought = savedClickerUpgrade.bought;
       });
 
-      if (data["inventory"]) {
-        data["inventory"].forEach((item) => {
-          
-          if (!item.id && item.name === "Wasserkochsalzlösung") {
-            item.power = 66;
-            item.id = 2;
-            item.duration = 15;
-            item.description = "Deine Bierdeckel pro Sekunde werden für 15 Sekunden 66x effizienter!";
-          } else if (!item.id && item.name === "Super homo saft") {
-            item.power = 7000;
-            item.id = 1;
-            item.duration = 60;
-            item.description = "Sandro wird für 60 Sekunden 7000x effizienter!";
-          }
-
-          this.game.items.push(new Item(item.id, item.name, item.imageString, item.description, item.text, item.referenceMemberId, item.power, item.consumable, item.duration));
+      if (data["inventory_new"]) {
+        data["inventory_new"].forEach((item) => {
+          this.game.inventory.addItem(item.id, item.amount);
         });
         this.game.updateInventory();
       }

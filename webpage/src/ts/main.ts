@@ -1,17 +1,16 @@
 window.onload = () => {
-  window["a"] = new LargeNumber(1, 6);
-  window["b"] = new LargeNumber(500, 3);
-
+  
   document.querySelector(".navigation__burger").addEventListener("click", () => {
     document.querySelector(".navigation").classList.toggle("navigation--open");
   });
 
-  document.querySelector(".inventory").addEventListener("click", () => {
-    document.querySelector(".inventory__modal").classList.add("inventory__modal--open");
+  document.querySelector(".stats-button").addEventListener("click", () => {
+    window["clicker"].updateStats();
+    document.querySelector(".stats").classList.add("stats--open");
   });
 
-  document.querySelector(".inventory__close").addEventListener("click", () => {
-    document.querySelector(".inventory__modal").classList.remove("inventory__modal--open");
+  document.querySelector(".stats__close").addEventListener("click", () => {
+    document.querySelector(".stats").classList.remove("stats--open");
   });
 
 

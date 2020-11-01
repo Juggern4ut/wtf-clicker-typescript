@@ -1,0 +1,159 @@
+interface amount {
+  id: number;
+  amount: number;
+}
+
+class Inventory {
+  items: Item[] = [];
+  stack: amount[] = [];
+  itemAmount: number = 0;
+
+  inventoryButton: HTMLElement;
+  modal: HTMLElement;
+  inventoryContent: HTMLElement;
+  inventoryAmount: HTMLElement;
+
+  constructor() {
+    this.loadItems();
+    this.initInventoryButton();
+  }
+
+  /**
+   * Initialize the handler to open and close the inventory
+   */
+  initInventoryButton() {
+    this.inventoryButton = document.querySelector(".inventory");
+    this.modal = document.querySelector(".inventory__modal");
+    this.inventoryContent = document.querySelector(".inventory__content");
+    this.inventoryAmount = document.querySelector(".inventory__count");
+
+    this.inventoryButton.onclick = () => {
+      this.openInventory();
+      this.updateInventory();
+    };
+
+    let closeButton = document.querySelector(".inventory__close") as HTMLElement;
+    closeButton.onclick = () => {
+      this.closeInventory();
+    };
+  }
+
+  /**
+   * Will open the Inventory Modal
+   */
+  openInventory() {
+    this.modal.classList.add("inventory__modal--open");
+  }
+
+  /**
+   * Will close the Inventory Modal
+   */
+  closeInventory() {
+    this.modal.classList.remove("inventory__modal--open");
+  }
+
+  /**
+   * Will load the Items from the json file
+   */
+  loadItems() {
+    this.stack = [];
+    fetch("/data/items_new.json")
+      .then((res) => res.json())
+      .then((items) => {
+        items.forEach((item) => {
+          this.items.push(new Item(item["id"], item["name"], item["image"], item["description"], item["text"], item["referenceMemberId"], item["power"], item["consumable"], item["duration"]));
+          this.stack.push({ id: item["id"], amount: 0 });
+        });
+      });
+  }
+
+  /**
+   * Will return a random item, but only if it's ID is present in the itemIds array
+   * @param itemIds An array of ids from which a random item will be selected
+   * @returns A randomly selected Item
+   */
+  getRandomItem(itemIds: number[]): Item {
+    let possItems = [];
+    this.items.forEach((item) => {
+      if (itemIds.find((i) => item["id"] === i)) {
+        possItems.push(item);
+      }
+    });
+    let index = Math.floor(Math.random() * possItems.length);
+    return possItems[index];
+  }
+
+  /**
+   * Will add a number to the inventory
+   * @param id The id of the item to add to the inventory
+   */
+  addItem(id: number, amount: number = 1) {
+    const found = this.stack.find((i) => i.id === id);
+    if (found) {
+      this.itemAmount += amount;
+      found.amount += amount;
+      this.updateInventory();
+    } else {
+      console.warn("Das Item mit der ID: " + id + " wurde nicht gefunden und dem Inventar nicht hinzugefügt.");
+    }
+  }
+
+  /**
+   * Will update the whole DOM of the inventory
+   */
+  updateInventory() {
+    this.inventoryContent.innerHTML = "";
+
+    if (this.itemAmount) {
+      this.inventoryAmount.classList.add("inventory__count--visible");
+      this.inventoryAmount.innerHTML = this.itemAmount + "";
+    } else {
+      this.inventoryAmount.classList.remove("inventory__count--visible");
+    }
+
+    this.items.forEach((item) => {
+      let stack = this.stack.find((s) => s.id === item.id);
+      if (stack.amount > 0) {
+        let container = document.createElement("article");
+        container.classList.add("inventory__item");
+
+        let image = document.createElement("img");
+        image.classList.add("inventory__item-image");
+        image.src = "/img/items/" + item.imageString;
+
+        let info = document.createElement("div");
+
+        let title = document.createElement("p");
+        title.classList.add("inventory__item-title");
+        title.innerHTML = item.name;
+
+        let text = document.createElement("p");
+        text.classList.add("u-italic");
+        text.innerHTML = item.text;
+
+        let description = document.createElement("p");
+        description.innerHTML = item.description;
+
+        let amount = document.createElement("p");
+        amount.classList.add("inventory__item-amount");
+        amount.innerHTML = stack.amount + " x";
+
+        info.append(title);
+        info.append(text);
+        info.append(description);
+
+        container.append(image);
+        container.append(info);
+        container.append(amount);
+
+        container.onclick = () => {
+            stack.amount--;
+            this.updateInventory();
+            this.closeInventory();
+        }
+
+        this.inventoryContent.append(container);
+      }
+    });
+  }
+}

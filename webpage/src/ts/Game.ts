@@ -26,6 +26,13 @@ class Game {
   possibleItems: object[] = [];
   goldenpelo: HTMLImageElement;
   missedGoldenPelo: number = 0;
+  multiplier_bonus: HTMLElement;
+  multiplier_bonus__inner: HTMLElement;
+  inventory: Inventory;
+
+  clickerMultiplier: number = 1;
+  lastClickTimestamp: number;
+  continuousClicks: number = 0;
 
   constructor() {
     this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
@@ -39,8 +46,17 @@ class Game {
     this.goldenpelo.src = "/img/golden_pelo.png";
     this.goldenpelo.classList.add("golden-pelo");
 
-    //this.items.push(new Item("Gelbes Getränk", "potion_yellow.png"));
-    //this.items.push(new Item("Grünes Getränk", "potion_green.png"));
+    this.inventory = new Inventory();
+
+    this.multiplier_bonus = document.createElement("div");
+    this.multiplier_bonus.classList.add("multiplier_bonus");
+    this.multiplier_bonus__inner = document.createElement("p");
+    this.multiplier_bonus__inner.classList.add("multiplier_bonus__number");
+    this.multiplier_bonus__inner.innerHTML = this.clickerMultiplier + "<span>x</span>";
+
+    this.multiplier_bonus.append(this.multiplier_bonus__inner);
+
+    document.querySelector(".clicker").append(this.multiplier_bonus);
 
     this.instantiateMembers();
     this.loadPossibleItems();
@@ -153,46 +169,57 @@ class Game {
     }
   }
 
+  updateStats() {
+    let container = document.querySelector(".stats__content");
+    container.innerHTML = "";
+
+    let date = new Date(this.runStarted).toLocaleString();
+    let dateEntry = document.createElement("div");
+    dateEntry.classList.add("stats__entry");
+    dateEntry.innerHTML = "<span>Spielbeginn:</span><span>" + date + "</span>";
+
+    let handMadeEntry = document.createElement("div");
+    handMadeEntry.classList.add("stats__entry");
+    handMadeEntry.innerHTML = "<span>Von Hand geöffnete Biere:</span><span>" + window["numberAsText"](this.handmadeCaps) + "</span>";
+
+    let missedPeloEntry = document.createElement("div");
+    missedPeloEntry.classList.add("stats__entry");
+    missedPeloEntry.innerHTML = "<span>Verpasste goldene PeLos:</span><span>" + this.missedGoldenPelo + "</span>";
+
+    let membersEntry = document.createElement("div");
+    membersEntry.classList.add("stats__entry");
+    membersEntry.innerHTML = "<span>Anzahl Mitglieder:</span><span>" + this.totalMembers + "</span>";
+
+    container.append(dateEntry);
+    container.append(handMadeEntry);
+    container.append(missedPeloEntry);
+    container.append(membersEntry);
+  }
+
   updateInventory() {
-    if (this.items.length <= 0) {
-      this.inventoryContainer.innerHTML = "<p>Dein Inventar ist leer! :(</p>";
-      document.querySelector(".inventory__count").classList.remove("inventory__count--visible");
-      return;
-    } else {
-      this.inventoryContainer.innerHTML = "";
-
-      document.querySelector(".inventory__count").classList.add("inventory__count--visible");
-      document.querySelector(".inventory__count").innerHTML = this.items.length + "";
-    }
-
     let itemsCollected = [];
 
     this.items.forEach((item) => {
-      
-        let found = itemsCollected.find((i) => i.id === item.id);
-        if (!found) {
-          itemsCollected.push(item);
-          item.amount = 1;
-          this.inventoryContainer.append(item.dom);
-          item.updateAmount();
-          item.dom.onclick = () => {
-            if (!this.activeBuff) {
-              this.consumeBuff(item);
-            } else {
-              alert("Du kannst nur einen Trank auf einmal aktiv haben!");
-            }
-          };
-        } else {
-          found.amount++;
-          found.updateAmount();
-        }
-      
+      let found = itemsCollected.find((i) => i.id === item.id);
+      if (!found) {
+        itemsCollected.push(item);
+        item.amount = 1;
+        this.inventoryContainer.append(item.dom);
+        item.dom.onclick = () => {
+          if (!this.activeBuff) {
+            this.consumeBuff(item);
+          } else {
+            alert("Du kannst nur einen Trank auf einmal aktiv haben!");
+          }
+        };
+      }
     });
   }
 
   consumeBuff(item) {
     const index = this.items.findIndex((i) => i.id === item.id || i.name === item.name);
     this.items.splice(index, 1);
+    document.querySelector(".inventory__modal").classList.remove("inventory__modal--open");
     if (item.id === 1000) {
       let possibleIds = [];
       this.members.forEach((m) => {
@@ -206,9 +233,26 @@ class Game {
 
       wonMember.amount++;
       alert("Gratuliere! 1x " + wonMember.name);
+    } else if (item.id === 4) {
+      let possibleIds = [];
+      this.members.forEach((m) => {
+        if (m.amount > 0) {
+          possibleIds.push(m.id);
+        }
+      });
+
+      let wonId = Math.floor(Math.random() * possibleIds.length - 1);
+      let lostId = Math.floor(Math.random() * possibleIds.length - 1);
+      let wonMember = this.members.find((m) => m.id === wonId);
+      let lostMember = this.members.find((m) => m.id === lostId);
+
+      wonMember.amount++;
+      lostMember.amount--;
+      alert("Mitgliederveränderungen: +1 " + wonMember.name + ", -1 " + lostMember.name);
     } else {
       this.buffStart = Date.now();
       this.activeBuff = item;
+      document.querySelector(".active_buff__image")["src"] = "/img/items/" + item.imageString;
     }
     this.updateInventory();
     this.save.save();
@@ -218,11 +262,16 @@ class Game {
     if (this.activeBuff) {
       let dur = this.activeBuff.duration * 1000;
       if (this.buffStart + dur > Date.now()) {
+        let remain = (this.buffStart + dur - Date.now()) / (this.activeBuff.duration * 1000);
+
         document.querySelector("body").classList.add("buff");
+        document.querySelector(".active_buff").classList.add("active_buff--visible");
+        document.querySelector(".active_buff__time--inner").style.width = remain * 100 + "%";
       } else {
         this.activeBuff = null;
         this.buffStart = 0;
         document.querySelector("body").classList.remove("buff");
+        document.querySelector(".active_buff").classList.remove("active_buff--visible");
       }
     }
   }
@@ -277,10 +326,23 @@ class Game {
     } else {
       document.querySelector(".inventory").classList.remove("visible");
     }
-
+    this.checkClickMultiplier();
     this.checkBuff();
 
     this.runDuration = Date.now() - this.runStarted;
+  }
+
+  checkClickMultiplier() {
+    if (this.clickerMultiplier <= 1 || Date.now() - 500 > this.lastClickTimestamp) {
+      this.multiplier_bonus.classList.remove("multiplier_bonus--visible");
+      this.multiplier_bonus.classList.remove("multiplier_bonus--2");
+      this.multiplier_bonus.classList.remove("multiplier_bonus--4");
+      this.multiplier_bonus.classList.remove("multiplier_bonus--8");
+    } else {
+      this.multiplier_bonus__inner.innerHTML = this.clickerMultiplier + "<span>x</span>";
+      this.multiplier_bonus.classList.add("multiplier_bonus--" + this.clickerMultiplier);
+      this.multiplier_bonus.classList.add("multiplier_bonus--visible");
+    }
   }
 
   addSaveAndLoadDialogLogic() {
@@ -331,7 +393,7 @@ class Game {
   }
 
   spawnRandomItem() {
-    let percentChancePerSecond = 0.01 / (1000 / this.intervalSpeed);
+    let percentChancePerSecond = 1.01 / (1000 / this.intervalSpeed);
 
     if (this.activeBuff && this.activeBuff.referenceMemberId === -1) {
       percentChancePerSecond *= this.activeBuff.power;
@@ -344,7 +406,7 @@ class Game {
       this.goldenpelo.style.top = top + "px";
       this.goldenpelo.style.left = left + "px";
 
-      let clone = this.goldenpelo.cloneNode(true) as HTMLElement;
+      let clone = this.goldenpelo.cloneNode(true) as HTMLImageElement;
 
       document.querySelector("body").append(clone);
 
@@ -354,12 +416,21 @@ class Game {
       }, 3000);
 
       clone.onclick = () => {
-        let randomItem = this.possibleItems[Math.floor(Math.random() * this.possibleItems.length)];
+        let possibleIds = [1, 2, 3, 4];
+        if (this.activeBuff && this.activeBuff.id === 3) {
+          possibleIds = [1, 2, 4];
+        }
+
+        let randomItem = this.inventory.getRandomItem(possibleIds);
+        this.inventory.addItem(randomItem.id);
+
+        clone.src = "/img/items/" + randomItem["imageString"];
+        clone.classList.add("collected");
         this.items.push(
           new Item(
             randomItem["id"],
             randomItem["name"],
-            randomItem["image"],
+            randomItem["imageString"],
             randomItem["description"],
             randomItem["text"],
             randomItem["referenceMemberId"],
@@ -369,7 +440,9 @@ class Game {
           )
         );
         this.updateInventory();
-        clone.remove();
+        setTimeout(() => {
+          clone.remove();
+        }, 500);
       };
     }
   }
