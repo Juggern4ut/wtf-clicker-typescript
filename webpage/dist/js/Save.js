@@ -23,7 +23,7 @@ var Save = /** @class */ (function () {
         var localStorageData;
         if (fromString) {
             localStorageData = fromString;
-            this.game.clearInventory();
+            this.game.inventory.clearInventory();
         }
         else {
             localStorageData = localStorage.getItem("WtfClickerGame2");
@@ -46,7 +46,7 @@ var Save = /** @class */ (function () {
                 data_1["inventory_new"].forEach(function (item) {
                     _this.game.inventory.addItem(item.id, item.amount);
                 });
-                this.game.updateInventory();
+                this.game.inventory.updateInventory();
             }
             if (data_1["game"]) {
                 Object.keys(data_1["game"]).forEach(function (k) {

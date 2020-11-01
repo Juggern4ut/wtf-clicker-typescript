@@ -28,7 +28,7 @@ class Save {
     let localStorageData;
     if (fromString) {
       localStorageData = fromString;
-      this.game.clearInventory();
+      this.game.inventory.clearInventory();
     } else {
       localStorageData = localStorage.getItem("WtfClickerGame2");
     }
@@ -55,7 +55,7 @@ class Save {
         data["inventory_new"].forEach((item) => {
           this.game.inventory.addItem(item.id, item.amount);
         });
-        this.game.updateInventory();
+        this.game.inventory.updateInventory();
       }
 
       if (data["game"]) {

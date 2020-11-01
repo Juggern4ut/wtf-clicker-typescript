@@ -176,4 +176,12 @@ class Inventory {
       }
     });
   }
+
+  /**
+   * Will clear the inventory of all items
+   */
+  clearInventory() {
+    this.items = [];
+    this.updateInventory();
+  }
 }

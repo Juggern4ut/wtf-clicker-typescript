@@ -149,5 +149,12 @@ var Inventory = /** @class */ (function () {
             }
         });
     };
+    /**
+     * Will clear the inventory of all items
+     */
+    Inventory.prototype.clearInventory = function () {
+        this.items = [];
+        this.updateInventory();
+    };
     return Inventory;
 }());

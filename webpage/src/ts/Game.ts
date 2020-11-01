@@ -4,15 +4,12 @@ class Game {
   members: Member[] = [];
   upgrades: Upgrade[] = [];
   clickerUpgrades: ClickerUpgrade[] = [];
-  items: Item[] = [];
   score: number = 0;
   scoreElement: Score;
   showBoughtUpgrades: boolean;
   saveInterval: NodeJS.Timeout;
   lastUpdate: number;
   inventoryContainer: HTMLElement;
-  activeBuff: Item;
-  buffStart: number;
   dailyBonusGot: number = 0;
   saveDialog: HTMLElement;
   loadDialog: HTMLElement;
@@ -21,45 +18,24 @@ class Game {
   totalMembers: number;
   runStarted: number;
   runDuration: number;
-  possibleItems: object[] = [];
-  goldenpelo: HTMLImageElement;
-  missedGoldenPelo: number = 0;
-  multiplier_bonus: HTMLElement;
-  multiplier_bonus__inner: HTMLElement;
 
   save: Save;
   buff: Buff;
   clicker: Clicker;
   inventory: Inventory;
-
-  clickerMultiplier: number = 1;
-  lastClickTimestamp: number;
-  continuousClicks: number = 0;
+  goldenPelo: GoldenPelo;
 
   constructor() {
     this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
     this.clicker = new Clicker(this);
+    this.goldenPelo = new GoldenPelo(this);
+
     this.saveDialog = document.querySelector(".saveDialog");
     this.loadDialog = document.querySelector(".loadDialog");
     this.inventoryContainer = document.querySelector(".inventory__content");
     this.runStarted = Date.now();
 
-    this.goldenpelo = document.createElement("img");
-    this.goldenpelo.src = "/img/golden_pelo.png";
-    this.goldenpelo.classList.add("golden-pelo");
-
-    this.multiplier_bonus = document.createElement("div");
-    this.multiplier_bonus.classList.add("multiplier_bonus");
-    this.multiplier_bonus__inner = document.createElement("p");
-    this.multiplier_bonus__inner.classList.add("multiplier_bonus__number");
-    this.multiplier_bonus__inner.innerHTML = this.clickerMultiplier + "<span>x</span>";
-
-    this.multiplier_bonus.append(this.multiplier_bonus__inner);
-
-    document.querySelector(".clicker").append(this.multiplier_bonus);
-
     this.instantiateMembers();
-    this.loadPossibleItems();
 
     this.buff = new Buff(this.members);
     this.inventory = new Inventory(this.buff);
@@ -81,12 +57,6 @@ class Game {
     }, this.intervalSpeed);
 
     this.addSaveAndLoadDialogLogic();
-  }
-
-  loadPossibleItems() {
-    fetch("/data/items.json")
-      .then((res) => res.json())
-      .then((items) => (this.possibleItems = items));
   }
 
   instantiateMembers() {
@@ -187,7 +157,7 @@ class Game {
 
     let missedPeloEntry = document.createElement("div");
     missedPeloEntry.classList.add("stats__entry");
-    missedPeloEntry.innerHTML = "<span>Verpasste goldene PeLos:</span><span>" + this.missedGoldenPelo + "</span>";
+    missedPeloEntry.innerHTML = "<span>Verpasste goldene PeLos:</span><span>" + this.goldenPelo.missedGoldenPelo + "</span>";
 
     let membersEntry = document.createElement("div");
     membersEntry.classList.add("stats__entry");
@@ -199,88 +169,7 @@ class Game {
     container.append(membersEntry);
   }
 
-  updateInventory() {
-    let itemsCollected = [];
-
-    this.items.forEach((item) => {
-      let found = itemsCollected.find((i) => i.id === item.id);
-      if (!found) {
-        itemsCollected.push(item);
-        item.amount = 1;
-        this.inventoryContainer.append(item.dom);
-        item.dom.onclick = () => {
-          if (!this.activeBuff) {
-            this.consumeBuff(item);
-          } else {
-            alert("Du kannst nur einen Trank auf einmal aktiv haben!");
-          }
-        };
-      }
-    });
-  }
-
-  consumeBuff(item) {
-    const index = this.items.findIndex((i) => i.id === item.id || i.name === item.name);
-    this.items.splice(index, 1);
-    document.querySelector(".inventory__modal").classList.remove("inventory__modal--open");
-    if (item.id === 1000) {
-      let possibleIds = [];
-      this.members.forEach((m) => {
-        if (m.amount > 0) {
-          possibleIds.push(m.id);
-        }
-      });
-
-      let wonId = Math.floor(Math.random() * possibleIds.length - 1);
-      let wonMember = this.members.find((m) => m.id === wonId);
-
-      wonMember.amount++;
-      alert("Gratuliere! 1x " + wonMember.name);
-    } else if (item.id === 4) {
-      let possibleIds = [];
-      this.members.forEach((m) => {
-        if (m.amount > 0) {
-          possibleIds.push(m.id);
-        }
-      });
-
-      let wonId = Math.floor(Math.random() * possibleIds.length - 1);
-      let lostId = Math.floor(Math.random() * possibleIds.length - 1);
-      let wonMember = this.members.find((m) => m.id === wonId);
-      let lostMember = this.members.find((m) => m.id === lostId);
-
-      wonMember.amount++;
-      lostMember.amount--;
-      alert("Mitgliederveränderungen: +1 " + wonMember.name + ", -1 " + lostMember.name);
-    } else {
-      this.buffStart = Date.now();
-      this.activeBuff = item;
-      document.querySelector(".active_buff__image")["src"] = "/img/items/" + item.imageString;
-    }
-    this.updateInventory();
-    this.save.save();
-  }
-
-  // checkBuff() {
-  //   if (this.activeBuff) {
-  //     let dur = this.activeBuff.duration * 1000;
-  //     if (this.buffStart + dur > Date.now()) {
-  //       let remain = (this.buffStart + dur - Date.now()) / (this.activeBuff.duration * 1000);
-
-  //       document.querySelector("body").classList.add("buff");
-  //       document.querySelector(".active_buff").classList.add("active_buff--visible");
-  //       document.querySelector(".active_buff__time--inner").style.width = remain * 100 + "%";
-  //     } else {
-  //       this.activeBuff = null;
-  //       this.buffStart = 0;
-  //       document.querySelector("body").classList.remove("buff");
-  //       document.querySelector(".active_buff").classList.remove("active_buff--visible");
-  //     }
-  //   }
-  // }
-
   step() {
-
     this.buff.update();
 
     let difference = 1;
@@ -297,14 +186,14 @@ class Game {
     let increase = 0;
 
     this.members.forEach((m) => {
-      increase += m.getIncrease(this.activeBuff);
+      increase += m.getIncrease(this.buff.activeBuff);
     });
 
     increase *= difference;
 
     this.members.forEach((m) => {
       m.updateBuyability(this.score);
-      m.update(this.score, this.showBoughtUpgrades, this.activeBuff);
+      m.update(this.score, this.showBoughtUpgrades, this.buff.activeBuff);
     });
 
     this.clickerUpgrades.forEach((c) => {
@@ -316,9 +205,9 @@ class Game {
     this.members.forEach((mem) => (this.totalMembers += mem.amount));
 
     let buffedIncrease = 0;
-    if (this.activeBuff && this.activeBuff.id === 2) {
-      this.score += (increase / (1000 / this.intervalSpeed)) * 66;
-      buffedIncrease = increase * this.activeBuff.power;
+    if (this.buff.activeBuff && this.buff.activeBuff.id === 2) {
+      this.score += (increase / (1000 / this.intervalSpeed)) * this.buff.activeBuff.power;
+      buffedIncrease = increase * this.buff.activeBuff.power;
     } else {
       this.score += increase / (1000 / this.intervalSpeed);
       buffedIncrease = increase;
@@ -328,26 +217,12 @@ class Game {
 
     if (increase > 10000000) {
       document.querySelector(".inventory").classList.add("visible");
-      this.spawnRandomItem();
+      this.goldenPelo.spawnRandomItem();
     } else {
       document.querySelector(".inventory").classList.remove("visible");
     }
-    this.checkClickMultiplier();
 
     this.runDuration = Date.now() - this.runStarted;
-  }
-
-  checkClickMultiplier() {
-    if (this.clickerMultiplier <= 1 || Date.now() - 500 > this.lastClickTimestamp) {
-      this.multiplier_bonus.classList.remove("multiplier_bonus--visible");
-      this.multiplier_bonus.classList.remove("multiplier_bonus--2");
-      this.multiplier_bonus.classList.remove("multiplier_bonus--4");
-      this.multiplier_bonus.classList.remove("multiplier_bonus--8");
-    } else {
-      this.multiplier_bonus__inner.innerHTML = this.clickerMultiplier + "<span>x</span>";
-      this.multiplier_bonus.classList.add("multiplier_bonus--" + this.clickerMultiplier);
-      this.multiplier_bonus.classList.add("multiplier_bonus--visible");
-    }
   }
 
   addSaveAndLoadDialogLogic() {
@@ -389,66 +264,5 @@ class Game {
         alert("Fehler!");
       }
     });
-  }
-
-  clearInventory() {
-    this.items = [];
-    this.updateInventory();
-    this.save.save();
-  }
-
-  spawnRandomItem() {
-    let percentChancePerSecond = 1.01 / (1000 / this.intervalSpeed);
-
-    if (this.activeBuff && this.activeBuff.referenceMemberId === -1) {
-      percentChancePerSecond *= this.activeBuff.power;
-    }
-
-    if (Math.random() < percentChancePerSecond) {
-      const top = Math.random() * (window.innerHeight - 150);
-      const left = Math.random() * (window.innerWidth - 150);
-
-      this.goldenpelo.style.top = top + "px";
-      this.goldenpelo.style.left = left + "px";
-
-      let clone = this.goldenpelo.cloneNode(true) as HTMLImageElement;
-
-      document.querySelector("body").append(clone);
-
-      setTimeout(() => {
-        clone.remove();
-        this.missedGoldenPelo++;
-      }, 3000);
-
-      clone.onclick = () => {
-        let possibleIds = [1, 2, 3, 4];
-        if (this.activeBuff && this.activeBuff.id === 3) {
-          possibleIds = [1, 2, 4];
-        }
-
-        let randomItem = this.inventory.getRandomItem(possibleIds);
-        this.inventory.addItem(randomItem.id);
-
-        clone.src = "/img/items/" + randomItem["imageString"];
-        clone.classList.add("collected");
-        this.items.push(
-          new Item(
-            randomItem["id"],
-            randomItem["name"],
-            randomItem["imageString"],
-            randomItem["description"],
-            randomItem["text"],
-            randomItem["referenceMemberId"],
-            randomItem["power"],
-            randomItem["consumable"],
-            randomItem["duration"]
-          )
-        );
-        this.updateInventory();
-        setTimeout(() => {
-          clone.remove();
-        }, 500);
-      };
-    }
   }
 }

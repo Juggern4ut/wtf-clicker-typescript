@@ -13,12 +13,12 @@
   {
     "id": 2,
     "name": "Wasserkochsalzlösung",
-    "description": "Deine Bierdeckel pro Sekunde werden für 5 Sekunden 50x effizienter!",
+    "description": "Deine Bierdeckel pro Sekunde werden für 5 Sekunden 10x effizienter!",
     "text": "Regt den Durst an",
     "image": "potion_green.png",
     "consumable": true,
     "referenceMemberId": 0,
-    "power": 50,
+    "power": 10,
     "duration": 5
   },
   {

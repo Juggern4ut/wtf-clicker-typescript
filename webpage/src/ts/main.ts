@@ -13,7 +13,6 @@ window.onload = () => {
     document.querySelector(".stats").classList.remove("stats--open");
   });
 
-
   window["numberWithCommas"] = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
   };
