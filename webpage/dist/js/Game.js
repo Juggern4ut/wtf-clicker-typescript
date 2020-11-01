@@ -8,6 +8,7 @@ var Game = /** @class */ (function () {
         this.score = 0;
         this.dailyBonusGot = 0;
         this.handmadeCaps = 0;
+        this.missedGoldenPelo = 0;
         this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
         this.clicker = new Clicker(this);
         this.goldenPelo = new GoldenPelo(this);

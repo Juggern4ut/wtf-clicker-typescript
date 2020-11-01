@@ -18,6 +18,7 @@ class Game {
   totalMembers: number;
   runStarted: number;
   runDuration: number;
+  missedGoldenPelo: number = 0;
 
   save: Save;
   buff: Buff;

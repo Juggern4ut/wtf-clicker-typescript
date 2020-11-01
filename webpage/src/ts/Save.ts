@@ -16,7 +16,7 @@ class Save {
       dailyBonusGot: this.game.dailyBonusGot,
       handmadeCaps: this.game.handmadeCaps,
       runStarted: this.game.runStarted,
-      missedGoldenPelo: this.game.missedGoldenPelo,
+      missedGoldenPelo: this.game.goldenPelo.missedGoldenPelo,
     };
 
     const saveString = btoa(JSON.stringify(saveData));

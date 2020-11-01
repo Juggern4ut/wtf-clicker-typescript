@@ -37,7 +37,7 @@ class GoldenPelo {
 
       clone.onclick = () => {
         let possibleIds = [1, 2, 3, 4];
-        if (this.game.activeBuff && this.game.activeBuff.id === 3) {
+        if (this.game.buff.activeBuff && this.game.buff.activeBuff.id === 3) {
           possibleIds = [1, 2, 4];
         }
 

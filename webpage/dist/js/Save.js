@@ -12,7 +12,7 @@ var Save = /** @class */ (function () {
             dailyBonusGot: this.game.dailyBonusGot,
             handmadeCaps: this.game.handmadeCaps,
             runStarted: this.game.runStarted,
-            missedGoldenPelo: this.game.missedGoldenPelo
+            missedGoldenPelo: this.game.goldenPelo.missedGoldenPelo
         };
         var saveString = btoa(JSON.stringify(saveData));
         localStorage.setItem("WtfClickerGame2", saveString);
