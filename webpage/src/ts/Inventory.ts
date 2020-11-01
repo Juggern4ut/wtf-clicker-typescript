@@ -7,13 +7,15 @@ class Inventory {
   items: Item[] = [];
   stack: amount[] = [];
   itemAmount: number = 0;
+  buff: Buff;
 
   inventoryButton: HTMLElement;
   modal: HTMLElement;
   inventoryContent: HTMLElement;
   inventoryAmount: HTMLElement;
 
-  constructor() {
+  constructor(buff: Buff) {
+    this.buff = buff;
     this.loadItems();
     this.initInventoryButton();
   }
@@ -99,6 +101,22 @@ class Inventory {
   }
 
   /**
+   * Consume a item and send information about it to the buff class
+   * @param item The item to consume
+   */
+  consumeItem(item: Item) {
+    const found = this.stack.find((i) => i.id === item.id);
+    if (found) {
+      this.itemAmount--;
+      found.amount--;
+      this.updateInventory();
+      this.buff.consumeItem(item);
+    } else {
+      console.warn("Das Item mit der ID: " + item.id + " wurde nicht gefunden und dem Inventar nicht hinzugefügt.");
+    }
+  }
+
+  /**
    * Will update the whole DOM of the inventory
    */
   updateInventory() {
@@ -147,10 +165,12 @@ class Inventory {
         container.append(amount);
 
         container.onclick = () => {
-            stack.amount--;
-            this.updateInventory();
+          this.consumeItem(item);
+          this.updateInventory();
+          if (item.duration) {
             this.closeInventory();
-        }
+          }
+        };
 
         this.inventoryContent.append(container);
       }

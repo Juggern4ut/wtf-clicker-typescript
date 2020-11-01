@@ -21,7 +21,7 @@ class Item {
     this.referenceMemberId = referenceMemberId;
     this.power = power;
     this.consumable = consumable;
-    this.duration = duration ? duration : 60;
+    this.duration = duration;
     this.createImage();
     this.createDom();
   }

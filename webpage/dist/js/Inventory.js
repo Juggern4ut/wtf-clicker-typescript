@@ -1,8 +1,9 @@
 var Inventory = /** @class */ (function () {
-    function Inventory() {
+    function Inventory(buff) {
         this.items = [];
         this.stack = [];
         this.itemAmount = 0;
+        this.buff = buff;
         this.loadItems();
         this.initInventoryButton();
     }
@@ -83,6 +84,22 @@ var Inventory = /** @class */ (function () {
         }
     };
     /**
+     * Consume a item and send information about it to the buff class
+     * @param item The item to consume
+     */
+    Inventory.prototype.consumeItem = function (item) {
+        var found = this.stack.find(function (i) { return i.id === item.id; });
+        if (found) {
+            this.itemAmount--;
+            found.amount--;
+            this.updateInventory();
+            this.buff.consumeItem(item);
+        }
+        else {
+            console.warn("Das Item mit der ID: " + item.id + " wurde nicht gefunden und dem Inventar nicht hinzugefügt.");
+        }
+    };
+    /**
      * Will update the whole DOM of the inventory
      */
     Inventory.prototype.updateInventory = function () {
@@ -122,9 +139,11 @@ var Inventory = /** @class */ (function () {
                 container.append(info);
                 container.append(amount);
                 container.onclick = function () {
-                    stack.amount--;
+                    _this.consumeItem(item);
                     _this.updateInventory();
-                    _this.closeInventory();
+                    if (item.duration) {
+                        _this.closeInventory();
+                    }
                 };
                 _this.inventoryContent.append(container);
             }

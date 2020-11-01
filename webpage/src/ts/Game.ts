@@ -7,10 +7,8 @@ class Game {
   items: Item[] = [];
   score: number = 0;
   scoreElement: Score;
-  save: Save;
   showBoughtUpgrades: boolean;
   saveInterval: NodeJS.Timeout;
-  clicker: Clicker;
   lastUpdate: number;
   inventoryContainer: HTMLElement;
   activeBuff: Item;
@@ -28,6 +26,10 @@ class Game {
   missedGoldenPelo: number = 0;
   multiplier_bonus: HTMLElement;
   multiplier_bonus__inner: HTMLElement;
+
+  save: Save;
+  buff: Buff;
+  clicker: Clicker;
   inventory: Inventory;
 
   clickerMultiplier: number = 1;
@@ -46,8 +48,6 @@ class Game {
     this.goldenpelo.src = "/img/golden_pelo.png";
     this.goldenpelo.classList.add("golden-pelo");
 
-    this.inventory = new Inventory();
-
     this.multiplier_bonus = document.createElement("div");
     this.multiplier_bonus.classList.add("multiplier_bonus");
     this.multiplier_bonus__inner = document.createElement("p");
@@ -60,6 +60,9 @@ class Game {
 
     this.instantiateMembers();
     this.loadPossibleItems();
+
+    this.buff = new Buff(this.members);
+    this.inventory = new Inventory(this.buff);
 
     const showBoughtButton = document.querySelector(".showBought") as HTMLButtonElement;
     showBoughtButton.onclick = () => {
@@ -258,25 +261,28 @@ class Game {
     this.save.save();
   }
 
-  checkBuff() {
-    if (this.activeBuff) {
-      let dur = this.activeBuff.duration * 1000;
-      if (this.buffStart + dur > Date.now()) {
-        let remain = (this.buffStart + dur - Date.now()) / (this.activeBuff.duration * 1000);
+  // checkBuff() {
+  //   if (this.activeBuff) {
+  //     let dur = this.activeBuff.duration * 1000;
+  //     if (this.buffStart + dur > Date.now()) {
+  //       let remain = (this.buffStart + dur - Date.now()) / (this.activeBuff.duration * 1000);
 
-        document.querySelector("body").classList.add("buff");
-        document.querySelector(".active_buff").classList.add("active_buff--visible");
-        document.querySelector(".active_buff__time--inner").style.width = remain * 100 + "%";
-      } else {
-        this.activeBuff = null;
-        this.buffStart = 0;
-        document.querySelector("body").classList.remove("buff");
-        document.querySelector(".active_buff").classList.remove("active_buff--visible");
-      }
-    }
-  }
+  //       document.querySelector("body").classList.add("buff");
+  //       document.querySelector(".active_buff").classList.add("active_buff--visible");
+  //       document.querySelector(".active_buff__time--inner").style.width = remain * 100 + "%";
+  //     } else {
+  //       this.activeBuff = null;
+  //       this.buffStart = 0;
+  //       document.querySelector("body").classList.remove("buff");
+  //       document.querySelector(".active_buff").classList.remove("active_buff--visible");
+  //     }
+  //   }
+  // }
 
   step() {
+
+    this.buff.update();
+
     let difference = 1;
     if (this.lastUpdate && Date.now() - this.lastUpdate > 1000) {
       difference = (Date.now() - this.lastUpdate) / 100;
@@ -327,7 +333,6 @@ class Game {
       document.querySelector(".inventory").classList.remove("visible");
     }
     this.checkClickMultiplier();
-    this.checkBuff();
 
     this.runDuration = Date.now() - this.runStarted;
   }

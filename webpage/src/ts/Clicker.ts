@@ -70,7 +70,7 @@ class Clicker {
       if (game.dailyBonusGot === 0) {
         let date = new Date();
         game.dailyBonusGot = date.getDate();
-        game.items.push(new Item(1000, "Daily Bonus!", "daily_bonus.png", "Wirbt automatisch ein Vereinsmitglied an!", "Deine Mutter wäre stolz auf dich!", -3, 1, true, 1));
+        game.inventory.addItem(1000,1);
         game.updateInventory();
       }
 

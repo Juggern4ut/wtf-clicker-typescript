@@ -22,7 +22,6 @@ var Game = /** @class */ (function () {
         this.goldenpelo = document.createElement("img");
         this.goldenpelo.src = "/img/golden_pelo.png";
         this.goldenpelo.classList.add("golden-pelo");
-        this.inventory = new Inventory();
         this.multiplier_bonus = document.createElement("div");
         this.multiplier_bonus.classList.add("multiplier_bonus");
         this.multiplier_bonus__inner = document.createElement("p");
@@ -30,10 +29,10 @@ var Game = /** @class */ (function () {
         this.multiplier_bonus__inner.innerHTML = this.clickerMultiplier + "<span>x</span>";
         this.multiplier_bonus.append(this.multiplier_bonus__inner);
         document.querySelector(".clicker").append(this.multiplier_bonus);
-        //this.items.push(new Item("Gelbes Getränk", "potion_yellow.png"));
-        //this.items.push(new Item("Grünes Getränk", "potion_green.png"));
         this.instantiateMembers();
         this.loadPossibleItems();
+        this.buff = new Buff(this.members);
+        this.inventory = new Inventory(this.buff);
         var showBoughtButton = document.querySelector(".showBought");
         showBoughtButton.onclick = function () {
             _this.showBoughtUpgrades = !_this.showBoughtUpgrades;
@@ -211,25 +210,25 @@ var Game = /** @class */ (function () {
         this.updateInventory();
         this.save.save();
     };
-    Game.prototype.checkBuff = function () {
-        if (this.activeBuff) {
-            var dur = this.activeBuff.duration * 1000;
-            if (this.buffStart + dur > Date.now()) {
-                var remain = (this.buffStart + dur - Date.now()) / (this.activeBuff.duration * 1000);
-                document.querySelector("body").classList.add("buff");
-                document.querySelector(".active_buff").classList.add("active_buff--visible");
-                document.querySelector(".active_buff__time--inner").style.width = remain * 100 + "%";
-            }
-            else {
-                this.activeBuff = null;
-                this.buffStart = 0;
-                document.querySelector("body").classList.remove("buff");
-                document.querySelector(".active_buff").classList.remove("active_buff--visible");
-            }
-        }
-    };
+    // checkBuff() {
+    //   if (this.activeBuff) {
+    //     let dur = this.activeBuff.duration * 1000;
+    //     if (this.buffStart + dur > Date.now()) {
+    //       let remain = (this.buffStart + dur - Date.now()) / (this.activeBuff.duration * 1000);
+    //       document.querySelector("body").classList.add("buff");
+    //       document.querySelector(".active_buff").classList.add("active_buff--visible");
+    //       document.querySelector(".active_buff__time--inner").style.width = remain * 100 + "%";
+    //     } else {
+    //       this.activeBuff = null;
+    //       this.buffStart = 0;
+    //       document.querySelector("body").classList.remove("buff");
+    //       document.querySelector(".active_buff").classList.remove("active_buff--visible");
+    //     }
+    //   }
+    // }
     Game.prototype.step = function () {
         var _this = this;
+        this.buff.update();
         var difference = 1;
         if (this.lastUpdate && Date.now() - this.lastUpdate > 1000) {
             difference = (Date.now() - this.lastUpdate) / 100;
@@ -273,7 +272,6 @@ var Game = /** @class */ (function () {
             document.querySelector(".inventory").classList.remove("visible");
         }
         this.checkClickMultiplier();
-        this.checkBuff();
         this.runDuration = Date.now() - this.runStarted;
     };
     Game.prototype.checkClickMultiplier = function () {
