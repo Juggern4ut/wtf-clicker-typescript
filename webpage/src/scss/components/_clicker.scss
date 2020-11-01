@@ -66,6 +66,7 @@
   cursor: pointer;
   margin-top: 10px;
   height: 300px;
+  padding: 0 100px;
   outline: none;
   &:hover {
     transform: scale(0.95);
@@ -74,4 +75,51 @@
     animation: shake 0.5s;
     animation-iteration-count: infinite;
   }
+}
+
+.multiplier_bonus {
+  transform: rotate(-45deg);
+  position: absolute;
+  top: -15px;
+  left: 0px;
+  font-size: 70px;
+  color: #6bc962;
+  text-shadow: 0px 0px 10px #000;
+  opacity: 0;
+  transition: 200ms ease-out;
+
+  &--2 {
+    color: #6bc962;
+  }
+
+  &--4 {
+    color: #c2a629;
+  }
+
+  &--8 {
+    color: #a82200;
+  }
+
+  &--visible {
+    opacity: 1;
+  }
+
+  &__number {
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
+    span {
+      font-size: 50px;
+    }
+  }
+
+  &--8 &__number {
+    font-size: 90px;
+    animation: shake_hard 0.3s !important;
+    animation-iteration-count: infinite !important;
+  }
+}
+
+
+body.buff .clicker{
+  animation: glow 800ms infinite alternate;
 }

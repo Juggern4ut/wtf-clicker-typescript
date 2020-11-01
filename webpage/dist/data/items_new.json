@@ -17,7 +17,7 @@
     "text": "Regt den Durst an",
     "image": "potion_green.png",
     "consumable": true,
-    "referenceMemberId": -2,
+    "referenceMemberId": 0,
     "power": 50,
     "duration": 5
   },
@@ -28,7 +28,7 @@
     "text": "Rape mer der PeLo?",
     "image": "potion_purple.png",
     "consumable": true,
-    "referenceMemberId": -1,
+    "referenceMemberId": 0,
     "power": 20,
     "duration": 8
   },
@@ -39,7 +39,18 @@
     "text": "Hallo Sandro, eg chan nüüt me läse!",
     "image": "potion_red.png",
     "consumable": true,
-    "referenceMemberId": -3,
+    "referenceMemberId": 0,
+    "power": 0,
+    "duration": 0
+  },
+  {
+    "id": 1000,
+    "name": "Daily Bonus",
+    "description": "Wirbt automatisch ein Vereinsmitglied an!",
+    "text": "Deine Mutter wäre stolz auf dich!",
+    "image": "daily_bonus.png",
+    "consumable": true,
+    "referenceMemberId": 0,
     "power": 0,
     "duration": 0
   }

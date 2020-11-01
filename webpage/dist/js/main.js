@@ -1,14 +1,13 @@
 window.onload = function () {
-    window["a"] = new LargeNumber(1, 6);
-    window["b"] = new LargeNumber(500, 3);
     document.querySelector(".navigation__burger").addEventListener("click", function () {
         document.querySelector(".navigation").classList.toggle("navigation--open");
     });
-    document.querySelector(".inventory").addEventListener("click", function () {
-        document.querySelector(".inventory__modal").classList.add("inventory__modal--open");
+    document.querySelector(".stats-button").addEventListener("click", function () {
+        window["clicker"].updateStats();
+        document.querySelector(".stats").classList.add("stats--open");
     });
-    document.querySelector(".inventory__close").addEventListener("click", function () {
-        document.querySelector(".inventory__modal").classList.remove("inventory__modal--open");
+    document.querySelector(".stats__close").addEventListener("click", function () {
+        document.querySelector(".stats").classList.remove("stats--open");
     });
     window["numberWithCommas"] = function (number) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");

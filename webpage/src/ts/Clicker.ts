@@ -38,6 +38,22 @@ class Clicker {
         container.querySelector(".Cap").remove();
       }, 200);
 
+      if (Date.now() - 500 < game.lastClickTimestamp) {
+        game.continuousClicks++;
+        if (game.continuousClicks > 100) {
+          game.clickerMultiplier = 8;
+        } else if (game.continuousClicks > 50) {
+          game.clickerMultiplier = 4;
+        } else if (game.continuousClicks > 15) {
+          game.clickerMultiplier = 2;
+        }
+      } else {
+        game.clickerMultiplier = 1;
+        game.continuousClicks = 0;
+      }
+
+      game.lastClickTimestamp = Date.now();
+
       let power = 1;
       game.clickerUpgrades.forEach((c) => {
         if (!c.bought) return false;
@@ -61,6 +77,8 @@ class Clicker {
       if (game.activeBuff && game.activeBuff.id === 2) {
         power *= game.activeBuff.power;
       }
+
+      power *= game.clickerMultiplier;
 
       let tmp = document.createElement("p");
       tmp.classList.add("clickIncrease");

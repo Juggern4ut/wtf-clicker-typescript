@@ -26,6 +26,23 @@ var Clicker = /** @class */ (function () {
             setTimeout(function () {
                 container.querySelector(".Cap").remove();
             }, 200);
+            if (Date.now() - 500 < game.lastClickTimestamp) {
+                game.continuousClicks++;
+                if (game.continuousClicks > 100) {
+                    game.clickerMultiplier = 8;
+                }
+                else if (game.continuousClicks > 50) {
+                    game.clickerMultiplier = 4;
+                }
+                else if (game.continuousClicks > 15) {
+                    game.clickerMultiplier = 2;
+                }
+            }
+            else {
+                game.clickerMultiplier = 1;
+                game.continuousClicks = 0;
+            }
+            game.lastClickTimestamp = Date.now();
             var power = 1;
             game.clickerUpgrades.forEach(function (c) {
                 if (!c.bought)
@@ -49,6 +66,7 @@ var Clicker = /** @class */ (function () {
             if (game.activeBuff && game.activeBuff.id === 2) {
                 power *= game.activeBuff.power;
             }
+            power *= game.clickerMultiplier;
             var tmp = document.createElement("p");
             tmp.classList.add("clickIncrease");
             tmp.innerHTML = "+ " + window["numberAsText"](power);
