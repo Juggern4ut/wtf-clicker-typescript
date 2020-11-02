@@ -53,7 +53,7 @@ var Game = /** @class */ (function () {
                     if (m.getPrice() <= _this.score) {
                         _this.score -= m.getPrice();
                         var el = _this.membersSave.find(function (i) { return i["id"] === m.id; });
-                        el.amount++;
+                        el["amount"]++;
                         m.setAmount(m.getAmount() + 1);
                         _this.save.save();
                     }
@@ -104,7 +104,7 @@ var Game = /** @class */ (function () {
                         upgrade.dom.onclick = function () {
                             if (_this.score >= upgrade.price && !upgrade.bought) {
                                 upgrade.bought = true;
-                                _this.upgradesSave.find(function (i) { return i.id === upgrade.id; }).bought = true;
+                                _this.upgradesSave.find(function (i) { return i["id"] === upgrade.id; })["bought"] = true;
                                 _this.score -= upgrade.price;
                                 _this.save.save();
                             }

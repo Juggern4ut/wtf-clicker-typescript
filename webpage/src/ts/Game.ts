@@ -81,7 +81,7 @@ class Game {
             if (m.getPrice() <= this.score) {
               this.score -= m.getPrice();
               const el = this.membersSave.find((i) => i["id"] === m.id);
-              el.amount++;
+              el["amount"]++;
               m.setAmount(m.getAmount() + 1);
               this.save.save();
             }
@@ -136,7 +136,7 @@ class Game {
               upgrade.dom.onclick = () => {
                 if (this.score >= upgrade.price && !upgrade.bought) {
                   upgrade.bought = true;
-                  this.upgradesSave.find((i) => i.id === upgrade.id).bought = true;
+                  this.upgradesSave.find((i) => i["id"] === upgrade.id)["bought"] = true;
                   this.score -= upgrade.price;
                   this.save.save();
                 }
