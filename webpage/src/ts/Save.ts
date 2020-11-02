@@ -41,6 +41,7 @@ class Save {
       const data = JSON.parse(atob(localStorageData));
 
       if (data["members_new"]) {
+        this.game.membersSave = data["members_new"];
         data["members_new"].forEach((mem) => {
           this.game.members.find((i) => i.id === mem.id).setAmount(mem.amount);
           this.game.membersSave.find((i) => i["id"] === mem.id)["amount"] = mem.amount;
@@ -48,6 +49,7 @@ class Save {
       }
 
       if (data["upgrades_new"]) {
+        this.game.upgradesSave = data["upgrades_new"];
         this.game.members.forEach((member) => {
           member.upgrades.forEach((upgrade) => {
             const found = data["upgrades_new"].find((i) => i.id === upgrade.id);

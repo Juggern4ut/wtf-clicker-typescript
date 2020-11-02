@@ -34,12 +34,14 @@ var Save = /** @class */ (function () {
         if (localStorageData) {
             var data_1 = JSON.parse(atob(localStorageData));
             if (data_1["members_new"]) {
+                this.game.membersSave = data_1["members_new"];
                 data_1["members_new"].forEach(function (mem) {
                     _this.game.members.find(function (i) { return i.id === mem.id; }).setAmount(mem.amount);
                     _this.game.membersSave.find(function (i) { return i["id"] === mem.id; })["amount"] = mem.amount;
                 });
             }
             if (data_1["upgrades_new"]) {
+                this.game.upgradesSave = data_1["upgrades_new"];
                 this.game.members.forEach(function (member) {
                     member.upgrades.forEach(function (upgrade) {
                         var found = data_1["upgrades_new"].find(function (i) { return i.id === upgrade.id; });
