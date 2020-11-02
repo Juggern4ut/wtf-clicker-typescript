@@ -60,6 +60,18 @@
     "getFromGoldenPelos": true
   },
   {
+    "id": 6,
+    "name": "Bierrubin",
+    "description": "???",
+    "text": "Er funkelt im dunkeln...",
+    "image": "beer_ruby.png",
+    "consumable": false,
+    "referenceMemberId": 0,
+    "power": 0,
+    "duration": 0,
+    "getFromGoldenPelos": true
+  },
+  {
     "id": 1000,
     "name": "Daily Bonus",
     "description": "Wirbt automatisch ein Vereinsmitglied an!",

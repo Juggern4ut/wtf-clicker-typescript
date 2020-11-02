@@ -143,13 +143,15 @@ var Inventory = /** @class */ (function () {
                 container.append(image);
                 container.append(info);
                 container.append(amount);
-                container.onclick = function () {
-                    _this.consumeItem(item);
-                    _this.updateInventory();
-                    if (item.duration) {
-                        _this.closeInventory();
-                    }
-                };
+                if (item.consumable) {
+                    container.onclick = function () {
+                        _this.consumeItem(item);
+                        _this.updateInventory();
+                        if (item.duration) {
+                            _this.closeInventory();
+                        }
+                    };
+                }
                 _this.inventoryContent.append(container);
             }
         });

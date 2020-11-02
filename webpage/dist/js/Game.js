@@ -179,7 +179,7 @@ var Game = /** @class */ (function () {
         }
         this.scoreElement.updateScore(this.score, buffedIncrease);
         this.capsPerSecond = buffedIncrease;
-        if (increase > 10000000) {
+        if (increase > 1000000) {
             document.querySelector(".inventory").classList.add("visible");
             this.goldenPelo.spawnRandomItem();
         }

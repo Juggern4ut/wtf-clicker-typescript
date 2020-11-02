@@ -183,13 +183,15 @@ class Inventory {
         container.append(info);
         container.append(amount);
 
-        container.onclick = () => {
-          this.consumeItem(item);
-          this.updateInventory();
-          if (item.duration) {
-            this.closeInventory();
-          }
-        };
+        if (item.consumable) {
+          container.onclick = () => {
+            this.consumeItem(item);
+            this.updateInventory();
+            if (item.duration) {
+              this.closeInventory();
+            }
+          };
+        }
 
         this.inventoryContent.append(container);
       }
