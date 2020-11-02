@@ -4,9 +4,12 @@ var Save = /** @class */ (function () {
     }
     Save.prototype.save = function () {
         var saveData = {};
-        saveData["members"] = this.game.members;
-        saveData["clickerUpgrades"] = this.game.clickerUpgrades;
+        //saveData["members"] = this.game.members;
+        //saveData["clickerUpgrades"] = this.game.clickerUpgrades;
         saveData["inventory_new"] = this.game.inventory.stack;
+        saveData["members_new"] = this.game.membersSave;
+        saveData["upgrades_new"] = this.game.upgradesSave;
+        saveData["clicker_upgrades_new"] = this.game.clickerUpgradesSave;
         saveData["game"] = {
             score: this.game.score,
             dailyBonusGot: this.game.dailyBonusGot,
@@ -30,18 +33,28 @@ var Save = /** @class */ (function () {
         }
         if (localStorageData) {
             var data_1 = JSON.parse(atob(localStorageData));
-            this.game.members.forEach(function (member) {
-                var saveMember = data_1["members"].find(function (m) { return m.id === member.id; });
-                member.amount = saveMember.amount;
-                member.upgrades.forEach(function (upgrade) {
-                    var saveUpgrade = saveMember.upgrades.find(function (u) { return u.id === upgrade.id; });
-                    upgrade.bought = saveUpgrade ? saveUpgrade.bought : false;
+            if (data_1["members_new"]) {
+                data_1["members_new"].forEach(function (mem) {
+                    _this.game.members.find(function (i) { return i.id === mem.id; }).setAmount(mem.amount);
+                    _this.game.membersSave.find(function (i) { return i["id"] === mem.id; })["amount"] = mem.amount;
                 });
-            });
-            this.game.clickerUpgrades.forEach(function (clickerUpgrade) {
-                var savedClickerUpgrade = data_1["clickerUpgrades"].find(function (u) { return u.id === clickerUpgrade.id; });
-                clickerUpgrade.bought = savedClickerUpgrade.bought;
-            });
+            }
+            if (data_1["upgrades_new"]) {
+                this.game.members.forEach(function (member) {
+                    member.upgrades.forEach(function (upgrade) {
+                        var found = data_1["upgrades_new"].find(function (i) { return i.id === upgrade.id; });
+                        if (found) {
+                            upgrade.bought = found.bought;
+                        }
+                    });
+                });
+            }
+            if (data_1["clicker_upgrades_new"]) {
+                data_1["clicker_upgrades_new"].forEach(function (upgrade) {
+                    _this.game.clickerUpgrades.find(function (i) { return i.id === upgrade.id; }).bought = upgrade.bought;
+                });
+                this.game.clickerUpgradesSave = data_1["clicker_upgrades_new"];
+            }
             if (data_1["inventory_new"]) {
                 data_1["inventory_new"].forEach(function (item) {
                     _this.game.inventory.addItem(item.id, item.amount);

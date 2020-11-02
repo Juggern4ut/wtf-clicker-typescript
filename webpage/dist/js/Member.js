@@ -110,6 +110,12 @@ var Member = /** @class */ (function () {
     Member.prototype.buy = function () {
         this.amount++;
     };
+    Member.prototype.getAmount = function () {
+        return this.amount;
+    };
+    Member.prototype.setAmount = function (amount) {
+        this.amount = amount;
+    };
     Member.prototype.updateUpgrades = function (score, showBought) {
         var _this = this;
         this.upgrades.forEach(function (u) {

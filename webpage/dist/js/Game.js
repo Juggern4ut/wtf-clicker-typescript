@@ -3,8 +3,11 @@ var Game = /** @class */ (function () {
         var _this = this;
         this.intervalSpeed = 100;
         this.members = [];
+        this.membersSave = [];
         this.upgrades = [];
+        this.upgradesSave = [];
         this.clickerUpgrades = [];
+        this.clickerUpgradesSave = [];
         this.score = 0;
         this.dailyBonusGot = 0;
         this.handmadeCaps = 0;
@@ -12,19 +15,19 @@ var Game = /** @class */ (function () {
         this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
         this.clicker = new Clicker(this);
         this.goldenPelo = new GoldenPelo(this);
+        this.instantiateMembers();
+        this.buff = new Buff(this.members);
+        this.inventory = new Inventory(this.buff);
+        this.save = new Save(this);
         this.saveDialog = document.querySelector(".saveDialog");
         this.loadDialog = document.querySelector(".loadDialog");
         this.inventoryContainer = document.querySelector(".inventory__content");
         this.runStarted = Date.now();
-        this.instantiateMembers();
-        this.buff = new Buff(this.members);
-        this.inventory = new Inventory(this.buff);
         var showBoughtButton = document.querySelector(".showBought");
         showBoughtButton.onclick = function () {
             _this.showBoughtUpgrades = !_this.showBoughtUpgrades;
             showBoughtButton.innerHTML = _this.showBoughtUpgrades ? "Gekaufte Upgrades ausblenden" : "Gekaufte Upgrades anzeigen";
         };
-        this.save = new Save(this);
         this.saveInterval = setInterval(function () {
             _this.save.save();
         }, 5000);
@@ -43,12 +46,15 @@ var Game = /** @class */ (function () {
             res.forEach(function (mem) {
                 var tmp = new Member(mem.name, mem.basePower, mem.basePrice, mem.image, mem.id);
                 _this.members.push(tmp);
+                _this.membersSave.push({ id: mem.id, amount: 0 });
             });
             _this.members.forEach(function (m) {
                 m.dom.container.onclick = function () {
                     if (m.getPrice() <= _this.score) {
                         _this.score -= m.getPrice();
-                        m.buy();
+                        var el = _this.membersSave.find(function (i) { return i["id"] === m.id; });
+                        el.amount++;
+                        m.setAmount(m.getAmount() + 1);
                         _this.save.save();
                     }
                 };
@@ -66,9 +72,11 @@ var Game = /** @class */ (function () {
             res.forEach(function (up) {
                 var tmp = new ClickerUpgrade(up.name, up.description, up.requirement, up.type, up.power, up.price, up.id);
                 _this.clickerUpgrades.push(tmp);
+                _this.clickerUpgradesSave.push({ id: up.id, bought: false });
                 tmp.dom.onclick = function () {
                     if (tmp.price <= _this.score) {
                         _this.score -= tmp.price;
+                        _this.clickerUpgradesSave.find(function (i) { return i["id"] === up.id; })["bought"] = true;
                         tmp.buy();
                         _this.save.save();
                     }
@@ -91,10 +99,12 @@ var Game = /** @class */ (function () {
             });
             _this.members.forEach(function (m) {
                 m.upgrades.forEach(function (upgrade) {
+                    _this.upgradesSave.push({ id: upgrade.id, bought: false });
                     if (upgrade.dom) {
                         upgrade.dom.onclick = function () {
                             if (_this.score >= upgrade.price && !upgrade.bought) {
                                 upgrade.bought = true;
+                                _this.upgradesSave.find(function (i) { return i.id === upgrade.id; }).bought = true;
                                 _this.score -= upgrade.price;
                                 _this.save.save();
                             }
@@ -204,15 +214,14 @@ var Game = /** @class */ (function () {
         });
         this.loadDialog.querySelector("button").addEventListener("click", function () {
             var loadState = _this.loadDialog.querySelector("textarea").value;
-            try {
-                JSON.parse(atob(loadState));
-                _this.save.load(loadState);
-                _this.loadDialog.querySelector("textarea").value = "";
-                _this.loadDialog.classList.remove("loadDialog__open");
-            }
-            catch (error) {
-                alert("Fehler!");
-            }
+            // try {
+            JSON.parse(atob(loadState));
+            _this.save.load(loadState);
+            _this.loadDialog.querySelector("textarea").value = "";
+            _this.loadDialog.classList.remove("loadDialog__open");
+            // } catch (error) {
+            //   alert("Fehler!");
+            // }
         });
     };
     return Game;

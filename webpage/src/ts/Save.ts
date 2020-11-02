@@ -8,9 +8,13 @@ class Save {
   save() {
     const saveData = {};
 
-    saveData["members"] = this.game.members;
-    saveData["clickerUpgrades"] = this.game.clickerUpgrades;
+    //saveData["members"] = this.game.members;
+    //saveData["clickerUpgrades"] = this.game.clickerUpgrades;
     saveData["inventory_new"] = this.game.inventory.stack;
+    saveData["members_new"] = this.game.membersSave;
+    saveData["upgrades_new"] = this.game.upgradesSave;
+    saveData["clicker_upgrades_new"] = this.game.clickerUpgradesSave;
+
     saveData["game"] = {
       score: this.game.score,
       dailyBonusGot: this.game.dailyBonusGot,
@@ -36,20 +40,30 @@ class Save {
     if (localStorageData) {
       const data = JSON.parse(atob(localStorageData));
 
-      this.game.members.forEach((member) => {
-        let saveMember = data["members"].find((m) => m.id === member.id);
-        member.amount = saveMember.amount;
-
-        member.upgrades.forEach((upgrade) => {
-          let saveUpgrade = saveMember.upgrades.find((u) => u.id === upgrade.id);
-          upgrade.bought = saveUpgrade ? saveUpgrade.bought : false;
+      if (data["members_new"]) {
+        data["members_new"].forEach((mem) => {
+          this.game.members.find((i) => i.id === mem.id).setAmount(mem.amount);
+          this.game.membersSave.find((i) => i["id"] === mem.id)["amount"] = mem.amount;
         });
-      });
+      }
 
-      this.game.clickerUpgrades.forEach((clickerUpgrade) => {
-        let savedClickerUpgrade = data["clickerUpgrades"].find((u) => u.id === clickerUpgrade.id);
-        clickerUpgrade.bought = savedClickerUpgrade.bought;
-      });
+      if (data["upgrades_new"]) {
+        this.game.members.forEach((member) => {
+          member.upgrades.forEach((upgrade) => {
+            const found = data["upgrades_new"].find((i) => i.id === upgrade.id);
+            if (found) {
+              upgrade.bought = found.bought;
+            }
+          });
+        });
+      }
+
+      if (data["clicker_upgrades_new"]) {
+        data["clicker_upgrades_new"].forEach((upgrade) => {
+          this.game.clickerUpgrades.find((i) => i.id === upgrade.id).bought = upgrade.bought;
+        });
+        this.game.clickerUpgradesSave = data["clicker_upgrades_new"];
+      }
 
       if (data["inventory_new"]) {
         data["inventory_new"].forEach((item) => {

@@ -26,11 +26,7 @@ var GoldenPelo = /** @class */ (function () {
                 _this.missedGoldenPelo++;
             }, this.duration * 1000);
             clone_1.onclick = function () {
-                var possibleIds = [1, 2, 3, 4];
-                if (_this.game.buff.activeBuff && _this.game.buff.activeBuff.id === 3) {
-                    possibleIds = [1, 2, 4];
-                }
-                var randomItem = _this.game.inventory.getRandomItem(possibleIds);
+                var randomItem = _this.game.inventory.getRandomItem([3]);
                 _this.game.inventory.addItem(randomItem.id);
                 clone_1.src = "/img/items/" + randomItem["imageString"];
                 clone_1.classList.add("collected");

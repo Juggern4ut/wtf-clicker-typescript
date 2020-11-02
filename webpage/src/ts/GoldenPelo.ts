@@ -4,7 +4,7 @@ class GoldenPelo {
   missedGoldenPelo: number = 0;
   duration: number = 3;
   game: Game;
-  
+
   constructor(game: Game) {
     this.game = game;
     this.goldenpelo = document.createElement("img");
@@ -36,12 +36,8 @@ class GoldenPelo {
       }, this.duration * 1000);
 
       clone.onclick = () => {
-        let possibleIds = [1, 2, 3, 4];
-        if (this.game.buff.activeBuff && this.game.buff.activeBuff.id === 3) {
-          possibleIds = [1, 2, 4];
-        }
+        let randomItem = this.game.inventory.getRandomItem([3]);
 
-        let randomItem = this.game.inventory.getRandomItem(possibleIds);
         this.game.inventory.addItem(randomItem.id);
 
         clone.src = "/img/items/" + randomItem["imageString"];

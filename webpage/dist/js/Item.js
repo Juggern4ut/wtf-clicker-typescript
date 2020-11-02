@@ -1,5 +1,5 @@
 var Item = /** @class */ (function () {
-    function Item(id, name, icon, description, text, referenceMemberId, power, consumable, duration) {
+    function Item(id, name, icon, description, text, referenceMemberId, power, consumable, duration, getFromPelo) {
         this.amount = 0;
         this.id = id;
         this.name = name;
@@ -10,6 +10,7 @@ var Item = /** @class */ (function () {
         this.power = power;
         this.consumable = consumable;
         this.duration = duration;
+        this.getFromPelo = getFromPelo;
         this.createImage();
         this.createDom();
     }

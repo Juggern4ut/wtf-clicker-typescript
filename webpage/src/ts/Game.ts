@@ -1,9 +1,16 @@
 class Game {
   intervalSpeed: number = 100;
   stepInterval: NodeJS.Timeout;
+
   members: Member[] = [];
+  membersSave: Object[] = [];
+
   upgrades: Upgrade[] = [];
+  upgradesSave: Object[] = [];
+
   clickerUpgrades: ClickerUpgrade[] = [];
+  clickerUpgradesSave: Object[] = [];
+
   score: number = 0;
   scoreElement: Score;
   showBoughtUpgrades: boolean;
@@ -30,24 +37,21 @@ class Game {
     this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
     this.clicker = new Clicker(this);
     this.goldenPelo = new GoldenPelo(this);
+    this.instantiateMembers();
+    this.buff = new Buff(this.members);
+    this.inventory = new Inventory(this.buff);
+    this.save = new Save(this);
 
     this.saveDialog = document.querySelector(".saveDialog");
     this.loadDialog = document.querySelector(".loadDialog");
     this.inventoryContainer = document.querySelector(".inventory__content");
     this.runStarted = Date.now();
 
-    this.instantiateMembers();
-
-    this.buff = new Buff(this.members);
-    this.inventory = new Inventory(this.buff);
-
     const showBoughtButton = document.querySelector(".showBought") as HTMLButtonElement;
     showBoughtButton.onclick = () => {
       this.showBoughtUpgrades = !this.showBoughtUpgrades;
       showBoughtButton.innerHTML = this.showBoughtUpgrades ? "Gekaufte Upgrades ausblenden" : "Gekaufte Upgrades anzeigen";
     };
-
-    this.save = new Save(this);
 
     this.saveInterval = setInterval(() => {
       this.save.save();
@@ -69,13 +73,16 @@ class Game {
         res.forEach((mem) => {
           const tmp = new Member(mem.name, mem.basePower, mem.basePrice, mem.image, mem.id);
           this.members.push(tmp);
+          this.membersSave.push({ id: mem.id, amount: 0 });
         });
 
         this.members.forEach((m) => {
           m.dom.container.onclick = () => {
             if (m.getPrice() <= this.score) {
               this.score -= m.getPrice();
-              m.buy();
+              const el = this.membersSave.find((i) => i["id"] === m.id);
+              el.amount++;
+              m.setAmount(m.getAmount() + 1);
               this.save.save();
             }
           };
@@ -94,9 +101,11 @@ class Game {
         res.forEach((up) => {
           const tmp = new ClickerUpgrade(up.name, up.description, up.requirement, up.type, up.power, up.price, up.id);
           this.clickerUpgrades.push(tmp);
+          this.clickerUpgradesSave.push({ id: up.id, bought: false });
           tmp.dom.onclick = () => {
             if (tmp.price <= this.score) {
               this.score -= tmp.price;
+              this.clickerUpgradesSave.find((i) => i["id"] === up.id)["bought"] = true;
               tmp.buy();
               this.save.save();
             }
@@ -121,10 +130,13 @@ class Game {
 
         this.members.forEach((m) => {
           m.upgrades.forEach((upgrade) => {
+            this.upgradesSave.push({ id: upgrade.id, bought: false });
+
             if (upgrade.dom) {
               upgrade.dom.onclick = () => {
                 if (this.score >= upgrade.price && !upgrade.bought) {
                   upgrade.bought = true;
+                  this.upgradesSave.find((i) => i.id === upgrade.id).bought = true;
                   this.score -= upgrade.price;
                   this.save.save();
                 }
@@ -256,14 +268,14 @@ class Game {
 
     this.loadDialog.querySelector("button").addEventListener("click", () => {
       const loadState = this.loadDialog.querySelector("textarea").value;
-      try {
-        JSON.parse(atob(loadState));
-        this.save.load(loadState);
-        this.loadDialog.querySelector("textarea").value = "";
-        this.loadDialog.classList.remove("loadDialog__open");
-      } catch (error) {
-        alert("Fehler!");
-      }
+      // try {
+      JSON.parse(atob(loadState));
+      this.save.load(loadState);
+      this.loadDialog.querySelector("textarea").value = "";
+      this.loadDialog.classList.remove("loadDialog__open");
+      // } catch (error) {
+      //   alert("Fehler!");
+      // }
     });
   }
 }

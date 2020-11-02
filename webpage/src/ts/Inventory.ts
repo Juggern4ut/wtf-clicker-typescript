@@ -63,7 +63,20 @@ class Inventory {
       .then((res) => res.json())
       .then((items) => {
         items.forEach((item) => {
-          this.items.push(new Item(item["id"], item["name"], item["image"], item["description"], item["text"], item["referenceMemberId"], item["power"], item["consumable"], item["duration"]));
+          this.items.push(
+            new Item(
+              item["id"],
+              item["name"],
+              item["image"],
+              item["description"],
+              item["text"],
+              item["referenceMemberId"],
+              item["power"],
+              item["consumable"],
+              item["duration"],
+              item["getFromGoldenPelos"]
+            )
+          );
           this.stack.push({ id: item["id"], amount: 0 });
         });
       });
@@ -71,10 +84,16 @@ class Inventory {
 
   /**
    * Will return a random item, but only if it's ID is present in the itemIds array
-   * @param itemIds An array of ids from which a random item will be selected
    * @returns A randomly selected Item
    */
-  getRandomItem(itemIds: number[]): Item {
+  getRandomItem(ungettable: number[]): Item {
+    let itemIds = [];
+    this.items.forEach((i) => {
+      if (i.getFromPelo && !ungettable.includes(i.id)) {
+        itemIds.push(i.id);
+      }
+    });
+
     let possItems = [];
     this.items.forEach((item) => {
       if (itemIds.find((i) => item["id"] === i)) {

@@ -47,17 +47,22 @@ var Inventory = /** @class */ (function () {
             .then(function (res) { return res.json(); })
             .then(function (items) {
             items.forEach(function (item) {
-                _this.items.push(new Item(item["id"], item["name"], item["image"], item["description"], item["text"], item["referenceMemberId"], item["power"], item["consumable"], item["duration"]));
+                _this.items.push(new Item(item["id"], item["name"], item["image"], item["description"], item["text"], item["referenceMemberId"], item["power"], item["consumable"], item["duration"], item["getFromGoldenPelos"]));
                 _this.stack.push({ id: item["id"], amount: 0 });
             });
         });
     };
     /**
      * Will return a random item, but only if it's ID is present in the itemIds array
-     * @param itemIds An array of ids from which a random item will be selected
      * @returns A randomly selected Item
      */
-    Inventory.prototype.getRandomItem = function (itemIds) {
+    Inventory.prototype.getRandomItem = function (ungettable) {
+        var itemIds = [];
+        this.items.forEach(function (i) {
+            if (i.getFromPelo && !ungettable.includes(i.id)) {
+                itemIds.push(i.id);
+            }
+        });
         var possItems = [];
         this.items.forEach(function (item) {
             if (itemIds.find(function (i) { return item["id"] === i; })) {
