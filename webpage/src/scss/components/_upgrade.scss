@@ -2,8 +2,8 @@
   display: flex;
   max-width: 100vw;
   overflow-x: auto;
-  padding: 0 10px;
-  
+  padding: 0 20px;
+
   &::after {
     content: "";
     flex: 0 0 10px;
@@ -19,42 +19,43 @@
     flex-shrink: 0;
     background-color: #fff;
     cursor: pointer;
-    &:hover{
+
+    &:hover {
       background-color: #dedede;
     }
 
     &:not(:last-of-type) {
-      margin-right: 10px;
+      margin-right: 20px;
     }
 
-    &.bought{
+    &.bought {
       background-color: #3cc645;
       opacity: 0.5;
       cursor: default;
 
-      *{
+      * {
         font-weight: bold;
       }
     }
 
-    &.disabled{
+    &.disabled {
       pointer-events: none;
       opacity: 0.3;
     }
 
-    &.hidden{
+    &.hidden {
       display: none;
     }
   }
 
-  &__price{
+  &__price {
     position: absolute;
     bottom: 5px;
     left: 5px;
     width: calc(100% - 10px);
   }
 
-  &__description{
+  &__description {
     max-width: 180px;
   }
 

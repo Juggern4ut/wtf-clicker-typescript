@@ -1,20 +1,22 @@
-"use strict";
-class Inventory {
-    items = [];
-    stack = [];
-    itemAmount = 0;
-    buff;
-    inventoryButton;
-    modal;
-    inventoryContent;
-    inventoryAmount;
+import { Item } from "./Item.js";
+/**
+ * Handles the inventory state and inventory modal interactions.
+ */
+export class Inventory {
+    /**
+     * Creates a new inventory instance.
+     * @param buff The buff manager used for item effects.
+     */
     constructor(buff) {
+        this.items = [];
+        this.stack = [];
+        this.itemAmount = 0;
         this.buff = buff;
         this.loadItems();
         this.initInventoryButton();
     }
     /**
-     * Initialize the handler to open and close the inventory
+     * Initialize the handler to open and close the inventory.
      */
     initInventoryButton() {
         this.inventoryButton = document.querySelector(".inventory");
@@ -25,25 +27,25 @@ class Inventory {
             this.openInventory();
             this.updateInventory();
         };
-        let closeButton = document.querySelector(".inventory__close");
+        const closeButton = document.querySelector(".inventory__close");
         closeButton.onclick = () => {
             this.closeInventory();
         };
     }
     /**
-     * Will open the Inventory Modal
+     * Will open the Inventory Modal.
      */
     openInventory() {
         this.modal.classList.add("inventory__modal--open");
     }
     /**
-     * Will close the Inventory Modal
+     * Will close the Inventory Modal.
      */
     closeInventory() {
         this.modal.classList.remove("inventory__modal--open");
     }
     /**
-     * Will load the Items from the json file
+     * Will load the Items from the json file.
      */
     loadItems() {
         this.stack = [];
@@ -51,37 +53,39 @@ class Inventory {
             .then((res) => res.json())
             .then((items) => {
             items.forEach((item) => {
-                this.items.push(new Item(item["id"], item["name"], item["image"], item["description"], item["text"], item["referenceMemberId"], item["power"], item["consumable"], item["duration"], item["getFromGoldenPelos"]));
-                this.stack.push({ id: item["id"], amount: 0 });
+                this.items.push(new Item(item.id, item.name, item.image, item.description, item.text, item.referenceMemberId, item.power, item.consumable, item.duration, item.getFromGoldenPelos));
+                this.stack.push({ id: item.id, amount: 0 });
             });
         });
     }
     /**
-     * Will return a random item, but only if it's ID is present in the itemIds array
-     * @returns A randomly selected Item
+     * Will return a random item, but only if its ID is not present in the excluded id array.
+     * @param ungettable Item ids that must not be returned.
+     * @returns A randomly selected item.
      */
     getRandomItem(ungettable) {
-        let itemIds = [];
-        this.items.forEach((i) => {
-            if (i.getFromPelo && !ungettable.includes(i.id)) {
-                itemIds.push(i.id);
+        const itemIds = [];
+        this.items.forEach((item) => {
+            if (item.getFromPelo && !ungettable.includes(item.id)) {
+                itemIds.push(item.id);
             }
         });
-        let possItems = [];
+        const possItems = [];
         this.items.forEach((item) => {
-            if (itemIds.find((i) => item["id"] === i)) {
+            if (itemIds.find((id) => item.id === id)) {
                 possItems.push(item);
             }
         });
-        let index = Math.floor(Math.random() * possItems.length);
+        const index = Math.floor(Math.random() * possItems.length);
         return possItems[index];
     }
     /**
-     * Will add a number to the inventory
-     * @param id The id of the item to add to the inventory
+     * Will add a number to the inventory.
+     * @param id The id of the item to add to the inventory.
+     * @param amount The amount of items to add.
      */
     addItem(id, amount = 1) {
-        const found = this.stack.find((i) => i.id === id);
+        const found = this.stack.find((item) => item.id === id);
         if (found) {
             this.itemAmount += amount;
             found.amount += amount;
@@ -92,11 +96,11 @@ class Inventory {
         }
     }
     /**
-     * Consume a item and send information about it to the buff class
-     * @param item The item to consume
+     * Consumes an item and forwards the effect to the buff class.
+     * @param item The item to consume.
      */
     consumeItem(item) {
-        const found = this.stack.find((i) => i.id === item.id);
+        const found = this.stack.find((stackItem) => stackItem.id === item.id);
         if (found) {
             this.itemAmount--;
             found.amount--;
@@ -108,7 +112,7 @@ class Inventory {
         }
     }
     /**
-     * Will update the whole DOM of the inventory
+     * Will update the whole DOM of the inventory.
      */
     updateInventory() {
         this.inventoryContent.innerHTML = "";
@@ -120,23 +124,23 @@ class Inventory {
             this.inventoryAmount.classList.remove("inventory__count--visible");
         }
         this.items.forEach((item) => {
-            let stack = this.stack.find((s) => s.id === item.id);
+            const stack = this.stack.find((stackEntry) => stackEntry.id === item.id);
             if (stack.amount > 0) {
-                let container = document.createElement("article");
+                const container = document.createElement("article");
                 container.classList.add("inventory__item");
-                let image = document.createElement("img");
+                const image = document.createElement("img");
                 image.classList.add("inventory__item-image");
                 image.src = "/img/items/" + item.imageString;
-                let info = document.createElement("div");
-                let title = document.createElement("p");
+                const info = document.createElement("div");
+                const title = document.createElement("p");
                 title.classList.add("inventory__item-title");
                 title.innerHTML = item.name;
-                let text = document.createElement("p");
+                const text = document.createElement("p");
                 text.classList.add("u-italic");
                 text.innerHTML = item.text;
-                let description = document.createElement("p");
+                const description = document.createElement("p");
                 description.innerHTML = item.description;
-                let amount = document.createElement("p");
+                const amount = document.createElement("p");
                 amount.classList.add("inventory__item-amount");
                 amount.innerHTML = stack.amount + " x";
                 info.append(title);
@@ -159,7 +163,7 @@ class Inventory {
         });
     }
     /**
-     * Will clear the inventory of all items
+     * Will clear the inventory of all items.
      */
     clearInventory() {
         this.items = [];

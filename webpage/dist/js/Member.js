@@ -1,39 +1,28 @@
-"use strict";
 /**
- * Represents a buyable club member.
+ * Represents a purchasable club member.
  */
-class Member {
-    id;
-    amount;
-    name;
-    basePower;
-    basePrice;
-    nextPrice = 0;
-    container;
-    multiplier = 1;
-    upgrades = [];
-    image;
-    dom = {
-        container: null,
-        title: null,
-        image: null,
-        amount: null,
-        price: null,
-        imageContainer: null,
-        infoContainer: null,
-        amountContainer: null,
-        power: null,
-    };
+export class Member {
     /**
-     * Creates a member instance.
-     *
+     * Creates a new member instance.
      * @param name The member name.
-     * @param basePower The base production power.
-     * @param basePrice The initial price.
-     * @param image The image file name.
+     * @param basePower The member base production.
+     * @param basePrice The member base price.
+     * @param image The member image filename.
      * @param id The member id.
      */
     constructor(name, basePower, basePrice, image, id) {
+        this.nextPrice = 0;
+        this.multiplier = 1;
+        this.upgrades = [];
+        this.dom = {};
+        /**
+         * Formats a number with apostrophe thousands separators.
+         * @param number The number to format.
+         * @returns The formatted number.
+         */
+        this.numberWithCommas = (number) => {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+        };
         this.amount = 0;
         this.basePower = basePower;
         this.name = name;
@@ -42,29 +31,19 @@ class Member {
         this.dom.image = document.createElement("img");
         this.dom.image.src = "/img/members/" + image;
         this.dom.image.classList.add("members__image");
-        this.container = getRequiredElement(".members");
+        this.container = document.querySelector(".members");
         this.createDomElement();
         this.applyToDom();
     }
     /**
      * Adds an upgrade to the member.
-     *
-     * @param upgrade The upgrade to attach.
+     * @param upgrade The upgrade to add.
      */
     addUpgrade(upgrade) {
         this.upgrades.push(upgrade);
     }
     /**
-     * Formats a number using apostrophe thousands separators.
-     *
-     * @param number The value to format.
-     * @returns The formatted value.
-     */
-    numberWithCommas = (number) => {
-        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
-    };
-    /**
-     * Creates the member DOM structure.
+     * Creates the DOM elements for the member row.
      */
     createDomElement() {
         const template = document.createElement("template");
@@ -89,11 +68,9 @@ class Member {
         const amount = container.querySelector(".members__amount");
         const power = container.querySelector(".members__power");
         const price = container.querySelector(".members__price");
+        const buy = container.querySelector(".members__buy");
         title.textContent = this.name;
         amount.textContent = String("x" + this.amount);
-        if (this.dom.image) {
-            imageContainer.append(this.dom.image);
-        }
         this.dom.container = container;
         this.dom.imageContainer = imageContainer;
         this.dom.infoContainer = infoContainer;
@@ -102,19 +79,19 @@ class Member {
         this.dom.amount = amount;
         this.dom.power = power;
         this.dom.price = price;
+        this.dom.buyHandler = buy;
         this.updatePrice();
         this.updatePower(null);
     }
     /**
-     * Appends the member DOM to the container.
+     * Appends the member row to the page.
      */
     applyToDom() {
         this.container.append(this.dom.container);
     }
     /**
-     * Returns the current member price.
-     *
-     * @returns The current purchase price.
+     * Calculates the current purchase price.
+     * @returns The current member price.
      */
     getPrice() {
         if (this.amount === 0) {
@@ -142,7 +119,6 @@ class Member {
     }
     /**
      * Updates whether the member can currently be bought.
-     *
      * @param score The current score.
      */
     updateBuyability(score) {
@@ -154,23 +130,21 @@ class Member {
         }
     }
     /**
-     * Updates the displayed member power.
-     *
-     * @param buff The currently active buff.
+     * Updates the displayed production value.
+     * @param buff The active buff, if any.
      */
     updatePower(buff) {
         if (buff && this.id === buff.referenceMemberId) {
-            this.dom.power.innerHTML = window.numberAsText(this.basePower * this.getMultiplier() * buff.power) + " p/s";
+            this.dom.power.innerHTML = window.numberAsText(this.basePower * this.getMultiplier() * buff.power) + " cps";
         }
         else {
-            this.dom.power.innerHTML = window.numberAsText(this.basePower * this.getMultiplier()) + " p/s";
+            this.dom.power.innerHTML = window.numberAsText(this.basePower * this.getMultiplier()) + " cps";
         }
     }
     /**
-     * Returns the current production increase.
-     *
-     * @param buff The currently active buff.
-     * @returns The production increase.
+     * Calculates the current production increase of the member.
+     * @param buff The active buff, if any.
+     * @returns The current production increase.
      */
     getIncrease(buff) {
         if (buff && this.id === buff.referenceMemberId) {
@@ -179,43 +153,54 @@ class Member {
         return this.basePower * this.amount * this.getMultiplier();
     }
     /**
-     * Returns the current member multiplier.
-     *
-     * @returns The computed multiplier.
+     * Calculates the member multiplier from bought upgrades.
+     * @returns The current multiplier.
      */
     getMultiplier() {
         let multiplier = 1;
-        this.upgrades.forEach((u) => {
-            if (u.bought) {
-                multiplier *= u.multiplier;
+        this.upgrades.forEach((upgrade) => {
+            if (upgrade.bought) {
+                multiplier *= upgrade.multiplier;
             }
         });
         return multiplier;
     }
     /**
-     * Increments the owned member amount.
+     * Increases the owned amount by one.
      */
     buy() {
         this.amount++;
     }
     /**
-     * Updates all attached upgrades.
-     *
+     * Returns the owned amount.
+     * @returns The current amount.
+     */
+    getAmount() {
+        return this.amount;
+    }
+    /**
+     * Sets the owned amount.
+     * @param amount The new amount.
+     */
+    setAmount(amount) {
+        this.amount = amount;
+    }
+    /**
+     * Updates all upgrades related to this member.
      * @param score The current score.
-     * @param showBought Whether bought upgrades should stay visible.
+     * @param showBought Whether bought upgrades should remain visible.
      */
     updateUpgrades(score, showBought) {
-        this.upgrades.forEach((u) => {
-            u.updateVisibility(this.amount, showBought);
-            u.updateBuyability(score);
+        this.upgrades.forEach((upgrade) => {
+            upgrade.updateVisibility(this.amount, showBought);
+            upgrade.updateBuyability(score);
         });
     }
     /**
-     * Updates the member DOM state.
-     *
+     * Updates the member UI.
      * @param score The current score.
-     * @param showBought Whether bought upgrades should stay visible.
-     * @param buff The currently active buff.
+     * @param showBought Whether bought upgrades should remain visible.
+     * @param buff The active buff, if any.
      */
     update(score, showBought, buff) {
         this.updateBuyability(score);

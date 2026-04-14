@@ -1,15 +1,16 @@
-"use strict";
-class Clicker {
-    game;
-    power = 1;
-    clickerMultiplier = 1;
-    lastClickTimestamp;
-    continuousClicks = 0;
-    container;
-    cap;
-    multiplier_bonus;
-    multiplier_bonus__inner;
+/**
+ * Handles manual clicking interactions and click-related bonuses.
+ */
+export class Clicker {
+    /**
+     * Creates the clicker UI and wires its interactions.
+     * @param game The current game instance.
+     */
     constructor(game) {
+        this.power = 1;
+        this.clickerMultiplier = 1;
+        this.lastClickTimestamp = 0;
+        this.continuousClicks = 0;
         this.game = game;
         this.container = document.createElement("div");
         this.container.classList.add("clicker");
@@ -17,8 +18,8 @@ class Clicker {
         image.classList.add("Bottle");
         image.src = "/img/bottle.png";
         image.draggable = false;
-        image.ondragstart = (e) => {
-            e.preventDefault();
+        image.ondragstart = (event) => {
+            event.preventDefault();
             return false;
         };
         this.cap = document.createElement("img");
@@ -26,17 +27,20 @@ class Clicker {
         this.cap.src = "/img/cap.png";
         this.container.append(image);
         document.querySelector("body").prepend(this.container);
-        image.onclick = (e) => {
+        image.onclick = (event) => {
             this.letCapFlyOff();
             this.updateClickMultiplier();
             this.checkDailyBonus();
             const power = this.calculatePower();
-            this.displayClickedCaps(e, power);
+            this.displayClickedCaps(event, power);
             this.game.score += power;
             this.game.handmadeCaps += power;
         };
         this.createMultiplierDom();
     }
+    /**
+     * Updates the click multiplier based on the current click streak.
+     */
     updateClickMultiplier() {
         if (Date.now() - 500 < this.lastClickTimestamp) {
             this.continuousClicks++;
@@ -67,14 +71,20 @@ class Clicker {
             this.multiplier_bonus.classList.add("multiplier_bonus--visible");
         }
     }
+    /**
+     * Grants the daily inventory bonus on the first click of the day.
+     */
     checkDailyBonus() {
         if (this.game.dailyBonusGot === 0) {
-            let date = new Date();
+            const date = new Date();
             this.game.dailyBonusGot = date.getDate();
             this.game.inventory.addItem(1000, 1);
             this.game.inventory.updateInventory();
         }
     }
+    /**
+     * Animates the bottle cap flying away after a click.
+     */
     letCapFlyOff() {
         this.container.appendChild(this.cap.cloneNode(true));
         setTimeout(() => {
@@ -85,12 +95,17 @@ class Clicker {
             this.container.querySelector(".Cap").remove();
         }, 200);
     }
-    displayClickedCaps(e, power) {
-        let tmp = document.createElement("p");
+    /**
+     * Displays the floating clicked-cap indicator near the mouse cursor.
+     * @param event The click event.
+     * @param power The amount awarded for the click.
+     */
+    displayClickedCaps(event, power) {
+        const tmp = document.createElement("p");
         tmp.classList.add("clickIncrease");
-        tmp.innerHTML = "+ " + window["numberAsText"](power);
-        tmp.style.top = e.clientY - 30 + "px";
-        tmp.style.left = e.clientX + 30 + "px";
+        tmp.innerHTML = "+ " + window.numberAsText(power);
+        tmp.style.top = event.clientY - 30 + "px";
+        tmp.style.left = event.clientX + 30 + "px";
         document.querySelector("body").append(tmp);
         setTimeout(() => {
             tmp.classList.add("clickIncrease--fade");
@@ -99,6 +114,9 @@ class Clicker {
             tmp.remove();
         }, 500);
     }
+    /**
+     * Creates the multiplier indicator DOM.
+     */
     createMultiplierDom() {
         this.multiplier_bonus = document.createElement("div");
         this.multiplier_bonus.classList.add("multiplier_bonus");
@@ -108,20 +126,26 @@ class Clicker {
         this.multiplier_bonus.append(this.multiplier_bonus__inner);
         document.querySelector(".clicker").append(this.multiplier_bonus);
     }
+    /**
+     * Calculates the current click power including upgrades and buffs.
+     * @returns The total click power.
+     */
     calculatePower() {
         let power = 1;
-        this.game.clickerUpgrades.forEach((c) => {
-            if (!c.bought)
+        this.game.clickerUpgrades.forEach((clickerUpgrade) => {
+            if (!clickerUpgrade.bought) {
                 return false;
-            if (c["type"] === "multiplier") {
-                power = power * c.power;
             }
-            else if (c["type"] === "percentage") {
-                power = power + this.game.capsPerSecond * (c.power / 100);
+            if (clickerUpgrade.type === "multiplier") {
+                power = power * clickerUpgrade.power;
             }
-            else if (c["type"] === "buildingAddition") {
-                power = power + this.game.totalMembers * c.power;
+            else if (clickerUpgrade.type === "percentage") {
+                power = power + this.game.capsPerSecond * (clickerUpgrade.power / 100);
             }
+            else if (clickerUpgrade.type === "buildingAddition") {
+                power = power + this.game.totalMembers * clickerUpgrade.power;
+            }
+            return true;
         });
         if (this.game.buff.activeBuff && this.game.buff.activeBuff.id === 2) {
             power *= this.game.buff.activeBuff.power;

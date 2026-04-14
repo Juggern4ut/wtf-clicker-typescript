@@ -1,4 +1,7 @@
-class LargeNumber {
+/**
+ * Represents a large number using a value and power-of-thousand scale.
+ */
+export class LargeNumber {
   potence: number;
   value: number;
   scale: string[][] = [
@@ -26,19 +29,28 @@ class LargeNumber {
     ["dezilliarde", "dezilliarden"],
   ];
 
+  /**
+   * Creates a new large number.
+   * @param value The numeric value.
+   * @param potence The power-of-thousand exponent.
+   */
   constructor(value: number, potence: number) {
     if (potence % 3 !== 0) {
       console.error("The LargeNumber class doesn't allow potences not dividible by 3");
+      this.value = value;
+      this.potence = potence;
       return;
     }
 
     this.value = value;
     this.potence = potence;
-
     this.recalculate();
   }
 
-  recalculate() {
+  /**
+   * Re-normalizes the large number to the configured thousand scale.
+   */
+  recalculate(): void {
     while (this.value >= 1000) {
       this.value = this.value / 1000;
       this.potence += 3;
@@ -50,7 +62,11 @@ class LargeNumber {
     }
   }
 
-  toString() {
+  /**
+   * Converts the large number to display text.
+   * @returns The formatted large number.
+   */
+  toString(): string {
     if (this.value === 1) {
       return this.value.toFixed(0) + " " + this.scale[this.potence / 3][0];
     }
@@ -59,10 +75,19 @@ class LargeNumber {
     return this.value.toFixed(decimals) + " " + this.scale[this.potence / 3][1];
   }
 
+  /**
+   * Equalizes a large number to another potence.
+   * @param number The source number.
+   * @param newPotence The target potence.
+   * @returns The equalized numeric value.
+   */
   static equalize(number: LargeNumber, newPotence: number): number {
     let tmpPotence = number.potence;
     let tmpValue = number.value;
-    if (tmpPotence === newPotence) return tmpValue;
+    if (tmpPotence === newPotence) {
+      return tmpValue;
+    }
+
     if (tmpPotence < newPotence) {
       while (tmpPotence < newPotence) {
         tmpValue /= 1000;
@@ -74,9 +99,16 @@ class LargeNumber {
         tmpPotence -= 3;
       }
     }
+
     return tmpValue;
   }
 
+  /**
+   * Adds two large numbers.
+   * @param number1 The first number.
+   * @param number2 The second number.
+   * @returns The sum.
+   */
   static add(number1: LargeNumber, number2: LargeNumber): LargeNumber {
     if (number1.potence === number2.potence) {
       return new LargeNumber(number1.value + number2.value, number1.potence);
@@ -91,9 +123,16 @@ class LargeNumber {
       tmpValue = tmpValue / 1000;
       tmpPotence += 3;
     }
+
     return new LargeNumber(tmpValue + largerNumber.value, largerNumber.potence);
   }
 
+  /**
+   * Subtracts one large number from another.
+   * @param number1 The first number.
+   * @param number2 The second number.
+   * @returns The difference.
+   */
   static subtract(number1: LargeNumber, number2: LargeNumber): LargeNumber {
     if (number1.potence === number2.potence) {
       return new LargeNumber(number1.value + number2.value, number1.potence);
@@ -108,6 +147,7 @@ class LargeNumber {
       tmpValue = tmpValue / 1000;
       tmpPotence += 3;
     }
+
     return new LargeNumber(tmpValue - largerNumber.value, largerNumber.potence);
   }
 }

@@ -1,19 +1,44 @@
-interface amount {
+import type { Buff } from "./Buff.js";
+import { Item } from "./Item.js";
+
+interface ItemData {
+  id: number;
+  name: string;
+  image: string;
+  description: string;
+  text: string;
+  referenceMemberId: number;
+  power: number;
+  consumable: boolean;
+  duration: number;
+  getFromGoldenPelos: boolean;
+}
+
+/**
+ * Represents the stored amount of a single inventory item.
+ */
+export interface InventoryAmount {
   id: number;
   amount: number;
 }
 
-class Inventory {
+/**
+ * Handles the inventory state and inventory modal interactions.
+ */
+export class Inventory {
   items: Item[] = [];
-  stack: amount[] = [];
+  stack: InventoryAmount[] = [];
   itemAmount: number = 0;
   buff: Buff;
+  inventoryButton!: HTMLElement;
+  modal!: HTMLElement;
+  inventoryContent!: HTMLElement;
+  inventoryAmount!: HTMLElement;
 
-  inventoryButton: HTMLElement;
-  modal: HTMLElement;
-  inventoryContent: HTMLElement;
-  inventoryAmount: HTMLElement;
-
+  /**
+   * Creates a new inventory instance.
+   * @param buff The buff manager used for item effects.
+   */
   constructor(buff: Buff) {
     this.buff = buff;
     this.loadItems();
@@ -21,95 +46,98 @@ class Inventory {
   }
 
   /**
-   * Initialize the handler to open and close the inventory
+   * Initialize the handler to open and close the inventory.
    */
-  initInventoryButton() {
-    this.inventoryButton = document.querySelector(".inventory");
-    this.modal = document.querySelector(".inventory__modal");
-    this.inventoryContent = document.querySelector(".inventory__content");
-    this.inventoryAmount = document.querySelector(".inventory__count");
+  initInventoryButton(): void {
+    this.inventoryButton = document.querySelector(".inventory") as HTMLElement;
+    this.modal = document.querySelector(".inventory__modal") as HTMLElement;
+    this.inventoryContent = document.querySelector(".inventory__content") as HTMLElement;
+    this.inventoryAmount = document.querySelector(".inventory__count") as HTMLElement;
 
-    this.inventoryButton.onclick = () => {
+    this.inventoryButton.onclick = (): void => {
       this.openInventory();
       this.updateInventory();
     };
 
-    let closeButton = document.querySelector(".inventory__close") as HTMLElement;
-    closeButton.onclick = () => {
+    const closeButton = document.querySelector(".inventory__close") as HTMLElement;
+    closeButton.onclick = (): void => {
       this.closeInventory();
     };
   }
 
   /**
-   * Will open the Inventory Modal
+   * Will open the Inventory Modal.
    */
-  openInventory() {
+  openInventory(): void {
     this.modal.classList.add("inventory__modal--open");
   }
 
   /**
-   * Will close the Inventory Modal
+   * Will close the Inventory Modal.
    */
-  closeInventory() {
+  closeInventory(): void {
     this.modal.classList.remove("inventory__modal--open");
   }
 
   /**
-   * Will load the Items from the json file
+   * Will load the Items from the json file.
    */
-  loadItems() {
+  loadItems(): void {
     this.stack = [];
     fetch("/data/items_new.json")
-      .then((res) => res.json())
+      .then((res) => res.json() as Promise<ItemData[]>)
       .then((items) => {
-        items.forEach((item) => {
+        items.forEach((item: ItemData) => {
           this.items.push(
             new Item(
-              item["id"],
-              item["name"],
-              item["image"],
-              item["description"],
-              item["text"],
-              item["referenceMemberId"],
-              item["power"],
-              item["consumable"],
-              item["duration"],
-              item["getFromGoldenPelos"]
+              item.id,
+              item.name,
+              item.image,
+              item.description,
+              item.text,
+              item.referenceMemberId,
+              item.power,
+              item.consumable,
+              item.duration,
+              item.getFromGoldenPelos
             )
           );
-          this.stack.push({ id: item["id"], amount: 0 });
+          this.stack.push({ id: item.id, amount: 0 });
         });
       });
   }
 
   /**
-   * Will return a random item, but only if it's ID is present in the itemIds array
-   * @returns A randomly selected Item
+   * Will return a random item, but only if its ID is not present in the excluded id array.
+   * @param ungettable Item ids that must not be returned.
+   * @returns A randomly selected item.
    */
   getRandomItem(ungettable: number[]): Item {
-    let itemIds = [];
-    this.items.forEach((i) => {
-      if (i.getFromPelo && !ungettable.includes(i.id)) {
-        itemIds.push(i.id);
+    const itemIds: number[] = [];
+    this.items.forEach((item) => {
+      if (item.getFromPelo && !ungettable.includes(item.id)) {
+        itemIds.push(item.id);
       }
     });
 
-    let possItems = [];
+    const possItems: Item[] = [];
     this.items.forEach((item) => {
-      if (itemIds.find((i) => item["id"] === i)) {
+      if (itemIds.find((id) => item.id === id)) {
         possItems.push(item);
       }
     });
-    let index = Math.floor(Math.random() * possItems.length);
+
+    const index = Math.floor(Math.random() * possItems.length);
     return possItems[index];
   }
 
   /**
-   * Will add a number to the inventory
-   * @param id The id of the item to add to the inventory
+   * Will add a number to the inventory.
+   * @param id The id of the item to add to the inventory.
+   * @param amount The amount of items to add.
    */
-  addItem(id: number, amount: number = 1) {
-    const found = this.stack.find((i) => i.id === id);
+  addItem(id: number, amount: number = 1): void {
+    const found = this.stack.find((item) => item.id === id);
     if (found) {
       this.itemAmount += amount;
       found.amount += amount;
@@ -120,11 +148,11 @@ class Inventory {
   }
 
   /**
-   * Consume a item and send information about it to the buff class
-   * @param item The item to consume
+   * Consumes an item and forwards the effect to the buff class.
+   * @param item The item to consume.
    */
-  consumeItem(item: Item) {
-    const found = this.stack.find((i) => i.id === item.id);
+  consumeItem(item: Item): void {
+    const found = this.stack.find((stackItem) => stackItem.id === item.id);
     if (found) {
       this.itemAmount--;
       found.amount--;
@@ -136,9 +164,9 @@ class Inventory {
   }
 
   /**
-   * Will update the whole DOM of the inventory
+   * Will update the whole DOM of the inventory.
    */
-  updateInventory() {
+  updateInventory(): void {
     this.inventoryContent.innerHTML = "";
 
     if (this.itemAmount) {
@@ -149,29 +177,29 @@ class Inventory {
     }
 
     this.items.forEach((item) => {
-      let stack = this.stack.find((s) => s.id === item.id);
+      const stack = this.stack.find((stackEntry) => stackEntry.id === item.id) as InventoryAmount;
       if (stack.amount > 0) {
-        let container = document.createElement("article");
+        const container = document.createElement("article");
         container.classList.add("inventory__item");
 
-        let image = document.createElement("img");
+        const image = document.createElement("img");
         image.classList.add("inventory__item-image");
         image.src = "/img/items/" + item.imageString;
 
-        let info = document.createElement("div");
+        const info = document.createElement("div");
 
-        let title = document.createElement("p");
+        const title = document.createElement("p");
         title.classList.add("inventory__item-title");
         title.innerHTML = item.name;
 
-        let text = document.createElement("p");
+        const text = document.createElement("p");
         text.classList.add("u-italic");
         text.innerHTML = item.text;
 
-        let description = document.createElement("p");
+        const description = document.createElement("p");
         description.innerHTML = item.description;
 
-        let amount = document.createElement("p");
+        const amount = document.createElement("p");
         amount.classList.add("inventory__item-amount");
         amount.innerHTML = stack.amount + " x";
 
@@ -184,7 +212,7 @@ class Inventory {
         container.append(amount);
 
         if (item.consumable) {
-          container.onclick = () => {
+          container.onclick = (): void => {
             this.consumeItem(item);
             this.updateInventory();
             if (item.duration) {
@@ -199,9 +227,9 @@ class Inventory {
   }
 
   /**
-   * Will clear the inventory of all items
+   * Will clear the inventory of all items.
    */
-  clearInventory() {
+  clearInventory(): void {
     this.items = [];
     this.updateInventory();
   }

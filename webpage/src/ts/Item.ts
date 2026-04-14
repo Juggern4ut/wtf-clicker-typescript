@@ -1,19 +1,46 @@
-class Item {
+/**
+ * Represents a collectible or consumable inventory item.
+ */
+export class Item {
   name: string;
-  image: HTMLImageElement;
+  image!: HTMLImageElement;
   imageString: string;
   description: string;
   text: string;
   duration: number;
   consumable: boolean;
-  dom: HTMLElement;
+  dom!: HTMLElement;
   referenceMemberId: number;
   amount: number = 0;
   power: number;
   id: number;
   getFromPelo: boolean;
 
-  constructor(id: number, name: string, icon: string, description: string, text: string, referenceMemberId: number, power: number, consumable: boolean, duration: number, getFromPelo: boolean) {
+  /**
+   * Creates a new item instance.
+   * @param id The item id.
+   * @param name The item name.
+   * @param icon The image filename.
+   * @param description The item description.
+   * @param text The item flavor text.
+   * @param referenceMemberId The related member id for item buffs.
+   * @param power The effect strength.
+   * @param consumable Whether the item can be consumed.
+   * @param duration The buff duration in seconds.
+   * @param getFromPelo Whether the item can drop from golden Pelos.
+   */
+  constructor(
+    id: number,
+    name: string,
+    icon: string,
+    description: string,
+    text: string,
+    referenceMemberId: number,
+    power: number,
+    consumable: boolean,
+    duration: number,
+    getFromPelo: boolean
+  ) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -28,24 +55,27 @@ class Item {
     this.createDom();
   }
 
-  createDom() {
+  /**
+   * Creates the DOM representation of the item.
+   */
+  createDom(): void {
     this.dom = document.createElement("article");
     this.dom.classList.add("inventory__item");
 
     const info = document.createElement("div");
 
-    let description = document.createElement("p");
+    const description = document.createElement("p");
     description.innerHTML = this.description;
 
-    let text = document.createElement("p");
+    const text = document.createElement("p");
     text.classList.add("u-italic");
     text.innerHTML = '"' + this.text + '"';
 
-    let title = document.createElement("p");
+    const title = document.createElement("p");
     title.classList.add("inventory__item-title");
     title.innerHTML = this.name;
 
-    let amount = document.createElement("p");
+    const amount = document.createElement("p");
     amount.classList.add("inventory__item-amount");
     amount.innerHTML = this.amount + " x";
 
@@ -58,12 +88,18 @@ class Item {
     this.dom.append(amount);
   }
 
-  updateAmount() {
-    let el = this.dom.querySelector(".inventory__item-amount");
+  /**
+   * Updates the displayed amount text.
+   */
+  updateAmount(): void {
+    const el = this.dom.querySelector(".inventory__item-amount") as HTMLElement;
     el.innerHTML = this.amount + " x";
   }
 
-  createImage() {
+  /**
+   * Creates the item image element.
+   */
+  createImage(): void {
     this.image = document.createElement("img");
     this.image.src = "/img/items/" + this.imageString;
     this.image.classList.add("inventory__item-image");

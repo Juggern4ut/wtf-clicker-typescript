@@ -3,6 +3,9 @@
     "rootDir": "./webpage/src/ts",
     "outDir": "./webpage/dist/js",
     "lib": ["dom", "es2017"],
-    "module": "commonjs",
+    "target": "es2020",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strict": true
   }
 }

@@ -1,56 +1,82 @@
-class Buff {
-  activeBuff: Item;
-  buffStart: number;
+import type { Item } from "./Item.js";
+import type { Member } from "./Member.js";
+
+/**
+ * Handles item consumption and the currently active buff state.
+ */
+export class Buff {
+  activeBuff: Item | null = null;
+  buffStart: number | null = null;
   members: Member[];
 
+  /**
+   * Creates a new buff manager.
+   * @param members The available members in the game.
+   */
   constructor(members: Member[]) {
     this.members = members;
   }
 
-  consumeItem(item: Item) {
+  /**
+   * Consumes an item and either activates a timed buff or applies its instant effect.
+   * @param item The item being consumed.
+   */
+  consumeItem(item: Item): void {
     if (item.duration > 0) {
       this.activeBuff = item;
       this.buffStart = Date.now();
       const activeBuffImage = document.querySelector(".active_buff__image") as HTMLImageElement;
       activeBuffImage.src = "/img/items/" + this.activeBuff.imageString;
     } else {
-
       if (item.id === 1000) {
-        let member = this.getRandomMember(true);
+        const member = this.getRandomMember(true);
         member.amount++;
         alert("Gratuliere! 1x " + member.name);
       } else if (item.id === 4) {
-        let wonMember = this.getRandomMember(true);
-        let lostMember = this.getRandomMember(true);
+        const wonMember = this.getRandomMember(true);
+        const lostMember = this.getRandomMember(true);
         wonMember.amount++;
         lostMember.amount--;
         alert("Mitgliederveränderungen: +1 " + wonMember.name + ", -1 " + lostMember.name);
       }
-      
     }
   }
 
-  checkBuff() {
-    if (!this.activeBuff) return false;
+  /**
+   * Checks whether the current buff is still active.
+   * @returns `true` when the current buff duration has not expired.
+   */
+  checkBuff(): boolean {
+    if (!this.activeBuff || this.buffStart === null) {
+      return false;
+    }
+
     return this.buffStart + this.activeBuff.duration * 1000 > Date.now();
   }
 
-  update() {
+  /**
+   * Updates the active buff state and refreshes the related DOM.
+   */
+  update(): void {
     if (!this.checkBuff()) {
       this.activeBuff = null;
       this.buffStart = null;
     }
+
     this.updateDom();
   }
 
-  updateDom() {
-    const body = document.querySelector("body");
-    const activeBuff = document.querySelector(".active_buff");
+  /**
+   * Updates the active buff UI.
+   */
+  updateDom(): void {
+    const body = document.querySelector("body") as HTMLBodyElement;
+    const activeBuff = document.querySelector(".active_buff") as HTMLElement;
     const activeBuffInner = document.querySelector(".active_buff__time--inner") as HTMLElement;
 
-    if (this.activeBuff) {
-      let dur = this.activeBuff.duration * 1000;
-      let remain = (this.buffStart + dur - Date.now()) / (this.activeBuff.duration * 1000);
+    if (this.activeBuff && this.buffStart !== null) {
+      const dur = this.activeBuff.duration * 1000;
+      const remain = (this.buffStart + dur - Date.now()) / (this.activeBuff.duration * 1000);
 
       body.classList.add("buff");
       activeBuff.classList.add("active_buff--visible");
@@ -61,13 +87,19 @@ class Buff {
     }
   }
 
-  getRandomMember(bought: boolean = true) {
-    let possible = [];
-    this.members.forEach((m) => {
-      if (m.amount > 0 || !bought) {
-        possible.push(m);
+  /**
+   * Returns a random member from the available pool.
+   * @param bought Whether only already-owned members are allowed.
+   * @returns A randomly selected member.
+   */
+  getRandomMember(bought: boolean = true): Member {
+    const possible: Member[] = [];
+    this.members.forEach((member) => {
+      if (member.amount > 0 || !bought) {
+        possible.push(member);
       }
     });
+
     return possible[Math.floor(Math.random() * possible.length)];
   }
 }

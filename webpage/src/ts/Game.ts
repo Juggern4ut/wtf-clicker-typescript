@@ -1,40 +1,89 @@
-class Game {
+import { Buff } from "./Buff.js";
+import { Clicker } from "./Clicker.js";
+import { ClickerUpgrade, type ClickerUpgradeRequirement } from "./ClickerUpgrade.js";
+import { GoldenPelo } from "./GoldenPelo.js";
+import { Inventory, type InventoryAmount } from "./Inventory.js";
+import { Member } from "./Member.js";
+import { Save } from "./Save.js";
+import { Score } from "./Score.js";
+import { Upgrade } from "./Upgrade.js";
+
+interface MemberData {
+  id: number;
+  name: string;
+  basePower: number;
+  basePrice: number;
+  image: string;
+}
+
+interface UpgradeData {
+  id: number;
+  name: string;
+  description: string;
+  requirement: number;
+  multiplier: number;
+  price: number;
+  referenceId: number;
+}
+
+interface ClickerUpgradeData {
+  id: number;
+  name: string;
+  description: string;
+  requirement: ClickerUpgradeRequirement;
+  type: string;
+  power: number;
+  price: number;
+}
+
+interface MemberSaveEntry {
+  id: number;
+  amount: number;
+}
+
+interface UpgradeSaveEntry {
+  id: number;
+  bought: boolean;
+}
+
+/**
+ * Coordinates the overall game state, loading, saving, and update loop.
+ */
+export class Game {
   intervalSpeed: number = 100;
-  stepInterval: NodeJS.Timeout;
-
+  stepInterval: ReturnType<typeof setInterval>;
   members: Member[] = [];
-  membersSave: Object[] = [];
-
+  membersSave: MemberSaveEntry[] = [];
   upgrades: Upgrade[] = [];
-  upgradesSave: Object[] = [];
-
+  upgradesSave: UpgradeSaveEntry[] = [];
   clickerUpgrades: ClickerUpgrade[] = [];
-  clickerUpgradesSave: Object[] = [];
-
+  clickerUpgradesSave: UpgradeSaveEntry[] = [];
   score: number = 0;
   scoreElement: Score;
-  showBoughtUpgrades: boolean;
-  saveInterval: NodeJS.Timeout;
-  lastUpdate: number;
+  showBoughtUpgrades: boolean = false;
+  saveInterval: ReturnType<typeof setInterval>;
+  lastUpdate: number = 0;
   inventoryContainer: HTMLElement;
   dailyBonusGot: number = 0;
   saveDialog: HTMLElement;
   loadDialog: HTMLElement;
   handmadeCaps: number = 0;
-  capsPerSecond: number;
-  totalMembers: number;
+  capsPerSecond: number = 0;
+  totalMembers: number = 0;
   runStarted: number;
-  runDuration: number;
+  runDuration: number = 0;
   missedGoldenPelo: number = 0;
-
   save: Save;
   buff: Buff;
   clicker: Clicker;
   inventory: Inventory;
   goldenPelo: GoldenPelo;
 
+  /**
+   * Creates a new game instance and starts its update loops.
+   */
   constructor() {
-    this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
+    this.scoreElement = new Score(document.querySelector(".score") as HTMLElement, document.querySelector(".scorePerSeconds") as HTMLElement);
     this.clicker = new Clicker(this);
     this.goldenPelo = new GoldenPelo(this);
     this.instantiateMembers();
@@ -42,13 +91,13 @@ class Game {
     this.inventory = new Inventory(this.buff);
     this.save = new Save(this);
 
-    this.saveDialog = document.querySelector(".saveDialog");
-    this.loadDialog = document.querySelector(".loadDialog");
-    this.inventoryContainer = document.querySelector(".inventory__content");
+    this.saveDialog = document.querySelector(".saveDialog") as HTMLElement;
+    this.loadDialog = document.querySelector(".loadDialog") as HTMLElement;
+    this.inventoryContainer = document.querySelector(".inventory__content") as HTMLElement;
     this.runStarted = Date.now();
 
     const showBoughtButton = document.querySelector(".showBought") as HTMLButtonElement;
-    showBoughtButton.onclick = () => {
+    showBoughtButton.onclick = (): void => {
       this.showBoughtUpgrades = !this.showBoughtUpgrades;
       showBoughtButton.innerHTML = this.showBoughtUpgrades ? "Gekaufte Upgrades ausblenden" : "Gekaufte Upgrades anzeigen";
     };
@@ -64,25 +113,26 @@ class Game {
     this.addSaveAndLoadDialogLogic();
   }
 
-  instantiateMembers() {
+  /**
+   * Loads and instantiates all members from the JSON source.
+   */
+  instantiateMembers(): void {
     fetch("/data/members.json")
+      .then((res) => res.json() as Promise<MemberData[]>)
       .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        res.forEach((mem) => {
+        res.forEach((mem: MemberData) => {
           const tmp = new Member(mem.name, mem.basePower, mem.basePrice, mem.image, mem.id);
           this.members.push(tmp);
           this.membersSave.push({ id: mem.id, amount: 0 });
         });
 
-        this.members.forEach((m) => {
-          m.dom.container.onclick = () => {
-            if (m.getPrice() <= this.score) {
-              this.score -= m.getPrice();
-              const el = this.membersSave.find((i) => i["id"] === m.id);
-              el["amount"]++;
-              m.setAmount(m.getAmount() + 1);
+        this.members.forEach((member) => {
+          member.dom.buyHandler.onclick = (): void => {
+            if (member.getPrice() <= this.score) {
+              this.score -= member.getPrice();
+              const entry = this.membersSave.find((item) => item.id === member.id) as MemberSaveEntry;
+              entry.amount++;
+              member.setAmount(member.getAmount() + 1);
               this.save.save();
             }
           };
@@ -92,20 +142,21 @@ class Game {
       });
   }
 
-  instantiateClickerUpgrades() {
+  /**
+   * Loads and instantiates all clicker upgrades.
+   */
+  instantiateClickerUpgrades(): void {
     fetch("/data/clickerUpgrades.json")
+      .then((res) => res.json() as Promise<ClickerUpgradeData[]>)
       .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        res.forEach((up) => {
+        res.forEach((up: ClickerUpgradeData) => {
           const tmp = new ClickerUpgrade(up.name, up.description, up.requirement, up.type, up.power, up.price, up.id);
           this.clickerUpgrades.push(tmp);
           this.clickerUpgradesSave.push({ id: up.id, bought: false });
-          tmp.dom.onclick = () => {
+          (tmp.dom as HTMLElement).onclick = (): void => {
             if (tmp.price <= this.score) {
               this.score -= tmp.price;
-              this.clickerUpgradesSave.find((i) => i["id"] === up.id)["bought"] = true;
+              (this.clickerUpgradesSave.find((item) => item.id === up.id) as UpgradeSaveEntry).bought = true;
               tmp.buy();
               this.save.save();
             }
@@ -116,27 +167,28 @@ class Game {
       });
   }
 
-  instantiateUpgrades() {
+  /**
+   * Loads and instantiates all member upgrades.
+   */
+  instantiateUpgrades(): void {
     fetch("/data/upgrades.json")
+      .then((res) => res.json() as Promise<UpgradeData[]>)
       .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        res.forEach((up) => {
+        res.forEach((up: UpgradeData) => {
           const tmp = new Upgrade(up.name, up.description, up.requirement, up.multiplier, up.price, up.id);
-          const refMember = this.members.find((mem) => mem.id === up.referenceId);
+          const refMember = this.members.find((member) => member.id === up.referenceId) as Member;
           refMember.addUpgrade(tmp);
         });
 
-        this.members.forEach((m) => {
-          m.upgrades.forEach((upgrade) => {
+        this.members.forEach((member) => {
+          member.upgrades.forEach((upgrade) => {
             this.upgradesSave.push({ id: upgrade.id, bought: false });
 
             if (upgrade.dom) {
-              upgrade.dom.onclick = () => {
+              upgrade.dom.onclick = (): void => {
                 if (this.score >= upgrade.price && !upgrade.bought) {
                   upgrade.bought = true;
-                  this.upgradesSave.find((i) => i["id"] === upgrade.id)["bought"] = true;
+                  (this.upgradesSave.find((item) => item.id === upgrade.id) as UpgradeSaveEntry).bought = true;
                   this.score -= upgrade.price;
                   this.save.save();
                 }
@@ -149,30 +201,36 @@ class Game {
       });
   }
 
-  reset() {
+  /**
+   * Resets the current save after user confirmation.
+   */
+  reset(): void {
     if (confirm("Wirklich den gesamten Fortschritt löschen?")) {
       this.save.reset();
     }
   }
 
-  updateStats() {
-    let container = document.querySelector(".stats__content");
+  /**
+   * Rebuilds the statistics panel.
+   */
+  updateStats(): void {
+    const container = document.querySelector(".stats__content") as HTMLElement;
     container.innerHTML = "";
 
-    let date = new Date(this.runStarted).toLocaleString();
-    let dateEntry = document.createElement("div");
+    const date = new Date(this.runStarted).toLocaleString();
+    const dateEntry = document.createElement("div");
     dateEntry.classList.add("stats__entry");
     dateEntry.innerHTML = "<span>Spielbeginn:</span><span>" + date + "</span>";
 
-    let handMadeEntry = document.createElement("div");
+    const handMadeEntry = document.createElement("div");
     handMadeEntry.classList.add("stats__entry");
-    handMadeEntry.innerHTML = "<span>Von Hand geöffnete Biere:</span><span>" + window["numberAsText"](this.handmadeCaps) + "</span>";
+    handMadeEntry.innerHTML = "<span>Von Hand geöffnete Biere:</span><span>" + window.numberAsText(this.handmadeCaps) + "</span>";
 
-    let missedPeloEntry = document.createElement("div");
+    const missedPeloEntry = document.createElement("div");
     missedPeloEntry.classList.add("stats__entry");
     missedPeloEntry.innerHTML = "<span>Verpasste goldene PeLos:</span><span>" + this.goldenPelo.missedGoldenPelo + "</span>";
 
-    let membersEntry = document.createElement("div");
+    const membersEntry = document.createElement("div");
     membersEntry.classList.add("stats__entry");
     membersEntry.innerHTML = "<span>Anzahl Mitglieder:</span><span>" + this.totalMembers + "</span>";
 
@@ -182,7 +240,10 @@ class Game {
     container.append(membersEntry);
   }
 
-  step() {
+  /**
+   * Advances the game state by one update tick.
+   */
+  step(): void {
     this.buff.update();
 
     let difference = 1;
@@ -190,7 +251,7 @@ class Game {
       difference = (Date.now() - this.lastUpdate) / 100;
     }
 
-    let tmp = new Date();
+    const tmp = new Date();
     if (tmp.getDate() !== this.dailyBonusGot) {
       this.dailyBonusGot = 0;
     }
@@ -198,24 +259,26 @@ class Game {
     this.lastUpdate = Date.now();
     let increase = 0;
 
-    this.members.forEach((m) => {
-      increase += m.getIncrease(this.buff.activeBuff);
+    this.members.forEach((member) => {
+      increase += member.getIncrease(this.buff.activeBuff);
     });
 
     increase *= difference;
 
-    this.members.forEach((m) => {
-      m.updateBuyability(this.score);
-      m.update(this.score, this.showBoughtUpgrades, this.buff.activeBuff);
+    this.members.forEach((member) => {
+      member.updateBuyability(this.score);
+      member.update(this.score, this.showBoughtUpgrades, this.buff.activeBuff);
     });
 
-    this.clickerUpgrades.forEach((c) => {
-      c.updateBuyability(this.score);
-      c.updateVisibility(this.members[0].amount, this.handmadeCaps, this.showBoughtUpgrades);
+    this.clickerUpgrades.forEach((clickerUpgrade) => {
+      clickerUpgrade.updateBuyability(this.score);
+      clickerUpgrade.updateVisibility(this.members[0].amount, this.handmadeCaps, this.showBoughtUpgrades);
     });
 
     this.totalMembers = 0;
-    this.members.forEach((mem) => (this.totalMembers += mem.amount));
+    this.members.forEach((member) => {
+      this.totalMembers += member.amount;
+    });
 
     let buffedIncrease = 0;
     if (this.buff.activeBuff && this.buff.activeBuff.id === 2) {
@@ -225,31 +288,35 @@ class Game {
       this.score += increase / (1000 / this.intervalSpeed);
       buffedIncrease = increase;
     }
+
     this.scoreElement.updateScore(this.score, buffedIncrease);
     this.capsPerSecond = buffedIncrease;
 
     if (increase > 1000000) {
-      document.querySelector(".inventory").classList.add("visible");
+      (document.querySelector(".inventory") as HTMLElement).classList.add("visible");
       this.goldenPelo.spawnRandomItem();
     } else {
-      document.querySelector(".inventory").classList.remove("visible");
+      (document.querySelector(".inventory") as HTMLElement).classList.remove("visible");
     }
 
     this.runDuration = Date.now() - this.runStarted;
   }
 
-  addSaveAndLoadDialogLogic() {
-    const showSaveButton = document.querySelector(".navigation__list-item.save");
-    const showLoadButton = document.querySelector(".navigation__list-item.load");
+  /**
+   * Wires the save and load dialog interactions.
+   */
+  addSaveAndLoadDialogLogic(): void {
+    const showSaveButton = document.querySelector(".navigation__list-item.save") as HTMLElement;
+    const showLoadButton = document.querySelector(".navigation__list-item.load") as HTMLElement;
 
     showSaveButton.addEventListener("click", () => {
       this.saveDialog.classList.add("saveDialog__open");
-      let saveString = this.save.save();
-      this.saveDialog.querySelector("textarea").innerHTML = saveString;
+      const saveString = this.save.save();
+      (this.saveDialog.querySelector("textarea") as HTMLTextAreaElement).innerHTML = saveString;
     });
 
-    this.saveDialog.addEventListener("click", (e) => {
-      let tmp = e.target as HTMLElement;
+    this.saveDialog.addEventListener("click", (event: MouseEvent) => {
+      const tmp = event.target as HTMLElement;
       if (tmp.classList.contains("saveDialog")) {
         this.saveDialog.classList.remove("saveDialog__open");
       }
@@ -259,23 +326,19 @@ class Game {
       this.loadDialog.classList.add("loadDialog__open");
     });
 
-    this.loadDialog.addEventListener("click", (e) => {
-      let tmp = e.target as HTMLElement;
+    this.loadDialog.addEventListener("click", (event: MouseEvent) => {
+      const tmp = event.target as HTMLElement;
       if (tmp.classList.contains("loadDialog")) {
         this.loadDialog.classList.remove("loadDialog__open");
       }
     });
 
-    this.loadDialog.querySelector("button").addEventListener("click", () => {
-      const loadState = this.loadDialog.querySelector("textarea").value;
-      // try {
+    (this.loadDialog.querySelector("button") as HTMLButtonElement).addEventListener("click", () => {
+      const loadState = (this.loadDialog.querySelector("textarea") as HTMLTextAreaElement).value;
       JSON.parse(atob(loadState));
       this.save.load(loadState);
-      this.loadDialog.querySelector("textarea").value = "";
+      (this.loadDialog.querySelector("textarea") as HTMLTextAreaElement).value = "";
       this.loadDialog.classList.remove("loadDialog__open");
-      // } catch (error) {
-      //   alert("Fehler!");
-      // }
     });
   }
 }
