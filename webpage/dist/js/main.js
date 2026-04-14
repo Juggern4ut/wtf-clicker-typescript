@@ -18,7 +18,7 @@ window.onload = () => {
     };
     window.numberAsText = (number) => {
         if (number < 1000000) {
-            return window.numberWithCommas(number.toFixed(2));
+            return window.numberWithCommas(number.toFixed(0));
         }
         const scales = [
             "",

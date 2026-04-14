@@ -151,9 +151,10 @@ export class Game {
       .then((res) => {
         res.forEach((up: ClickerUpgradeData) => {
           const tmp = new ClickerUpgrade(up.name, up.description, up.requirement, up.type, up.power, up.price, up.id);
+
           this.clickerUpgrades.push(tmp);
           this.clickerUpgradesSave.push({ id: up.id, bought: false });
-          (tmp.dom as HTMLElement).onclick = (): void => {
+          tmp.buyHandler.onclick = (): void => {
             if (tmp.price <= this.score) {
               this.score -= tmp.price;
               (this.clickerUpgradesSave.find((item) => item.id === up.id) as UpgradeSaveEntry).bought = true;
@@ -185,7 +186,7 @@ export class Game {
             this.upgradesSave.push({ id: upgrade.id, bought: false });
 
             if (upgrade.dom) {
-              upgrade.dom.onclick = (): void => {
+              upgrade.buy.onclick = (): void => {
                 if (this.score >= upgrade.price && !upgrade.bought) {
                   upgrade.bought = true;
                   (this.upgradesSave.find((item) => item.id === upgrade.id) as UpgradeSaveEntry).bought = true;

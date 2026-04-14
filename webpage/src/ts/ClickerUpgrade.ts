@@ -18,6 +18,7 @@ export class ClickerUpgrade {
   container: HTMLElement;
   bought: boolean = false;
   dom: HTMLElement | null = null;
+  buyHandler: HTMLElement | null = null;
   id: number;
   description: string;
 
@@ -47,27 +48,32 @@ export class ClickerUpgrade {
    * Creates the DOM representation of the upgrade.
    */
   createDom(): void {
-    this.dom = document.createElement("article");
-    this.dom.classList.add("upgrades__upgrade");
-    this.dom.classList.add("hidden");
+        const template = document.createElement("template");
 
-    const price = document.createElement("p");
-    price.classList.add("upgrades__price");
-    price.innerHTML = window.numberAsText(this.price);
+        template.innerHTML = `
+            <article class="upgrades__upgrade hidden">
+                <section class="upgrades__infos">
+                    <p class="upgrades__title"></p>
+                    <p class="upgrades__description" style="font-size:12px"></p>
+                </section>
+                <p class="upgrades__buy"><span class="upgrades__price"></span></p>
+            </article>
+          `;
 
-    const title = document.createElement("p");
-    title.innerHTML = this.title;
+        const root = template.content.firstElementChild as HTMLElement;
 
-    const effect = document.createElement("p");
-    effect.style.fontSize = 12 + "px";
-    effect.classList.add("upgrades__description");
-    effect.innerHTML = this.description;
+        const title = root.querySelector(".upgrades__title") as HTMLParagraphElement;
+        const effect = root.querySelector(".upgrades__description") as HTMLParagraphElement;
+        const price = root.querySelector(".upgrades__price") as HTMLParagraphElement;
+        const buy = root.querySelector(".upgrades__buy") as HTMLParagraphElement;
 
-    this.dom.append(title);
-    this.dom.append(effect);
-    this.dom.append(price);
+        title.textContent = this.title;
+        effect.textContent = this.description;
+        price.textContent = window.numberAsText(this.price);
 
-    this.container.append(this.dom);
+        this.dom = root;
+        this.buyHandler = buy;
+        this.container.append(root);
   }
 
   /**

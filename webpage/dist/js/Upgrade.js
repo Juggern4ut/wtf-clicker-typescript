@@ -14,6 +14,7 @@ export class Upgrade {
     constructor(title, description, requirement, multiplier, price, id) {
         this.bought = false;
         this.dom = null;
+        this.buy = null;
         this.title = title;
         this.requirement = requirement;
         this.multiplier = multiplier;
@@ -27,22 +28,27 @@ export class Upgrade {
      * Creates the DOM representation of the upgrade.
      */
     createDom() {
-        this.dom = document.createElement("article");
-        this.dom.classList.add("upgrades__upgrade");
-        this.dom.classList.add("hidden");
-        const price = document.createElement("p");
-        price.classList.add("upgrades__price");
-        price.innerHTML = window.numberAsText(this.price);
-        const title = document.createElement("p");
-        title.innerHTML = this.title;
-        const effect = document.createElement("p");
-        effect.style.fontSize = 12 + "px";
-        effect.classList.add("upgrades__description");
-        effect.innerHTML = this.description;
-        this.dom.append(title);
-        this.dom.append(effect);
-        this.dom.append(price);
-        this.container.append(this.dom);
+        const template = document.createElement("template");
+        template.innerHTML = `
+            <article class="upgrades__upgrade hidden">
+                <section class="upgrades__infos">
+                    <p class="upgrades__title"></p>
+                    <p class="upgrades__description" style="font-size:12px"></p>
+                </section>
+                <p class="upgrades__buy"><span class="upgrades__price"></span></p>
+            </article>
+          `;
+        const root = template.content.firstElementChild;
+        const title = root.querySelector(".upgrades__title");
+        const effect = root.querySelector(".upgrades__description");
+        const price = root.querySelector(".upgrades__price");
+        const buy = root.querySelector(".upgrades__buy");
+        title.textContent = this.title;
+        effect.textContent = this.description;
+        price.textContent = window.numberAsText(this.price);
+        this.dom = root;
+        this.buy = buy;
+        this.container.append(root);
     }
     /**
      * Updates whether the upgrade can be bought.
