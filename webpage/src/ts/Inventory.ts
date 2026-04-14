@@ -193,7 +193,7 @@ export class Inventory {
         title.innerHTML = item.name;
 
         const text = document.createElement("p");
-        text.classList.add("u-italic");
+        text.classList.add("inventory__item-subtitle");
         text.innerHTML = item.text;
 
         const description = document.createElement("p");
@@ -201,7 +201,7 @@ export class Inventory {
 
         const amount = document.createElement("p");
         amount.classList.add("inventory__item-amount");
-        amount.innerHTML = stack.amount + " x";
+        amount.innerHTML = "<span class='inventory__item-amount-label'>x</span>"+stack.amount;
 
         info.append(title);
         info.append(text);

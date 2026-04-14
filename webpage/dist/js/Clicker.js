@@ -154,3 +154,4 @@ export class Clicker {
         return power;
     }
 }
+//# sourceMappingURL=Clicker.js.map

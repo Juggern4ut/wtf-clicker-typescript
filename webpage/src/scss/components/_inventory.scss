@@ -5,8 +5,8 @@
   cursor: pointer;
   display: none;
 
-  &.visible{
-      display: block;
+  &.visible {
+    display: block;
   }
 
   &__image {
@@ -34,13 +34,14 @@
   &__inner {
     opacity: 0;
     transform: translateY(-100px);
-    margin: 20px auto;
+    margin: 50px auto;
     background-color: #fff;
     max-width: 1000px;
     width: calc(100% - 20px);
     border-top: 50px solid #05398c;
     position: relative;
     transition: 200ms ease-out;
+    border-radius: 5px;
   }
 
   &__modal--open &__inner {
@@ -52,7 +53,7 @@
     position: absolute;
     top: -38px;
     left: 15px;
-    font-size: 18px;
+    font-size: 23px;
     font-weight: bold;
     color: #fff;
     z-index: 100;
@@ -64,24 +65,34 @@
     right: 0;
     color: #fff;
     font-size: 20px;
-    font-weight: bold;
     padding: 0 10px;
     cursor: pointer;
+    font-family: monospace;
+    transform: scaleX(1.3);
   }
 
   &__item-title {
     font-weight: bold;
     word-break: break-all;
+    font-size: 21px;
+    font-variant: small-caps;
+  }
+
+  &__item-subtitle {
+    font-size: 14px;
+    font-style: italic;
+    margin-bottom: 8px;
   }
 
   &__item {
     padding: 10px;
     display: flex;
-    &:not(:last-of-type){
-      border-bottom: 1px solid #AAA;
-    }
+    margin: 0 0 10px 0;
+    border: 1px solid #dedede;
+    border-radius: 10px;
+    align-items: center;
 
-    &:hover{
+    &:hover {
       cursor: pointer;
       background-color: #dedede;
     }
@@ -94,9 +105,12 @@
     height: 64px;
   }
 
-  &__content{
+  &__content {
     max-height: calc(100vh - 90px);
     overflow-y: auto;
+    padding: 10px;
+    padding-bottom: 0;
+    border: 1px solid #dedede;
   }
 
   &__count {
@@ -112,12 +126,18 @@
     min-width: 31px;
     background-color: #c50000;
     display: none;
+
     &--visible {
       display: block;
     }
   }
 
-  &__item-amount{
+  &__item-amount-label {
+    font-size: 15px;
+    margin-right: 3px;
+  }
+
+  &__item-amount {
     text-align: right;
     flex-grow: 1;
     position: relative;
@@ -125,5 +145,8 @@
     font-size: 30px;
     font-weight: bold;
     color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: end;
   }
 }

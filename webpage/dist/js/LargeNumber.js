@@ -133,3 +133,4 @@ export class LargeNumber {
         return new LargeNumber(tmpValue - largerNumber.value, largerNumber.potence);
     }
 }
+//# sourceMappingURL=LargeNumber.js.map

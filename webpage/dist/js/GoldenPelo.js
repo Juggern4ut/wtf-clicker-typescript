@@ -46,3 +46,4 @@ export class GoldenPelo {
         }
     }
 }
+//# sourceMappingURL=GoldenPelo.js.map

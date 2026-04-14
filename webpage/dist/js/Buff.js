@@ -91,3 +91,4 @@ export class Buff {
         return possible[Math.floor(Math.random() * possible.length)];
     }
 }
+//# sourceMappingURL=Buff.js.map

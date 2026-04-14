@@ -71,3 +71,4 @@ export class Item {
         this.image.classList.add("inventory__item-image");
     }
 }
+//# sourceMappingURL=Item.js.map

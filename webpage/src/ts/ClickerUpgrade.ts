@@ -65,7 +65,7 @@ export class ClickerUpgrade {
         const title = root.querySelector(".upgrades__title") as HTMLParagraphElement;
         const effect = root.querySelector(".upgrades__description") as HTMLParagraphElement;
         const price = root.querySelector(".upgrades__price") as HTMLParagraphElement;
-        const buy = root.querySelector(".upgrades__buy") as HTMLParagraphElement;
+        const buy = root.querySelector(".upgrades__buy") as HTMLElement;
 
         title.textContent = this.title;
         effect.textContent = this.description;

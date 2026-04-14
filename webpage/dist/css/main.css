@@ -428,13 +428,14 @@ body.buff .clicker {
 .inventory__inner {
   opacity: 0;
   transform: translateY(-100px);
-  margin: 20px auto;
+  margin: 50px auto;
   background-color: #fff;
   max-width: 1000px;
   width: calc(100% - 20px);
   border-top: 50px solid #05398c;
   position: relative;
   transition: 200ms ease-out;
+  border-radius: 5px;
 }
 .inventory__modal--open .inventory__inner {
   opacity: 1;
@@ -444,7 +445,7 @@ body.buff .clicker {
   position: absolute;
   top: -38px;
   left: 15px;
-  font-size: 18px;
+  font-size: 23px;
   font-weight: bold;
   color: #fff;
   z-index: 100;
@@ -455,20 +456,29 @@ body.buff .clicker {
   right: 0;
   color: #fff;
   font-size: 20px;
-  font-weight: bold;
   padding: 0 10px;
   cursor: pointer;
+  font-family: monospace;
+  transform: scaleX(1.3);
 }
 .inventory__item-title {
   font-weight: bold;
   word-break: break-all;
+  font-size: 21px;
+  font-variant: small-caps;
+}
+.inventory__item-subtitle {
+  font-size: 14px;
+  font-style: italic;
+  margin-bottom: 8px;
 }
 .inventory__item {
   padding: 10px;
   display: flex;
-}
-.inventory__item:not(:last-of-type) {
-  border-bottom: 1px solid #AAA;
+  margin: 0 0 10px 0;
+  border: 1px solid #dedede;
+  border-radius: 10px;
+  align-items: center;
 }
 .inventory__item:hover {
   cursor: pointer;
@@ -483,6 +493,9 @@ body.buff .clicker {
 .inventory__content {
   max-height: calc(100vh - 90px);
   overflow-y: auto;
+  padding: 10px;
+  padding-bottom: 0;
+  border: 1px solid #dedede;
 }
 .inventory__count {
   position: absolute;
@@ -501,6 +514,10 @@ body.buff .clicker {
 .inventory__count--visible {
   display: block;
 }
+.inventory__item-amount-label {
+  font-size: 15px;
+  margin-right: 3px;
+}
 .inventory__item-amount {
   text-align: right;
   flex-grow: 1;
@@ -509,6 +526,9 @@ body.buff .clicker {
   font-size: 30px;
   font-weight: bold;
   color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: end;
 }
 
 .members {
@@ -563,7 +583,6 @@ body.buff .clicker {
   font-size: 23px;
 }
 .members__disabled {
-  pointer-events: none;
   position: relative;
   opacity: 0.7;
 }
@@ -601,6 +620,10 @@ body.buff .clicker {
   width: 70px;
   height: auto;
 }
+.members__footer {
+  display: flex;
+  gap: 10px;
+}
 .members__buy {
   align-items: center;
   box-sizing: border-box;
@@ -621,6 +644,10 @@ body.buff .clicker {
 }
 .members__buy:hover {
   background-color: rgb(45, 46, 105);
+}
+.members__buy--small {
+  min-width: 1px;
+  padding: 10px 16px;
 }
 .members__buy span {
   text-align: center;
@@ -747,6 +774,7 @@ body.buff .clicker {
   width: calc(100% - 20px);
   border-top: 50px solid #05398c;
   position: relative;
+  border-radius: 5px;
   transition: 200ms ease-out;
 }
 .stats--open .stats__inner {

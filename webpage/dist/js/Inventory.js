@@ -136,13 +136,13 @@ export class Inventory {
                 title.classList.add("inventory__item-title");
                 title.innerHTML = item.name;
                 const text = document.createElement("p");
-                text.classList.add("u-italic");
+                text.classList.add("inventory__item-subtitle");
                 text.innerHTML = item.text;
                 const description = document.createElement("p");
                 description.innerHTML = item.description;
                 const amount = document.createElement("p");
                 amount.classList.add("inventory__item-amount");
-                amount.innerHTML = stack.amount + " x";
+                amount.innerHTML = "<span class='inventory__item-amount-label'>x</span>" + stack.amount;
                 info.append(title);
                 info.append(text);
                 info.append(description);
@@ -170,3 +170,4 @@ export class Inventory {
         this.updateInventory();
     }
 }
+//# sourceMappingURL=Inventory.js.map

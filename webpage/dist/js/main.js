@@ -59,3 +59,4 @@ window.onload = () => {
     };
     window.clicker = new Game();
 };
+//# sourceMappingURL=main.js.map

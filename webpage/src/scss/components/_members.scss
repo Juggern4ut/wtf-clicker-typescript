@@ -57,7 +57,6 @@
   }
 
   &__disabled {
-    pointer-events: none;
     position: relative;
     opacity: 0.7;
   }
@@ -103,6 +102,10 @@
     height: auto;
   }
 
+  &__footer{
+    display: flex;
+    gap: 10px;
+  }
 
   &__buy {
     align-items: center;
@@ -122,8 +125,13 @@
     transition: all 0.1s;
     background-color: rgb(5, 6, 45);
 
-    &:hover{
+    &:hover {
       background-color: rgb(45, 46, 105);
+    }
+
+    &--small {
+      min-width: 1px;
+      padding: 10px 16px;
     }
   }
 

@@ -15,6 +15,7 @@ interface MemberDom {
     infoContainer: HTMLElement;
     amountContainer: HTMLElement;
     power: HTMLElement;
+    statHandler: HTMLElement;
 }
 
 /**
@@ -90,7 +91,10 @@ export class Member {
                 <div class="members__infoContainer">
                     <p class="members__power"></p>
                 </div>
-                <p class="members__buy"><span class="members__price"></span></p>
+                <div class="members__footer">
+                    <p class="members__buy"><span class="members__price"></span></p>
+                    <p class="members__buy members__buy--small">?</p>
+                </div>
             </article>
         `;
 
@@ -103,6 +107,7 @@ export class Member {
         const power = container.querySelector(".members__power") as HTMLParagraphElement;
         const price = container.querySelector(".members__price") as HTMLParagraphElement;
         const buy = container.querySelector(".members__buy") as HTMLParagraphElement;
+        const statHandler = container.querySelector(".members__buy--small") as HTMLParagraphElement;
 
         title.textContent = this.name;
         amount.textContent = String("x" + this.amount);
@@ -116,6 +121,7 @@ export class Member {
         this.dom.power = power;
         this.dom.price = price;
         this.dom.buyHandler = buy;
+        this.dom.statHandler = statHandler;
 
         this.updatePrice();
         this.updatePower(null);

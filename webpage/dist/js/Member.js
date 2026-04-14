@@ -57,7 +57,10 @@ export class Member {
                 <div class="members__infoContainer">
                     <p class="members__power"></p>
                 </div>
-                <p class="members__buy"><span class="members__price"></span></p>
+                <div class="members__footer">
+                    <p class="members__buy"><span class="members__price"></span></p>
+                    <p class="members__buy members__buy--small">?</p>
+                </div>
             </article>
         `;
         const container = template.content.firstElementChild;
@@ -69,6 +72,7 @@ export class Member {
         const power = container.querySelector(".members__power");
         const price = container.querySelector(".members__price");
         const buy = container.querySelector(".members__buy");
+        const statHandler = container.querySelector(".members__buy--small");
         title.textContent = this.name;
         amount.textContent = String("x" + this.amount);
         this.dom.container = container;
@@ -80,6 +84,7 @@ export class Member {
         this.dom.power = power;
         this.dom.price = price;
         this.dom.buyHandler = buy;
+        this.dom.statHandler = statHandler;
         this.updatePrice();
         this.updatePower(null);
     }
@@ -210,3 +215,4 @@ export class Member {
         this.updatePrice();
     }
 }
+//# sourceMappingURL=Member.js.map

@@ -116,3 +116,4 @@ export class ClickerUpgrade {
         this.dom?.classList.add("hidden");
     }
 }
+//# sourceMappingURL=ClickerUpgrade.js.map

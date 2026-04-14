@@ -12,6 +12,20 @@ import { Upgrade } from "./Upgrade.js";
  */
 export class Game {
     /**
+     * Returns an existing upgrade save entry or creates a default one.
+     * @param saveEntries The upgrade save collection to read from.
+     * @param id The upgrade id.
+     * @returns A mutable save entry for the requested upgrade.
+     */
+    getOrCreateUpgradeSaveEntry(saveEntries, id) {
+        let entry = saveEntries.find((item) => item.id === id);
+        if (!entry) {
+            entry = { id, bought: false };
+            saveEntries.push(entry);
+        }
+        return entry;
+    }
+    /**
      * Creates a new game instance and starts its update loops.
      */
     constructor() {
@@ -77,6 +91,9 @@ export class Game {
                         this.save.save();
                     }
                 };
+                member.dom.statHandler.onclick = () => {
+                    alert(`${member.amount} ${member.amount == 1 ? member.name : member.name + "s"} à ${member.basePower * member.getMultiplier()} = ${member.amount * member.basePower * member.getMultiplier()} cps.`);
+                };
             });
             this.instantiateClickerUpgrades();
         });
@@ -92,14 +109,16 @@ export class Game {
                 const tmp = new ClickerUpgrade(up.name, up.description, up.requirement, up.type, up.power, up.price, up.id);
                 this.clickerUpgrades.push(tmp);
                 this.clickerUpgradesSave.push({ id: up.id, bought: false });
-                tmp.buyHandler.onclick = () => {
-                    if (tmp.price <= this.score) {
-                        this.score -= tmp.price;
-                        this.clickerUpgradesSave.find((item) => item.id === up.id).bought = true;
-                        tmp.buy();
-                        this.save.save();
-                    }
-                };
+                if (tmp.buyHandler) {
+                    tmp.buyHandler.onclick = () => {
+                        if (tmp.price <= this.score) {
+                            this.score -= tmp.price;
+                            this.getOrCreateUpgradeSaveEntry(this.clickerUpgradesSave, up.id).bought = true;
+                            tmp.buy();
+                            this.save.save();
+                        }
+                    };
+                }
             });
             this.instantiateUpgrades();
         });
@@ -119,11 +138,11 @@ export class Game {
             this.members.forEach((member) => {
                 member.upgrades.forEach((upgrade) => {
                     this.upgradesSave.push({ id: upgrade.id, bought: false });
-                    if (upgrade.dom) {
+                    if (upgrade.dom && upgrade.buy) {
                         upgrade.buy.onclick = () => {
                             if (this.score >= upgrade.price && !upgrade.bought) {
                                 upgrade.bought = true;
-                                this.upgradesSave.find((item) => item.id === upgrade.id).bought = true;
+                                this.getOrCreateUpgradeSaveEntry(this.upgradesSave, upgrade.id).bought = true;
                                 this.score -= upgrade.price;
                                 this.save.save();
                             }
@@ -252,3 +271,4 @@ export class Game {
         });
     }
 }
+//# sourceMappingURL=Game.js.map

@@ -24,6 +24,7 @@
     width: calc(100% - 20px);
     border-top: 50px solid #05398c;
     position: relative;
+    border-radius: 5px;
     transition: 200ms ease-out;
   }
 
@@ -67,6 +68,7 @@
     padding: 10px;
     display: flex;
     justify-content: space-between;
+
     &:not(:last-of-type) {
       border-bottom: 1px solid #888;
     }

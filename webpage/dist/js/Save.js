@@ -10,6 +10,20 @@ export class Save {
         this.game = game;
     }
     /**
+     * Merges stored upgrade flags into the currently known upgrade defaults.
+     * This preserves new upgrade ids that older saves do not know about.
+     * @param currentEntries The runtime default save entries.
+     * @param loadedEntries The saved entries loaded from storage.
+     * @returns The merged save entries.
+     */
+    mergeUpgradeEntries(currentEntries, loadedEntries) {
+        const loadedById = new Map(loadedEntries.map((entry) => [entry.id, entry.bought]));
+        return currentEntries.map((entry) => ({
+            id: entry.id,
+            bought: loadedById.get(entry.id) ?? entry.bought,
+        }));
+    }
+    /**
      * Saves the current game state into local storage.
      * @returns The serialized save string.
      */
@@ -54,10 +68,10 @@ export class Save {
                 });
             }
             if (data.upgrades_new) {
-                this.game.upgradesSave = data.upgrades_new;
+                this.game.upgradesSave = this.mergeUpgradeEntries(this.game.upgradesSave, data.upgrades_new);
                 this.game.members.forEach((member) => {
                     member.upgrades.forEach((upgrade) => {
-                        const found = data.upgrades_new?.find((item) => item.id === upgrade.id);
+                        const found = this.game.upgradesSave.find((item) => item.id === upgrade.id);
                         if (found) {
                             upgrade.bought = found.bought;
                         }
@@ -65,10 +79,13 @@ export class Save {
                 });
             }
             if (data.clicker_upgrades_new) {
-                data.clicker_upgrades_new.forEach((upgrade) => {
-                    this.game.clickerUpgrades.find((item) => item.id === upgrade.id).bought = upgrade.bought;
+                this.game.clickerUpgradesSave = this.mergeUpgradeEntries(this.game.clickerUpgradesSave, data.clicker_upgrades_new);
+                this.game.clickerUpgradesSave.forEach((upgrade) => {
+                    const clickerUpgrade = this.game.clickerUpgrades.find((item) => item.id === upgrade.id);
+                    if (clickerUpgrade) {
+                        clickerUpgrade.bought = upgrade.bought;
+                    }
                 });
-                this.game.clickerUpgradesSave = data.clicker_upgrades_new;
             }
             if (data.inventory_new) {
                 data.inventory_new.forEach((item) => {
@@ -98,3 +115,4 @@ export class Save {
         window.location.reload();
     }
 }
+//# sourceMappingURL=Save.js.map

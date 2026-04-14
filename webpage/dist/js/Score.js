@@ -21,3 +21,4 @@ export class Score {
         this.scorePerSecondsElement.innerHTML = window.numberAsText(scorePerSecond);
     }
 }
+//# sourceMappingURL=Score.js.map
