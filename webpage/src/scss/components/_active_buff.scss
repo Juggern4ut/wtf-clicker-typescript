@@ -1,0 +1,33 @@
+.active_buff {
+  display: none;
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  
+  &--visible {
+    display: block;
+  }
+
+  &__image{
+    width: 64px;
+  }
+
+  &__time {
+    display: block;
+    width: 64px;
+    height: 7px;
+    border: 1px solid #000;
+    background-color: #fff;
+    position: relative;
+
+    &--inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: #0c0;
+      width: 75%;
+      height: 100%;
+    }
+
+  }
+}

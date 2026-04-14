@@ -155,6 +155,14 @@ class Member {
     this.amount++;
   }
 
+  getAmount(): number {
+    return this.amount;
+  }
+
+  setAmount(amount: number) {
+    this.amount = amount;
+  }
+
   updateUpgrades(score: number, showBought: boolean) {
     this.upgrades.forEach((u) => {
       u.updateVisibility(this.amount, showBought);

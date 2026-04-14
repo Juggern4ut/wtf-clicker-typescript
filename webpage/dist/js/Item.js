@@ -1,6 +1,19 @@
-var Item = /** @class */ (function () {
-    function Item(id, name, icon, description, text, referenceMemberId, power, consumable, duration) {
-        this.amount = 0;
+"use strict";
+class Item {
+    name;
+    image;
+    imageString;
+    description;
+    text;
+    duration;
+    consumable;
+    dom;
+    referenceMemberId;
+    amount = 0;
+    power;
+    id;
+    getFromPelo;
+    constructor(id, name, icon, description, text, referenceMemberId, power, consumable, duration, getFromPelo) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -9,23 +22,24 @@ var Item = /** @class */ (function () {
         this.referenceMemberId = referenceMemberId;
         this.power = power;
         this.consumable = consumable;
-        this.duration = duration ? duration : 60;
+        this.duration = duration;
+        this.getFromPelo = getFromPelo;
         this.createImage();
         this.createDom();
     }
-    Item.prototype.createDom = function () {
+    createDom() {
         this.dom = document.createElement("article");
         this.dom.classList.add("inventory__item");
-        var info = document.createElement("div");
-        var description = document.createElement("p");
+        const info = document.createElement("div");
+        let description = document.createElement("p");
         description.innerHTML = this.description;
-        var text = document.createElement("p");
+        let text = document.createElement("p");
         text.classList.add("u-italic");
         text.innerHTML = '"' + this.text + '"';
-        var title = document.createElement("p");
+        let title = document.createElement("p");
         title.classList.add("inventory__item-title");
         title.innerHTML = this.name;
-        var amount = document.createElement("p");
+        let amount = document.createElement("p");
         amount.classList.add("inventory__item-amount");
         amount.innerHTML = this.amount + " x";
         info.append(title);
@@ -34,15 +48,14 @@ var Item = /** @class */ (function () {
         this.dom.append(this.image);
         this.dom.append(info);
         this.dom.append(amount);
-    };
-    Item.prototype.updateAmount = function () {
-        var el = this.dom.querySelector(".inventory__item-amount");
+    }
+    updateAmount() {
+        let el = this.dom.querySelector(".inventory__item-amount");
         el.innerHTML = this.amount + " x";
-    };
-    Item.prototype.createImage = function () {
+    }
+    createImage() {
         this.image = document.createElement("img");
         this.image.src = "/img/items/" + this.imageString;
         this.image.classList.add("inventory__item-image");
-    };
-    return Item;
-}());
+    }
+}

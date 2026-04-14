@@ -1,21 +1,39 @@
-var Member = /** @class */ (function () {
-    function Member(name, basePower, basePrice, image, id) {
-        this.multiplier = 1;
-        this.upgrades = [];
-        this.dom = {
-            container: null,
-            title: null,
-            image: null,
-            amount: null,
-            price: null,
-            imageContainer: null,
-            infoContainer: null,
-            amountContainer: null,
-            power: null
-        };
-        this.numberWithCommas = function (number) {
-            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
-        };
+"use strict";
+/**
+ * Represents a buyable club member.
+ */
+class Member {
+    id;
+    amount;
+    name;
+    basePower;
+    basePrice;
+    nextPrice = 0;
+    container;
+    multiplier = 1;
+    upgrades = [];
+    image;
+    dom = {
+        container: null,
+        title: null,
+        image: null,
+        amount: null,
+        price: null,
+        imageContainer: null,
+        infoContainer: null,
+        amountContainer: null,
+        power: null,
+    };
+    /**
+     * Creates a member instance.
+     *
+     * @param name The member name.
+     * @param basePower The base production power.
+     * @param basePrice The initial price.
+     * @param image The image file name.
+     * @param id The member id.
+     */
+    constructor(name, basePower, basePrice, image, id) {
         this.amount = 0;
         this.basePower = basePower;
         this.name = name;
@@ -24,105 +42,186 @@ var Member = /** @class */ (function () {
         this.dom.image = document.createElement("img");
         this.dom.image.src = "/img/members/" + image;
         this.dom.image.classList.add("members__image");
-        this.container = document.querySelector(".members");
+        this.container = getRequiredElement(".members");
         this.createDomElement();
         this.applyToDom();
     }
-    Member.prototype.addUpgrade = function (upgrade) {
+    /**
+     * Adds an upgrade to the member.
+     *
+     * @param upgrade The upgrade to attach.
+     */
+    addUpgrade(upgrade) {
         this.upgrades.push(upgrade);
+    }
+    /**
+     * Formats a number using apostrophe thousands separators.
+     *
+     * @param number The value to format.
+     * @returns The formatted value.
+     */
+    numberWithCommas = (number) => {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
     };
-    Member.prototype.createDomElement = function () {
-        this.dom.imageContainer = document.createElement("div");
-        this.dom.imageContainer.classList.add("members__imageContainer");
-        this.dom.infoContainer = document.createElement("div");
-        this.dom.infoContainer.classList.add("members__infoContainer");
-        this.dom.amountContainer = document.createElement("div");
-        this.dom.amountContainer.classList.add("members__amountContainer");
-        this.dom.title = document.createElement("p");
-        this.dom.title.classList.add("members__title");
-        this.dom.amount = document.createElement("p");
-        this.dom.amount.classList.add("members__amount");
-        this.dom.power = document.createElement("p");
-        this.dom.power.classList.add("members__power");
-        this.dom.title.innerHTML = this.name;
-        this.dom.amount.innerHTML = "" + this.amount;
-        this.dom.container = document.createElement("article");
-        this.dom.container.classList.add("members__member");
-        this.dom.price = document.createElement("p");
-        this.dom.price.classList.add("members__price");
+    /**
+     * Creates the member DOM structure.
+     */
+    createDomElement() {
+        const template = document.createElement("template");
+        template.innerHTML = `
+            <article class="members__member">
+                <div class="members__heading">
+                    <p class="members__title"></p>
+                    <p class="members__amount"></p>
+                </div>
+                <div class="members__imageContainer" style="background-image: url('${this.dom.image.src}')"></div>
+                <div class="members__infoContainer">
+                    <p class="members__power"></p>
+                </div>
+                <p class="members__buy"><span class="members__price"></span></p>
+            </article>
+        `;
+        const container = template.content.firstElementChild;
+        const imageContainer = container.querySelector(".members__imageContainer");
+        const infoContainer = container.querySelector(".members__infoContainer");
+        const amountContainer = container.querySelector(".members__amountContainer");
+        const title = container.querySelector(".members__title");
+        const amount = container.querySelector(".members__amount");
+        const power = container.querySelector(".members__power");
+        const price = container.querySelector(".members__price");
+        title.textContent = this.name;
+        amount.textContent = String("x" + this.amount);
+        if (this.dom.image) {
+            imageContainer.append(this.dom.image);
+        }
+        this.dom.container = container;
+        this.dom.imageContainer = imageContainer;
+        this.dom.infoContainer = infoContainer;
+        this.dom.amountContainer = amountContainer;
+        this.dom.title = title;
+        this.dom.amount = amount;
+        this.dom.power = power;
+        this.dom.price = price;
         this.updatePrice();
-        this.dom.imageContainer.append(this.dom.image);
-        this.dom.infoContainer.append(this.dom.title);
-        this.dom.amountContainer.append(this.dom.amount);
-        this.dom.infoContainer.append(this.dom.power);
-        this.dom.infoContainer.append(this.dom.price);
         this.updatePower(null);
-        this.dom.container.append(this.dom.imageContainer);
-        this.dom.container.append(this.dom.infoContainer);
-        this.dom.container.append(this.dom.amountContainer);
-    };
-    Member.prototype.applyToDom = function () {
+    }
+    /**
+     * Appends the member DOM to the container.
+     */
+    applyToDom() {
         this.container.append(this.dom.container);
-    };
-    Member.prototype.getPrice = function () {
+    }
+    /**
+     * Returns the current member price.
+     *
+     * @returns The current purchase price.
+     */
+    getPrice() {
         if (this.amount === 0) {
             return this.basePrice;
         }
         return Math.ceil(this.basePrice * Math.pow(1.15, this.amount));
-    };
-    Member.prototype.updateAmount = function () {
-        this.dom.amount.innerHTML = "" + this.amount;
-    };
-    Member.prototype.updatePrice = function () {
-        this.dom.price.innerHTML = window["numberAsText"](this.getPrice()) + "";
-    };
-    Member.prototype.updateBuyability = function (score) {
+    }
+    /**
+     * Updates the displayed member amount.
+     */
+    updateAmount() {
+        if (this.amount <= 0) {
+            this.dom.amount.classList.add("hidden");
+        }
+        else {
+            this.dom.amount.classList.remove("hidden");
+            this.dom.amount.innerHTML = "<span class='members__amount-span'>x</span>" + this.amount;
+        }
+    }
+    /**
+     * Updates the displayed member price.
+     */
+    updatePrice() {
+        this.dom.price.innerHTML = window.numberAsText(this.getPrice()) + "";
+    }
+    /**
+     * Updates whether the member can currently be bought.
+     *
+     * @param score The current score.
+     */
+    updateBuyability(score) {
         if (this.getPrice() > score) {
             this.dom.container.classList.add("members__disabled");
         }
         else {
             this.dom.container.classList.remove("members__disabled");
         }
-    };
-    Member.prototype.updatePower = function (buff) {
+    }
+    /**
+     * Updates the displayed member power.
+     *
+     * @param buff The currently active buff.
+     */
+    updatePower(buff) {
         if (buff && this.id === buff.referenceMemberId) {
-            this.dom.power.innerHTML = window["numberAsText"](this.basePower * this.getMultiplier() * buff.power) + " p/s";
+            this.dom.power.innerHTML = window.numberAsText(this.basePower * this.getMultiplier() * buff.power) + " p/s";
         }
         else {
-            this.dom.power.innerHTML = window["numberAsText"](this.basePower * this.getMultiplier()) + " p/s";
+            this.dom.power.innerHTML = window.numberAsText(this.basePower * this.getMultiplier()) + " p/s";
         }
-    };
-    Member.prototype.getIncrease = function (buff) {
+    }
+    /**
+     * Returns the current production increase.
+     *
+     * @param buff The currently active buff.
+     * @returns The production increase.
+     */
+    getIncrease(buff) {
         if (buff && this.id === buff.referenceMemberId) {
             return this.basePower * this.amount * this.getMultiplier() * buff.power;
         }
         return this.basePower * this.amount * this.getMultiplier();
-    };
-    Member.prototype.getMultiplier = function () {
-        var multiplier = 1;
-        this.upgrades.forEach(function (u) {
+    }
+    /**
+     * Returns the current member multiplier.
+     *
+     * @returns The computed multiplier.
+     */
+    getMultiplier() {
+        let multiplier = 1;
+        this.upgrades.forEach((u) => {
             if (u.bought) {
                 multiplier *= u.multiplier;
             }
         });
         return multiplier;
-    };
-    Member.prototype.buy = function () {
+    }
+    /**
+     * Increments the owned member amount.
+     */
+    buy() {
         this.amount++;
-    };
-    Member.prototype.updateUpgrades = function (score, showBought) {
-        var _this = this;
-        this.upgrades.forEach(function (u) {
-            u.updateVisibility(_this.amount, showBought);
+    }
+    /**
+     * Updates all attached upgrades.
+     *
+     * @param score The current score.
+     * @param showBought Whether bought upgrades should stay visible.
+     */
+    updateUpgrades(score, showBought) {
+        this.upgrades.forEach((u) => {
+            u.updateVisibility(this.amount, showBought);
             u.updateBuyability(score);
         });
-    };
-    Member.prototype.update = function (score, showBought, buff) {
+    }
+    /**
+     * Updates the member DOM state.
+     *
+     * @param score The current score.
+     * @param showBought Whether bought upgrades should stay visible.
+     * @param buff The currently active buff.
+     */
+    update(score, showBought, buff) {
         this.updateBuyability(score);
         this.updatePower(buff);
         this.updateAmount();
         this.updateUpgrades(score, showBought);
         this.updatePrice();
-    };
-    return Member;
-}());
+    }
+}

@@ -1,31 +1,19 @@
 {
-  "name": "lumens-slider-2",
+  "name": "wtf-clicker-typescript",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently --kill-others \"npm run gulp\" \"tsc\" \"live-server ./webpage/dist\"",
-    "gulp": "gulp",
-    "ftp-deploy": "node deploy_active.js"
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "sass": "sass ./webpage/src/scss/main.scss ./webpage/dist/css/main.css --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "autoprefixer": "^9.7.4",
-    "concurrently": "^5.2.0",
-    "gulp": "^4.0.2",
-    "gulp-changed": "^4.0.2",
-    "gulp-csso": "^4.0.1",
-    "gulp-imagemin": "^7.1.0",
-    "gulp-postcss": "^8.0.0",
-    "gulp-sass": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.5",
-    "live-server": "^1.2.1"
-  },
+  "type": "module",
   "dependencies": {
-    "fs": "0.0.1-security",
-    "ftp": "^0.3.10",
-    "glob": "^7.1.6"
+    "sass": "^1.99.0",
+    "typescript": "^6.0.2"
   }
 }

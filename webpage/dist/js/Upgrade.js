@@ -1,7 +1,15 @@
-var Upgrade = /** @class */ (function () {
-    function Upgrade(title, description, requirement, multiplier, price, id) {
-        this.bought = false;
-        this.dom = null;
+"use strict";
+class Upgrade {
+    title;
+    requirement;
+    multiplier;
+    price;
+    container;
+    bought = false;
+    dom = null;
+    id;
+    description;
+    constructor(title, description, requirement, multiplier, price, id) {
         this.title = title;
         this.requirement = requirement;
         this.multiplier = multiplier;
@@ -11,16 +19,16 @@ var Upgrade = /** @class */ (function () {
         this.container = document.querySelector(".upgrades");
         this.createDom();
     }
-    Upgrade.prototype.createDom = function () {
+    createDom() {
         this.dom = document.createElement("article");
         this.dom.classList.add("upgrades__upgrade");
         this.dom.classList.add("hidden");
-        var price = document.createElement("p");
+        const price = document.createElement("p");
         price.classList.add("upgrades__price");
         price.innerHTML = window["numberAsText"](this.price);
-        var title = document.createElement("p");
+        const title = document.createElement("p");
         title.innerHTML = this.title;
-        var effect = document.createElement("p");
+        const effect = document.createElement("p");
         effect.style.fontSize = 12 + "px";
         effect.classList.add("upgrades__description");
         effect.innerHTML = this.description;
@@ -28,8 +36,8 @@ var Upgrade = /** @class */ (function () {
         this.dom.append(effect);
         this.dom.append(price);
         this.container.append(this.dom);
-    };
-    Upgrade.prototype.updateBuyability = function (score) {
+    }
+    updateBuyability(score) {
         if (!this.dom)
             return false;
         if (score > this.price || this.bought) {
@@ -38,8 +46,8 @@ var Upgrade = /** @class */ (function () {
         else {
             this.dom.classList.add("disabled");
         }
-    };
-    Upgrade.prototype.updateVisibility = function (amount, showBought) {
+    }
+    updateVisibility(amount, showBought) {
         if (this.bought) {
             this.dom.classList.remove("hidden");
             if (showBought) {
@@ -56,6 +64,5 @@ var Upgrade = /** @class */ (function () {
         else {
             this.dom.classList.add("hidden");
         }
-    };
-    return Upgrade;
-}());
+    }
+}

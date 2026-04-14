@@ -8,15 +8,19 @@ class Save {
   save() {
     const saveData = {};
 
-    saveData["members"] = this.game.members;
-    saveData["clickerUpgrades"] = this.game.clickerUpgrades;
-    saveData["inventory"] = this.game.items;
+    //saveData["members"] = this.game.members;
+    //saveData["clickerUpgrades"] = this.game.clickerUpgrades;
+    saveData["inventory_new"] = this.game.inventory.stack;
+    saveData["members_new"] = this.game.membersSave;
+    saveData["upgrades_new"] = this.game.upgradesSave;
+    saveData["clicker_upgrades_new"] = this.game.clickerUpgradesSave;
+
     saveData["game"] = {
       score: this.game.score,
       dailyBonusGot: this.game.dailyBonusGot,
       handmadeCaps: this.game.handmadeCaps,
       runStarted: this.game.runStarted,
-      missedGoldenPelo: this.game.missedGoldenPelo,
+      missedGoldenPelo: this.game.goldenPelo.missedGoldenPelo,
     };
 
     const saveString = btoa(JSON.stringify(saveData));
@@ -28,7 +32,7 @@ class Save {
     let localStorageData;
     if (fromString) {
       localStorageData = fromString;
-      this.game.clearInventory();
+      this.game.inventory.clearInventory();
     } else {
       localStorageData = localStorage.getItem("WtfClickerGame2");
     }
@@ -36,39 +40,38 @@ class Save {
     if (localStorageData) {
       const data = JSON.parse(atob(localStorageData));
 
-      this.game.members.forEach((member) => {
-        let saveMember = data["members"].find((m) => m.id === member.id);
-        member.amount = saveMember.amount;
-
-        member.upgrades.forEach((upgrade) => {
-          let saveUpgrade = saveMember.upgrades.find((u) => u.id === upgrade.id);
-          upgrade.bought = saveUpgrade ? saveUpgrade.bought : false;
+      if (data["members_new"]) {
+        this.game.membersSave = data["members_new"];
+        data["members_new"].forEach((mem) => {
+          this.game.members.find((i) => i.id === mem.id).setAmount(mem.amount);
+          this.game.membersSave.find((i) => i["id"] === mem.id)["amount"] = mem.amount;
         });
-      });
+      }
 
-      this.game.clickerUpgrades.forEach((clickerUpgrade) => {
-        let savedClickerUpgrade = data["clickerUpgrades"].find((u) => u.id === clickerUpgrade.id);
-        clickerUpgrade.bought = savedClickerUpgrade.bought;
-      });
-
-      if (data["inventory"]) {
-        data["inventory"].forEach((item) => {
-          
-          if (!item.id && item.name === "Wasserkochsalzlösung") {
-            item.power = 66;
-            item.id = 2;
-            item.duration = 15;
-            item.description = "Deine Bierdeckel pro Sekunde werden für 15 Sekunden 66x effizienter!";
-          } else if (!item.id && item.name === "Super homo saft") {
-            item.power = 7000;
-            item.id = 1;
-            item.duration = 60;
-            item.description = "Sandro wird für 60 Sekunden 7000x effizienter!";
-          }
-
-          this.game.items.push(new Item(item.id, item.name, item.imageString, item.description, item.text, item.referenceMemberId, item.power, item.consumable, item.duration));
+      if (data["upgrades_new"]) {
+        this.game.upgradesSave = data["upgrades_new"];
+        this.game.members.forEach((member) => {
+          member.upgrades.forEach((upgrade) => {
+            const found = data["upgrades_new"].find((i) => i.id === upgrade.id);
+            if (found) {
+              upgrade.bought = found.bought;
+            }
+          });
         });
-        this.game.updateInventory();
+      }
+
+      if (data["clicker_upgrades_new"]) {
+        data["clicker_upgrades_new"].forEach((upgrade) => {
+          this.game.clickerUpgrades.find((i) => i.id === upgrade.id).bought = upgrade.bought;
+        });
+        this.game.clickerUpgradesSave = data["clicker_upgrades_new"];
+      }
+
+      if (data["inventory_new"]) {
+        data["inventory_new"].forEach((item) => {
+          this.game.inventory.addItem(item.id, item.amount);
+        });
+        this.game.inventory.updateInventory();
       }
 
       if (data["game"]) {

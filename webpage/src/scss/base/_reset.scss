@@ -2,7 +2,6 @@ html {
   font-size: 62.5%;
   box-sizing: border-box;
   background: #00867f;
-  
 }
 
 body {
@@ -13,10 +12,11 @@ body {
   min-height: 100vh;
   background: linear-gradient(138deg, #020024 0%, #05398c 20%, #00867f 100%);
 
-  &.buff{
-    background: linear-gradient(138deg, #934200  0%, #ce7b00 20%, #8a7c00 100%);
+  &.buff {
+    background: linear-gradient(315deg, #ca5f21, #d25e00, #e6c718);
+    background-size: 600% 600%;
+    animation: BuffGlow 20s ease infinite;
   }
-  
 }
 
 * {

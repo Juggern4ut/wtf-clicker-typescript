@@ -3,4 +3,14 @@
   width: 150px;
   animation: shake 0.5s;
   animation-iteration-count: infinite;
+  opacity: 1;
+  transition: 400ms ease-out;
+
+  &.collected{
+    animation: none;
+    opacity: 0.6;
+    width: 50px;
+    top: 20px !important;
+    left: 20px !important;
+  }
 }

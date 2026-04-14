@@ -11,8 +11,9 @@ class Item {
   amount: number = 0;
   power: number;
   id: number;
+  getFromPelo: boolean;
 
-  constructor(id: number, name: string, icon: string, description: string, text: string, referenceMemberId: number, power: number, consumable: boolean, duration: number) {
+  constructor(id: number, name: string, icon: string, description: string, text: string, referenceMemberId: number, power: number, consumable: boolean, duration: number, getFromPelo: boolean) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -21,7 +22,8 @@ class Item {
     this.referenceMemberId = referenceMemberId;
     this.power = power;
     this.consumable = consumable;
-    this.duration = duration ? duration : 60;
+    this.duration = duration;
+    this.getFromPelo = getFromPelo;
     this.createImage();
     this.createDom();
   }
