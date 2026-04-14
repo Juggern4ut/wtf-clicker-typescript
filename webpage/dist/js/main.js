@@ -17,8 +17,12 @@ window.onload = () => {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
     };
     window.numberAsText = (number) => {
+        let decimals = 0;
         if (number < 1000000) {
-            return window.numberWithCommas(number.toFixed(0));
+            if (number < 1 || number % 1 != 0) {
+                decimals = 2;
+            }
+            return window.numberWithCommas(number.toFixed(decimals));
         }
         const scales = [
             "",
