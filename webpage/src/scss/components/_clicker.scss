@@ -11,36 +11,47 @@
 
 .Fly {
   opacity: 0;
+
   &_1 {
     transform: translate(-150px, -150px) rotate(-154deg);
   }
+
   &_2 {
     transform: translate(-100px, -160px) rotate(-194deg);
   }
+
   &_3 {
     transform: translate(-50px, -170px) rotate(254deg);
   }
+
   &_4 {
     transform: translate(-15px, -150px) rotate(354deg);
   }
+
   &_5 {
     transform: translate(-220px, -123px) rotate(-243deg);
   }
+
   &_6 {
     transform: translate(20px, -202px) rotate(-163deg);
   }
+
   &_7 {
     transform: translate(72px, -160px) rotate(-243deg);
   }
+
   &_8 {
     transform: translate(123px, -180px) rotate(-243deg);
   }
+
   &_9 {
     transform: translate(175px, -100px) rotate(-243deg);
   }
+
   &_10 {
     transform: translate(182px, -169px) rotate(-243deg);
   }
+
   &_11 {
     transform: translate(200px, -90px) rotate(-243deg);
   }
@@ -68,9 +79,11 @@
   height: 300px;
   padding: 0 100px;
   outline: none;
+
   &:hover {
     transform: scale(0.95);
   }
+
   &:active {
     animation: shake 0.5s;
     animation-iteration-count: infinite;
@@ -100,6 +113,11 @@
     color: #a82200;
   }
 
+  &--16 {
+    color: #a90000;
+    animation: shake_hard infinite 0.2s !important;
+  }
+
   &--visible {
     opacity: 1;
   }
@@ -107,6 +125,7 @@
   &__number {
     animation: shake 0.5s;
     animation-iteration-count: infinite;
+
     span {
       font-size: 50px;
     }
@@ -117,9 +136,14 @@
     animation: shake_hard 0.3s !important;
     animation-iteration-count: infinite !important;
   }
+
+  &--16 &__number {
+    font-size: 110px;
+    animation: textGlow 0.5s ease-in-out infinite alternate;
+  }
 }
 
 
-body.buff .clicker{
+body.buff .clicker {
   animation: glow 800ms infinite alternate;
 }

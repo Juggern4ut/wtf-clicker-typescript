@@ -76,6 +76,14 @@
     box-shadow: 0 0 30px 30px rgb(228, 182, 139);
   }
 }
+@keyframes textGlow {
+  from {
+    text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000, 0 0 60px #ff0000, 0 0 70px #ff0000;
+  }
+  to {
+    text-shadow: 0 0 20px #ffaa00, 0 0 30px #ffaa00, 0 0 40px #ffaa00, 0 0 50px #ffaa00, 0 0 60px #ffaa00, 0 0 70px #ffaa00, 0 0 80px #ffaa00;
+  }
+}
 @keyframes BuffGlow {
   0% {
     background-position: 7% 0%;
@@ -303,6 +311,10 @@ strong {
 .multiplier_bonus--8 {
   color: #a82200;
 }
+.multiplier_bonus--16 {
+  color: #a90000;
+  animation: shake_hard infinite 0.2s !important;
+}
 .multiplier_bonus--visible {
   opacity: 1;
 }
@@ -317,6 +329,10 @@ strong {
   font-size: 90px;
   animation: shake_hard 0.3s !important;
   animation-iteration-count: infinite !important;
+}
+.multiplier_bonus--16 .multiplier_bonus__number {
+  font-size: 110px;
+  animation: textGlow 0.5s ease-in-out infinite alternate;
 }
 
 body.buff .clicker {

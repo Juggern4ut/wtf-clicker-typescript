@@ -10,6 +10,7 @@ export class Clicker {
         this.power = 1;
         this.clickerMultiplier = 1;
         this.lastClickTimestamp = 0;
+        this.clearMultiplierTimeout = 0;
         this.continuousClicks = 0;
         this.game = game;
         this.container = document.createElement("div");
@@ -42,9 +43,18 @@ export class Clicker {
      * Updates the click multiplier based on the current click streak.
      */
     updateClickMultiplier() {
+        if (this.clearMultiplierTimeout) {
+            clearTimeout(this.clearMultiplierTimeout);
+        }
+        this.clearMultiplierTimeout = setTimeout(() => {
+            this.multiplier_bonus.classList.remove("multiplier_bonus--visible");
+        }, 1000);
         if (Date.now() - 500 < this.lastClickTimestamp) {
             this.continuousClicks++;
-            if (this.continuousClicks > 100) {
+            if (this.continuousClicks > 500) {
+                this.clickerMultiplier = 16;
+            }
+            else if (this.continuousClicks > 100) {
                 this.clickerMultiplier = 8;
             }
             else if (this.continuousClicks > 50) {
@@ -64,6 +74,7 @@ export class Clicker {
             this.multiplier_bonus.classList.remove("multiplier_bonus--2");
             this.multiplier_bonus.classList.remove("multiplier_bonus--4");
             this.multiplier_bonus.classList.remove("multiplier_bonus--8");
+            this.multiplier_bonus.classList.remove("multiplier_bonus--16");
         }
         else {
             this.multiplier_bonus__inner.innerHTML = this.clickerMultiplier + "<span>x</span>";
