@@ -1,17 +1,23 @@
-var Clicker = /** @class */ (function () {
-    function Clicker(game) {
-        var _this = this;
-        this.power = 1;
-        this.clickerMultiplier = 1;
-        this.continuousClicks = 0;
+"use strict";
+class Clicker {
+    game;
+    power = 1;
+    clickerMultiplier = 1;
+    lastClickTimestamp;
+    continuousClicks = 0;
+    container;
+    cap;
+    multiplier_bonus;
+    multiplier_bonus__inner;
+    constructor(game) {
         this.game = game;
         this.container = document.createElement("div");
         this.container.classList.add("clicker");
-        var image = document.createElement("img");
+        const image = document.createElement("img");
         image.classList.add("Bottle");
         image.src = "/img/bottle.png";
         image.draggable = false;
-        image.ondragstart = function (e) {
+        image.ondragstart = (e) => {
             e.preventDefault();
             return false;
         };
@@ -20,18 +26,18 @@ var Clicker = /** @class */ (function () {
         this.cap.src = "/img/cap.png";
         this.container.append(image);
         document.querySelector("body").prepend(this.container);
-        image.onclick = function (e) {
-            _this.letCapFlyOff();
-            _this.updateClickMultiplier();
-            _this.checkDailyBonus();
-            var power = _this.calculatePower();
-            _this.displayClickedCaps(e, power);
-            _this.game.score += power;
-            _this.game.handmadeCaps += power;
+        image.onclick = (e) => {
+            this.letCapFlyOff();
+            this.updateClickMultiplier();
+            this.checkDailyBonus();
+            const power = this.calculatePower();
+            this.displayClickedCaps(e, power);
+            this.game.score += power;
+            this.game.handmadeCaps += power;
         };
         this.createMultiplierDom();
     }
-    Clicker.prototype.updateClickMultiplier = function () {
+    updateClickMultiplier() {
         if (Date.now() - 500 < this.lastClickTimestamp) {
             this.continuousClicks++;
             if (this.continuousClicks > 100) {
@@ -60,41 +66,40 @@ var Clicker = /** @class */ (function () {
             this.multiplier_bonus.classList.add("multiplier_bonus--" + this.clickerMultiplier);
             this.multiplier_bonus.classList.add("multiplier_bonus--visible");
         }
-    };
-    Clicker.prototype.checkDailyBonus = function () {
+    }
+    checkDailyBonus() {
         if (this.game.dailyBonusGot === 0) {
-            var date = new Date();
+            let date = new Date();
             this.game.dailyBonusGot = date.getDate();
             this.game.inventory.addItem(1000, 1);
             this.game.inventory.updateInventory();
         }
-    };
-    Clicker.prototype.letCapFlyOff = function () {
-        var _this = this;
+    }
+    letCapFlyOff() {
         this.container.appendChild(this.cap.cloneNode(true));
-        setTimeout(function () {
-            _this.container.querySelector(".Cap:not(.Fly)").classList.add("Fly_" + Math.ceil(Math.random() * 11));
-            _this.container.querySelector(".Cap:not(.Fly)").classList.add("Fly");
+        setTimeout(() => {
+            this.container.querySelector(".Cap:not(.Fly)").classList.add("Fly_" + Math.ceil(Math.random() * 11));
+            this.container.querySelector(".Cap:not(.Fly)").classList.add("Fly");
         }, 20);
-        setTimeout(function () {
-            _this.container.querySelector(".Cap").remove();
+        setTimeout(() => {
+            this.container.querySelector(".Cap").remove();
         }, 200);
-    };
-    Clicker.prototype.displayClickedCaps = function (e, power) {
-        var tmp = document.createElement("p");
+    }
+    displayClickedCaps(e, power) {
+        let tmp = document.createElement("p");
         tmp.classList.add("clickIncrease");
         tmp.innerHTML = "+ " + window["numberAsText"](power);
         tmp.style.top = e.clientY - 30 + "px";
         tmp.style.left = e.clientX + 30 + "px";
         document.querySelector("body").append(tmp);
-        setTimeout(function () {
+        setTimeout(() => {
             tmp.classList.add("clickIncrease--fade");
         }, 10);
-        setTimeout(function () {
+        setTimeout(() => {
             tmp.remove();
         }, 500);
-    };
-    Clicker.prototype.createMultiplierDom = function () {
+    }
+    createMultiplierDom() {
         this.multiplier_bonus = document.createElement("div");
         this.multiplier_bonus.classList.add("multiplier_bonus");
         this.multiplier_bonus__inner = document.createElement("p");
@@ -102,21 +107,20 @@ var Clicker = /** @class */ (function () {
         this.multiplier_bonus__inner.innerHTML = this.clickerMultiplier + "<span>x</span>";
         this.multiplier_bonus.append(this.multiplier_bonus__inner);
         document.querySelector(".clicker").append(this.multiplier_bonus);
-    };
-    Clicker.prototype.calculatePower = function () {
-        var _this = this;
-        var power = 1;
-        this.game.clickerUpgrades.forEach(function (c) {
+    }
+    calculatePower() {
+        let power = 1;
+        this.game.clickerUpgrades.forEach((c) => {
             if (!c.bought)
                 return false;
             if (c["type"] === "multiplier") {
                 power = power * c.power;
             }
             else if (c["type"] === "percentage") {
-                power = power + _this.game.capsPerSecond * (c.power / 100);
+                power = power + this.game.capsPerSecond * (c.power / 100);
             }
             else if (c["type"] === "buildingAddition") {
-                power = power + _this.game.totalMembers * c.power;
+                power = power + this.game.totalMembers * c.power;
             }
         });
         if (this.game.buff.activeBuff && this.game.buff.activeBuff.id === 2) {
@@ -124,6 +128,5 @@ var Clicker = /** @class */ (function () {
         }
         power *= this.clickerMultiplier;
         return power;
-    };
-    return Clicker;
-}());
+    }
+}

@@ -1,17 +1,34 @@
-var Game = /** @class */ (function () {
-    function Game() {
-        var _this = this;
-        this.intervalSpeed = 100;
-        this.members = [];
-        this.membersSave = [];
-        this.upgrades = [];
-        this.upgradesSave = [];
-        this.clickerUpgrades = [];
-        this.clickerUpgradesSave = [];
-        this.score = 0;
-        this.dailyBonusGot = 0;
-        this.handmadeCaps = 0;
-        this.missedGoldenPelo = 0;
+"use strict";
+class Game {
+    intervalSpeed = 100;
+    stepInterval;
+    members = [];
+    membersSave = [];
+    upgrades = [];
+    upgradesSave = [];
+    clickerUpgrades = [];
+    clickerUpgradesSave = [];
+    score = 0;
+    scoreElement;
+    showBoughtUpgrades;
+    saveInterval;
+    lastUpdate;
+    inventoryContainer;
+    dailyBonusGot = 0;
+    saveDialog;
+    loadDialog;
+    handmadeCaps = 0;
+    capsPerSecond;
+    totalMembers;
+    runStarted;
+    runDuration;
+    missedGoldenPelo = 0;
+    save;
+    buff;
+    clicker;
+    inventory;
+    goldenPelo;
+    constructor() {
         this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
         this.clicker = new Clicker(this);
         this.goldenPelo = new GoldenPelo(this);
@@ -23,152 +40,148 @@ var Game = /** @class */ (function () {
         this.loadDialog = document.querySelector(".loadDialog");
         this.inventoryContainer = document.querySelector(".inventory__content");
         this.runStarted = Date.now();
-        var showBoughtButton = document.querySelector(".showBought");
-        showBoughtButton.onclick = function () {
-            _this.showBoughtUpgrades = !_this.showBoughtUpgrades;
-            showBoughtButton.innerHTML = _this.showBoughtUpgrades ? "Gekaufte Upgrades ausblenden" : "Gekaufte Upgrades anzeigen";
+        const showBoughtButton = document.querySelector(".showBought");
+        showBoughtButton.onclick = () => {
+            this.showBoughtUpgrades = !this.showBoughtUpgrades;
+            showBoughtButton.innerHTML = this.showBoughtUpgrades ? "Gekaufte Upgrades ausblenden" : "Gekaufte Upgrades anzeigen";
         };
-        this.saveInterval = setInterval(function () {
-            _this.save.save();
+        this.saveInterval = setInterval(() => {
+            this.save.save();
         }, 5000);
-        this.stepInterval = setInterval(function () {
-            _this.step();
+        this.stepInterval = setInterval(() => {
+            this.step();
         }, this.intervalSpeed);
         this.addSaveAndLoadDialogLogic();
     }
-    Game.prototype.instantiateMembers = function () {
-        var _this = this;
+    instantiateMembers() {
         fetch("/data/members.json")
-            .then(function (res) {
+            .then((res) => {
             return res.json();
         })
-            .then(function (res) {
-            res.forEach(function (mem) {
-                var tmp = new Member(mem.name, mem.basePower, mem.basePrice, mem.image, mem.id);
-                _this.members.push(tmp);
-                _this.membersSave.push({ id: mem.id, amount: 0 });
+            .then((res) => {
+            res.forEach((mem) => {
+                const tmp = new Member(mem.name, mem.basePower, mem.basePrice, mem.image, mem.id);
+                this.members.push(tmp);
+                this.membersSave.push({ id: mem.id, amount: 0 });
             });
-            _this.members.forEach(function (m) {
-                m.dom.container.onclick = function () {
-                    if (m.getPrice() <= _this.score) {
-                        _this.score -= m.getPrice();
-                        var el = _this.membersSave.find(function (i) { return i["id"] === m.id; });
+            this.members.forEach((m) => {
+                m.dom.container.onclick = () => {
+                    if (m.getPrice() <= this.score) {
+                        this.score -= m.getPrice();
+                        const el = this.membersSave.find((i) => i["id"] === m.id);
                         el["amount"]++;
                         m.setAmount(m.getAmount() + 1);
-                        _this.save.save();
+                        this.save.save();
                     }
                 };
             });
-            _this.instantiateClickerUpgrades();
+            this.instantiateClickerUpgrades();
         });
-    };
-    Game.prototype.instantiateClickerUpgrades = function () {
-        var _this = this;
+    }
+    instantiateClickerUpgrades() {
         fetch("/data/clickerUpgrades.json")
-            .then(function (res) {
+            .then((res) => {
             return res.json();
         })
-            .then(function (res) {
-            res.forEach(function (up) {
-                var tmp = new ClickerUpgrade(up.name, up.description, up.requirement, up.type, up.power, up.price, up.id);
-                _this.clickerUpgrades.push(tmp);
-                _this.clickerUpgradesSave.push({ id: up.id, bought: false });
-                tmp.dom.onclick = function () {
-                    if (tmp.price <= _this.score) {
-                        _this.score -= tmp.price;
-                        _this.clickerUpgradesSave.find(function (i) { return i["id"] === up.id; })["bought"] = true;
+            .then((res) => {
+            res.forEach((up) => {
+                const tmp = new ClickerUpgrade(up.name, up.description, up.requirement, up.type, up.power, up.price, up.id);
+                this.clickerUpgrades.push(tmp);
+                this.clickerUpgradesSave.push({ id: up.id, bought: false });
+                tmp.dom.onclick = () => {
+                    if (tmp.price <= this.score) {
+                        this.score -= tmp.price;
+                        this.clickerUpgradesSave.find((i) => i["id"] === up.id)["bought"] = true;
                         tmp.buy();
-                        _this.save.save();
+                        this.save.save();
                     }
                 };
             });
-            _this.instantiateUpgrades();
+            this.instantiateUpgrades();
         });
-    };
-    Game.prototype.instantiateUpgrades = function () {
-        var _this = this;
+    }
+    instantiateUpgrades() {
         fetch("/data/upgrades.json")
-            .then(function (res) {
+            .then((res) => {
             return res.json();
         })
-            .then(function (res) {
-            res.forEach(function (up) {
-                var tmp = new Upgrade(up.name, up.description, up.requirement, up.multiplier, up.price, up.id);
-                var refMember = _this.members.find(function (mem) { return mem.id === up.referenceId; });
+            .then((res) => {
+            res.forEach((up) => {
+                const tmp = new Upgrade(up.name, up.description, up.requirement, up.multiplier, up.price, up.id);
+                const refMember = this.members.find((mem) => mem.id === up.referenceId);
                 refMember.addUpgrade(tmp);
             });
-            _this.members.forEach(function (m) {
-                m.upgrades.forEach(function (upgrade) {
-                    _this.upgradesSave.push({ id: upgrade.id, bought: false });
+            this.members.forEach((m) => {
+                m.upgrades.forEach((upgrade) => {
+                    this.upgradesSave.push({ id: upgrade.id, bought: false });
                     if (upgrade.dom) {
-                        upgrade.dom.onclick = function () {
-                            if (_this.score >= upgrade.price && !upgrade.bought) {
+                        upgrade.dom.onclick = () => {
+                            if (this.score >= upgrade.price && !upgrade.bought) {
                                 upgrade.bought = true;
-                                _this.upgradesSave.find(function (i) { return i["id"] === upgrade.id; })["bought"] = true;
-                                _this.score -= upgrade.price;
-                                _this.save.save();
+                                this.upgradesSave.find((i) => i["id"] === upgrade.id)["bought"] = true;
+                                this.score -= upgrade.price;
+                                this.save.save();
                             }
                         };
                     }
                 });
             });
-            _this.save.load();
+            this.save.load();
         });
-    };
-    Game.prototype.reset = function () {
+    }
+    reset() {
         if (confirm("Wirklich den gesamten Fortschritt löschen?")) {
             this.save.reset();
         }
-    };
-    Game.prototype.updateStats = function () {
-        var container = document.querySelector(".stats__content");
+    }
+    updateStats() {
+        let container = document.querySelector(".stats__content");
         container.innerHTML = "";
-        var date = new Date(this.runStarted).toLocaleString();
-        var dateEntry = document.createElement("div");
+        let date = new Date(this.runStarted).toLocaleString();
+        let dateEntry = document.createElement("div");
         dateEntry.classList.add("stats__entry");
         dateEntry.innerHTML = "<span>Spielbeginn:</span><span>" + date + "</span>";
-        var handMadeEntry = document.createElement("div");
+        let handMadeEntry = document.createElement("div");
         handMadeEntry.classList.add("stats__entry");
         handMadeEntry.innerHTML = "<span>Von Hand geöffnete Biere:</span><span>" + window["numberAsText"](this.handmadeCaps) + "</span>";
-        var missedPeloEntry = document.createElement("div");
+        let missedPeloEntry = document.createElement("div");
         missedPeloEntry.classList.add("stats__entry");
         missedPeloEntry.innerHTML = "<span>Verpasste goldene PeLos:</span><span>" + this.goldenPelo.missedGoldenPelo + "</span>";
-        var membersEntry = document.createElement("div");
+        let membersEntry = document.createElement("div");
         membersEntry.classList.add("stats__entry");
         membersEntry.innerHTML = "<span>Anzahl Mitglieder:</span><span>" + this.totalMembers + "</span>";
         container.append(dateEntry);
         container.append(handMadeEntry);
         container.append(missedPeloEntry);
         container.append(membersEntry);
-    };
-    Game.prototype.step = function () {
-        var _this = this;
+    }
+    step() {
         this.buff.update();
-        var difference = 1;
+        let difference = 1;
         if (this.lastUpdate && Date.now() - this.lastUpdate > 1000) {
             difference = (Date.now() - this.lastUpdate) / 100;
         }
-        var tmp = new Date();
+        let tmp = new Date();
         if (tmp.getDate() !== this.dailyBonusGot) {
             this.dailyBonusGot = 0;
         }
         this.lastUpdate = Date.now();
-        var increase = 0;
-        this.members.forEach(function (m) {
-            increase += m.getIncrease(_this.buff.activeBuff);
+        let increase = 0;
+        this.members.forEach((m) => {
+            increase += m.getIncrease(this.buff.activeBuff);
         });
         increase *= difference;
-        this.members.forEach(function (m) {
-            m.updateBuyability(_this.score);
-            m.update(_this.score, _this.showBoughtUpgrades, _this.buff.activeBuff);
+        this.members.forEach((m) => {
+            m.updateBuyability(this.score);
+            m.update(this.score, this.showBoughtUpgrades, this.buff.activeBuff);
         });
-        this.clickerUpgrades.forEach(function (c) {
-            c.updateBuyability(_this.score);
-            c.updateVisibility(_this.members[0].amount, _this.handmadeCaps, _this.showBoughtUpgrades);
+        this.clickerUpgrades.forEach((c) => {
+            c.updateBuyability(this.score);
+            c.updateVisibility(this.members[0].amount, this.handmadeCaps, this.showBoughtUpgrades);
         });
         this.totalMembers = 0;
-        this.members.forEach(function (mem) { return (_this.totalMembers += mem.amount); });
-        var buffedIncrease = 0;
+        this.members.forEach((mem) => (this.totalMembers += mem.amount));
+        let buffedIncrease = 0;
         if (this.buff.activeBuff && this.buff.activeBuff.id === 2) {
             this.score += (increase / (1000 / this.intervalSpeed)) * this.buff.activeBuff.power;
             buffedIncrease = increase * this.buff.activeBuff.power;
@@ -187,42 +200,40 @@ var Game = /** @class */ (function () {
             document.querySelector(".inventory").classList.remove("visible");
         }
         this.runDuration = Date.now() - this.runStarted;
-    };
-    Game.prototype.addSaveAndLoadDialogLogic = function () {
-        var _this = this;
-        var showSaveButton = document.querySelector(".navigation__list-item.save");
-        var showLoadButton = document.querySelector(".navigation__list-item.load");
-        showSaveButton.addEventListener("click", function () {
-            _this.saveDialog.classList.add("saveDialog__open");
-            var saveString = _this.save.save();
-            _this.saveDialog.querySelector("textarea").innerHTML = saveString;
+    }
+    addSaveAndLoadDialogLogic() {
+        const showSaveButton = document.querySelector(".navigation__list-item.save");
+        const showLoadButton = document.querySelector(".navigation__list-item.load");
+        showSaveButton.addEventListener("click", () => {
+            this.saveDialog.classList.add("saveDialog__open");
+            let saveString = this.save.save();
+            this.saveDialog.querySelector("textarea").innerHTML = saveString;
         });
-        this.saveDialog.addEventListener("click", function (e) {
-            var tmp = e.target;
+        this.saveDialog.addEventListener("click", (e) => {
+            let tmp = e.target;
             if (tmp.classList.contains("saveDialog")) {
-                _this.saveDialog.classList.remove("saveDialog__open");
+                this.saveDialog.classList.remove("saveDialog__open");
             }
         });
-        showLoadButton.addEventListener("click", function () {
-            _this.loadDialog.classList.add("loadDialog__open");
+        showLoadButton.addEventListener("click", () => {
+            this.loadDialog.classList.add("loadDialog__open");
         });
-        this.loadDialog.addEventListener("click", function (e) {
-            var tmp = e.target;
+        this.loadDialog.addEventListener("click", (e) => {
+            let tmp = e.target;
             if (tmp.classList.contains("loadDialog")) {
-                _this.loadDialog.classList.remove("loadDialog__open");
+                this.loadDialog.classList.remove("loadDialog__open");
             }
         });
-        this.loadDialog.querySelector("button").addEventListener("click", function () {
-            var loadState = _this.loadDialog.querySelector("textarea").value;
+        this.loadDialog.querySelector("button").addEventListener("click", () => {
+            const loadState = this.loadDialog.querySelector("textarea").value;
             // try {
             JSON.parse(atob(loadState));
-            _this.save.load(loadState);
-            _this.loadDialog.querySelector("textarea").value = "";
-            _this.loadDialog.classList.remove("loadDialog__open");
+            this.save.load(loadState);
+            this.loadDialog.querySelector("textarea").value = "";
+            this.loadDialog.classList.remove("loadDialog__open");
             // } catch (error) {
             //   alert("Fehler!");
             // }
         });
-    };
-    return Game;
-}());
+    }
+}
