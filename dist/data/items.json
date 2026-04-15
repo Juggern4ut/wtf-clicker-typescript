@@ -8,18 +8,20 @@
     "consumable": true,
     "referenceMemberId": 1,
     "power": 7000,
-    "duration": 60
+    "duration": 60,
+    "getFromGoldenPelos": true
   },
   {
     "id": 2,
     "name": "Wasserkochsalzlösung",
-    "description": "Deine Bierdeckel pro Sekunde werden für 5 Sekunden 50x effizienter!",
+    "description": "Deine Bierdeckel pro Sekunde werden für 15 Sekunden 10x effizienter!",
     "text": "Regt den Durst an",
     "image": "potion_green.png",
     "consumable": true,
-    "referenceMemberId": -2,
-    "power": 50,
-    "duration": 5
+    "referenceMemberId": 0,
+    "power": 10,
+    "duration": 15,
+    "getFromGoldenPelos": true
   },
   {
     "id": 3,
@@ -28,9 +30,10 @@
     "text": "Rape mer der PeLo?",
     "image": "potion_purple.png",
     "consumable": true,
-    "referenceMemberId": -1,
+    "referenceMemberId": 0,
     "power": 20,
-    "duration": 8
+    "duration": 8,
+    "getFromGoldenPelos": true
   },
   {
     "id": 4,
@@ -39,8 +42,57 @@
     "text": "Hallo Sandro, eg chan nüüt me läse!",
     "image": "potion_red.png",
     "consumable": true,
-    "referenceMemberId": -3,
+    "referenceMemberId": 0,
     "power": 0,
-    "duration": 0
+    "duration": 0,
+    "getFromGoldenPelos": true
+  },
+  {
+    "id": 5,
+    "name": "Canabinol",
+    "description": "Party Pascal wird für 5 Minuten doppelt so effektiv!",
+    "text": "Zum Backen geeignet!",
+    "image": "canabinol.png",
+    "consumable": true,
+    "referenceMemberId": 12,
+    "power": 2,
+    "duration": 300,
+    "getFromGoldenPelos": true
+  },
+  {
+    "id": 6,
+    "name": "Bierrubin",
+    "description": "???",
+    "text": "Er funkelt im dunkeln...",
+    "image": "beer_ruby.png",
+    "consumable": false,
+    "referenceMemberId": 0,
+    "power": 0,
+    "duration": 0,
+    "getFromGoldenPelos": true
+  },
+  {
+    "id": 7,
+    "name": "Höhlenwasser",
+    "description": "Klickt für 60 Sekunden automatisch 2x pro Sekunde auf das Bier.",
+    "text": "Konzentrierte Essenz der Crochöhle.",
+    "image": "potion_cursor.png",
+    "consumable": true,
+    "referenceMemberId": 0,
+    "power": 0,
+    "duration": 60,
+    "getFromGoldenPelos": true
+  },
+  {
+    "id": 1000,
+    "name": "Daily Bonus",
+    "description": "Wirbt automatisch ein Vereinsmitglied an!",
+    "text": "Deine Mutter wäre stolz auf dich!",
+    "image": "daily_bonus.png",
+    "consumable": true,
+    "referenceMemberId": 0,
+    "power": 0,
+    "duration": 0,
+    "getFromGoldenPelos": false
   }
 ]

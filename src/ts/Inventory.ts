@@ -84,7 +84,7 @@ export class Inventory {
    */
   loadItems(): void {
     this.stack = [];
-    fetch("/data/items_new.json")
+    fetch("/data/items.json")
       .then((res) => res.json() as Promise<ItemData[]>)
       .then((items) => {
         items.forEach((item: ItemData) => {

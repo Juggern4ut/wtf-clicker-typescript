@@ -43,19 +43,21 @@ export class Clicker {
         this.container.append(image);
         (document.querySelector("body") as HTMLBodyElement).prepend(this.container);
 
-        image.onclick = (event: MouseEvent): void => {
-            this.letCapFlyOff();
-            this.updateClickMultiplier();
-            this.checkDailyBonus();
-
-            const power = this.calculatePower();
-            this.displayClickedCaps(event, power);
-
-            this.game.score += power;
-            this.game.handmadeCaps += power;
-        };
+        image.onclick = (event: MouseEvent) => this.clickBottle(event);
 
         this.createMultiplierDom();
+    }
+
+    clickBottle(event: MouseEvent): void {
+        this.letCapFlyOff();
+        this.updateClickMultiplier();
+        this.checkDailyBonus();
+
+        const power = this.calculatePower();
+        this.displayClickedCaps(event, power);
+
+        this.game.score += power;
+        this.game.handmadeCaps += power;
     }
 
     /**
@@ -140,8 +142,13 @@ export class Clicker {
         const tmp = document.createElement("p");
         tmp.classList.add("clickIncrease");
         tmp.innerHTML = "+ " + window.numberAsText(power);
-        tmp.style.top = event.clientY - 30 + "px";
-        tmp.style.left = event.clientX + 30 + "px";
+        if (event != null) {
+            tmp.style.top = event.clientY - 30 + "px";
+            tmp.style.left = event.clientX + 30 + "px";
+        } else {
+            tmp.style.top = "60px";
+            tmp.style.left = window.innerWidth / 2 + 30 + "px";
+        }
         (document.querySelector("body") as HTMLBodyElement).append(tmp);
 
         setTimeout(() => {

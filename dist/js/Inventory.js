@@ -49,7 +49,7 @@ export class Inventory {
      */
     loadItems() {
         this.stack = [];
-        fetch("/data/items_new.json")
+        fetch("/data/items.json")
             .then((res) => res.json())
             .then((items) => {
             items.forEach((item) => {

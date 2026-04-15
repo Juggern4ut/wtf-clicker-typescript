@@ -78,6 +78,7 @@ export class Game {
     clicker: Clicker;
     inventory: Inventory;
     goldenPelo: GoldenPelo;
+    autoclickInterval: number = 0;
 
     /**
      * Returns an existing upgrade save entry or creates a default one.
@@ -309,6 +310,18 @@ export class Game {
         } else {
             this.score += increase / (1000 / this.intervalSpeed);
             buffedIncrease = increase;
+        }
+
+        if (this.buff.activeBuff && this.buff.activeBuff.id === 7) {
+            if (!this.autoclickInterval) {
+                this.autoclickInterval = setInterval(() => {
+                    this.clicker.clickBottle(null);
+                }, 200);
+            }
+        } else {
+            if (this.autoclickInterval) {
+                clearInterval(this.autoclickInterval);
+            }
         }
 
         this.scoreElement.updateScore(this.score, buffedIncrease);

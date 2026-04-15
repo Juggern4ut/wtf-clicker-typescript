@@ -14,13 +14,13 @@
   {
     "id": 2,
     "name": "Wasserkochsalzlösung",
-    "description": "Deine Bierdeckel pro Sekunde werden für 5 Sekunden 10x effizienter!",
+    "description": "Deine Bierdeckel pro Sekunde werden für 15 Sekunden 10x effizienter!",
     "text": "Regt den Durst an",
     "image": "potion_green.png",
     "consumable": true,
     "referenceMemberId": 0,
     "power": 10,
-    "duration": 5,
+    "duration": 15,
     "getFromGoldenPelos": true
   },
   {
@@ -69,6 +69,18 @@
     "referenceMemberId": 0,
     "power": 0,
     "duration": 0,
+    "getFromGoldenPelos": true
+  },
+  {
+    "id": 7,
+    "name": "Höhlenwasser",
+    "description": "Klickt für 60 Sekunden automatisch 5x pro Sekunde auf das Bier.",
+    "text": "Konzentrierte Essenz der Crochöhle.",
+    "image": "potion_cursor.png",
+    "consumable": true,
+    "referenceMemberId": 0,
+    "power": 0,
+    "duration": 60,
     "getFromGoldenPelos": true
   },
   {

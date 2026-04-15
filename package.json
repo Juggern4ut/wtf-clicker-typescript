@@ -6,6 +6,7 @@
     "scripts": {
         "start": "live-server dist",
         "watch": "tsc --watch",
+        "dev": "concurrently 'npm run sass' 'npm run watch' 'npm start'",
         "build": "tsc && copyfiles -u 1 src/data/**/*.json dist",
         "sass": "sass ./src/scss/main.scss ./dist/css/main.css --watch"
     },

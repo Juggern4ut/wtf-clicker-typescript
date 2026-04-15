@@ -45,6 +45,7 @@ export class Game {
         this.totalMembers = 0;
         this.runDuration = 0;
         this.missedGoldenPelo = 0;
+        this.autoclickInterval = 0;
         this.scoreElement = new Score(document.querySelector(".score"), document.querySelector(".scorePerSeconds"));
         this.clicker = new Clicker(this);
         this.goldenPelo = new GoldenPelo(this);
@@ -224,6 +225,18 @@ export class Game {
         else {
             this.score += increase / (1000 / this.intervalSpeed);
             buffedIncrease = increase;
+        }
+        if (this.buff.activeBuff && this.buff.activeBuff.id === 7) {
+            if (!this.autoclickInterval) {
+                this.autoclickInterval = setInterval(() => {
+                    this.clicker.clickBottle(null);
+                }, 200);
+            }
+        }
+        else {
+            if (this.autoclickInterval) {
+                clearInterval(this.autoclickInterval);
+            }
         }
         this.scoreElement.updateScore(this.score, buffedIncrease);
         this.capsPerSecond = buffedIncrease;
