@@ -5,7 +5,7 @@
     "sourceMap": true,
     "lib": ["dom", "es2017"],
     "target": "es2020",
-    "module": "nodenext",
+    "module": "ESNext",
     "moduleResolution": "nodenext",
     "strict": true
   }
