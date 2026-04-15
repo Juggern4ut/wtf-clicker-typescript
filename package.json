@@ -1,19 +1,23 @@
 {
-  "name": "wtf-clicker-typescript",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch",
-    "sass": "sass ./webpage/src/scss/main.scss ./webpage/dist/css/main.css --watch"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "sass": "^1.99.0",
-    "typescript": "^6.0.2"
-  }
+    "name": "wtf-clicker-typescript",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "live-server dist",
+        "build": "tsc",
+        "watch": "tsc --watch",
+        "sass": "sass ./src/scss/main.scss ./dist/css/main.css --watch"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "dependencies": {
+        "sass": "^1.99.0",
+        "typescript": "^6.0.2"
+    },
+    "devDependencies": {
+        "live-server": "^1.2.2"
+    }
 }

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "rootDir": "./webpage/src/ts",
-    "outDir": "./webpage/dist/js",
+    "rootDir": "./src/ts",
+    "outDir": "./dist/js",
     "sourceMap": true,
     "lib": ["dom", "es2017"],
     "target": "es2020",
